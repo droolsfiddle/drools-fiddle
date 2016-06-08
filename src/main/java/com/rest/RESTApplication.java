@@ -6,7 +6,7 @@ import java.util.Set;
 /**
  * Created by jvipret on 08/06/2016.
  */
-  public class RESTApplication extends javax.ws.rs.core.Application {
+public class RESTApplication extends javax.ws.rs.core.Application {
 
   private Set<Object> singletons = new HashSet<Object>();
 

@@ -1,0 +1,20 @@
+<!doctype html>
+<html ng-app="helloAjaxApp">
+<head>
+    <title>Hello AngularJS</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.8/angular.min.js"></script>
+    <script src="form.js"></script>
+</head>
+
+<body ng-controller="myController">
+
+    <form role="form" ng-submit="submitDrl()" id="drlform">
+        <label control-label>id</label>
+        <input type="text" name="id" ng-model="id"/>
+        <input type="submit" value="Submit"/>
+    </form>
+
+    <textarea rows="4" cols="50" name="data" ng-model="data" form="drlform"/>
+
+</body>
+</html>
