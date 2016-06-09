@@ -1,7 +1,7 @@
-#Drools Fiddle project
-##installation
+# Drools Fiddle project
+## installation
     mvn clean install jboss-as:run
-##todo
+## todo
 - [ ] static html files to be served by jboss 
 
 
