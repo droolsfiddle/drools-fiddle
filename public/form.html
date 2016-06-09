@@ -9,12 +9,20 @@
 <body ng-controller="myController">
 
     <form role="form" ng-submit="submitDrl()" id="drlform">
-        <label control-label>id</label>
-        <input type="text" name="id" ng-model="id"/>
+        <label control-label>input data</label>
         <input type="submit" value="Submit"/>
     </form>
 
-    <textarea rows="4" cols="50" name="data" ng-model="data" form="drlform"/>
+    <div style="float:left;">
+        <p>
+            Data<br />
+        <textarea cols="120" rows="20" name="data" ng-model="message.data" form="drlform">
+
+        </textarea><br />
+            Log<br />
+            <textarea cols="120" rows="20" name="log" ng-model="message.log"></textarea>
+        </p>
+    </div>
 
 </body>
 </html>

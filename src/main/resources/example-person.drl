@@ -1,0 +1,17 @@
+import java.util.Date
+
+declare Person
+    name : String
+    dateOfBirth : Date
+    address : Address
+end
+
+rule "Using a declared Type"
+when
+    $p : Person( name == "Bob" )
+then
+    // Insert Mark, who is Bob's mate.
+    Person mark = new Person();
+    mark.setName("Mark");
+    insert( mark );
+end

@@ -7,6 +7,7 @@ public class Message {
 
   private int id;
   private String data;
+  private String log;
 
   public int getId() {
     return id;
@@ -24,11 +25,20 @@ public class Message {
     this.data = data;
   }
 
+  public String getLog() {
+    return log;
+  }
+
+  public void setLog(String log) {
+    this.log = log;
+  }
+
   @Override
   public String toString() {
     return "Message{" +
             "id=" + id +
             ", data='" + data + '\'' +
+            ", log='" + log + '\'' +
             '}';
   }
 }
