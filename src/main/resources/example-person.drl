@@ -1,5 +1,9 @@
 import java.util.Date
 
+declare Address
+    name : String
+end
+
 declare Person
     name : String
     dateOfBirth : Date
