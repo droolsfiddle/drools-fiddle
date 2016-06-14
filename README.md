@@ -1,8 +1,10 @@
 # Drools Fiddle project
 ## installation
-    mvn clean install jboss-as:run
+    mvn clean install wildfly:run
+## deployment (while the as is running)
+    mvn wildfly:deploy
 ## todo
-- [ ] static html files to be served by jboss 
+- [X] static html files to be served by jboss 
 
 
 
