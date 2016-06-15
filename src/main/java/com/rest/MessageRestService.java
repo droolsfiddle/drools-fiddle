@@ -33,6 +33,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.*;
 
 @Path("/message")
 @Produces(MediaType.APPLICATION_JSON)
@@ -213,7 +214,7 @@ public class MessageRestService {
             return iMessage;
         }
 
-        KieSession kieSession ;
+        final KieSession kieSession ;
         if (kBase.getKieSessions().size() > 0) { // there's a session
             logger.debug("Firing existing kieSession");
             kieSession = kBase.getKieSessions().iterator().next();
@@ -222,9 +223,29 @@ public class MessageRestService {
             kieSession = kBase.newKieSession();
         }
 
-        int numberOfFiredRules = kieSession.fireAllRules();
+        ExecutorService service = Executors.newFixedThreadPool(1);
 
-        iMessage.setLog("INFO: fired " + numberOfFiredRules + " rules.");
+        Future<Integer> futureResult = service.submit(new Callable<Integer>() {
+            public Integer call() throws Exception {
+                return kieSession.fireAllRules();
+            }
+        });
+
+        int numberOfFiredRules;
+
+        try{
+            numberOfFiredRules = futureResult.get(10, TimeUnit.SECONDS);
+            iMessage.setLog("INFO: fired " + numberOfFiredRules + " rules.");
+        } catch(TimeoutException e){
+            logger.warn("No response after 10 seconds",e);
+            iMessage.setLog("ERROR: rule evaluation timed out.");
+            futureResult.cancel(true);
+        } catch (Exception e2) {
+            logger.warn("Other error during rule evaluation",e2);
+            iMessage.setLog("ERROR: rule evaluation error " + e2.getMessage());
+        }
+
+        service.shutdown();
 
         return iMessage;
     }
