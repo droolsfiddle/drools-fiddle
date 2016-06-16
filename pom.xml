@@ -10,6 +10,7 @@
   <properties>
     <spring.version>4.3.0.RELEASE</spring.version>
     <drools.version>6.3.0.Final</drools.version>
+    <jackson.version>2.7.0</jackson.version>
   </properties>
 
   <dependencies>
@@ -89,7 +90,11 @@
           <version>1.2.16</version>
           <scope>provided</scope>
       </dependency>
-
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+      <version>${jackson.version}</version>
+    </dependency>
 
   </dependencies>
   <build>
