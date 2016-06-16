@@ -21,7 +21,7 @@ import java.io.IOException;
  */
 @Path("/facts")
 @Produces(MediaType.APPLICATION_JSON)
-@Consumes(MediaType.TEXT_PLAIN)
+@Consumes(MediaType.TEXT_PLAIN) //TODO: find a way to make it work with APPLICATION_JSON!
 @Service
 public class FactInstanceService {
 
