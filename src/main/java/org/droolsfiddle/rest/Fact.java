@@ -1,15 +1,16 @@
-package com.rest;
+package org.droolsfiddle.rest;
 
 import java.util.List;
 
 /**
  * Created by jvipret on 08/06/2016.
  */
-public class Package {
+public class Fact {
 
   private int id;
   private String name;
-  private List<Fact> facts;
+  private List<Attribute> attributes;
+
 
   public int getId() {
     return id;
@@ -27,20 +28,20 @@ public class Package {
     this.name = name;
   }
 
-  public List<Fact> getFacts() {
-    return facts;
+  public List<Attribute> getAttributes() {
+    return attributes;
   }
 
-  public void setFacts(List<Fact> facts) {
-    this.facts = facts;
+  public void setAttributes(List<Attribute> attributes) {
+    this.attributes = attributes;
   }
 
   @Override
   public String toString() {
-    return "Package{" +
+    return "Fact{" +
             "id=" + id +
             ", name='" + name + '\'' +
-            ", facts=" + facts +
+            ", attributes=" + attributes +
             '}';
   }
 }
