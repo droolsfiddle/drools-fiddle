@@ -2,34 +2,75 @@
 <html ng-app="helloAjaxApp">
 <head>
     <title>Hello AngularJS</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.8/angular.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+
     <script src="form.js"></script>
 </head>
 
 <body ng-controller="myController">
+<div class="container-fluid">
+    <div class="col-md-6">
+        <div class="row">
+            <div class="form-group">
 
-    <form role="form" ng-submit="submitDrl()" id="drlform">
-        <label control-label>input data</label>
-        <input type="submit" value="Submit"/>
-    </form>
-
-    <div style="float:left;">
-        <p>
-            Data<br />
-        <textarea cols="120" rows="20" name="data" ng-model="message.data" form="drlform">
-
-        </textarea><br />
-            Log<br />
-            <textarea cols="120" rows="20" name="log" ng-model="message.log"></textarea>
-        </p>
+                <h3><span class="label label-default">Drools rules</span></h3>
+                <br />
+                <textarea rows="25" class="form-control"  name="data" ng-model="message.data" form="drlform">
+                </textarea>
+                <br />
+                <form role="form" ng-submit="submitDrl()" id="drlform">
+                    <button type="submit" class="btn btn-default">Submit</button>
+                </form>
+            </div>
+        </div>
+        <div class="row">
+            <h3><span class="label label-default">Log</span></h3>
+            <br />
+            <textarea class="form-control"  name="log" ng-model="message.log"></textarea>
+            </p>
+        </div>
     </div>
-    <div style="float:right;">
-        <p>
-            Facts<br />
-        <textarea cols="120" rows="42" name="facts" ng-model="message.facts" form="drlform">
-        </textarea>
-        </p>
+    <div class="col-md-6">
+
+        <h3><span class="label label-default">Drools facts</span></h3>
+        <br />
+        <div ng-repeat="facts in message.packages[0].facts" class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+            <div class="panel panel-default">
+                <div class="panel-heading" role="tab" id="heading{{$index}}">
+                    <h4 class="panel-title">
+                        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse{{$index}}" aria-expanded="false" aria-controls="collapse{{$index}}">
+                            {{facts.name}}
+                        </a>
+                    </h4>
+                </div>
+                <div id="collapse{{$index}}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading{{$index}}">
+                    <div class="panel-body">
+                        <form role="form" ng-submit="pushAttribute()" >
+                        <table class="table">
+                            <tr ng-repeat="attr in facts.attributes">
+                                <th scope="row">{{attr.id}}</th>
+                                <td>{{attr.name}}</td>
+                                <td>
+                                    <input class="form-control" ng-model="attribute.value">
+                                </td>
+                                <td>{{attr.type}}</td>
+                            </tr>
+                        </table>
+                        <button type="submit" class="btn btn-default">Add</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
+</div>
+
+
 
 </body>
 </html>

@@ -168,8 +168,8 @@ public class MessageRestService {
                 List<Fact> facts = new ArrayList<Fact>();
                 for (FactType declare : pack.getFactTypes()) {
                     Fact aFact = new Fact();
+                    aFact.setName(declare.getName().replaceAll(pack.getName() + ".", ""));
                     List<Attribute> attributes = new ArrayList<Attribute>();
-                    aFact.setName(declare.getName());
                     for (FactField field : declare.getFields()) {
                         Attribute attr = new Attribute();
                         attr.setId(field.getIndex());
