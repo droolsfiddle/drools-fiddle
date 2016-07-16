@@ -6,7 +6,7 @@
 ## integration tests
     mvn clean verify -Parq-wildfly-managed
 ## todo
-- [ ] figure out why cookie is not kept across subsequent arquillian service calls (hence session is lost)
+- [X] figure out why cookie is not kept across subsequent arquillian service calls (hence session is lost)
 - [X] static html files to be served by jboss 
 
 
