@@ -1,15 +1,29 @@
 package org.droolsfiddle.it;
 
+import org.apache.http.HttpStatus;
 import org.drools.compiler.compiler.DroolsParserException;
 import org.droolsfiddle.rest.*;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.extension.rest.client.ArquillianResteasyResource;
+import org.jboss.arquillian.extension.rest.client.Header;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.junit.InSequence;
 import org.jboss.shrinkwrap.api.Archive;
+import static org.junit.Assert.*;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
+
+import javax.ws.rs.client.*;
+import javax.ws.rs.core.Cookie;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.NewCookie;
+import javax.ws.rs.core.Response;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -44,11 +58,20 @@ public class CompileInsertFireIT {
 
     private static final String FACT = "{\"name\":\"Bob\"}";
 
+    private final String sessionCookie = "";
+
     @Deployment(testable = false)
     public static Archive deploy(){
         return TestUtils.getArchive();
     }
 
+    /**
+     * Using arquillian resteasy plugin to test a REST endpoint. All the code to instantiate the REST client,
+     * query the server and parse the response is supplied by the plugin.
+     *
+     * @param service
+     * @throws DroolsParserException
+     */
     @Test
     @InSequence(1)
     public void postDrlParserTest(@ArquillianResteasyResource DrlParserService service) throws DroolsParserException {
@@ -68,11 +91,21 @@ public class CompileInsertFireIT {
         System.out.println(response.getPackages());
     }
 
+
+    /**
+     * In this as well as all following tests we cannot use all the arquillian resteasy plugin magic because it
+     * does not allow to register custom RequestFilter and ResponseFilter (which we need to handle session
+     * cookies).
+     * It may be cool to do a pull request into
+     * https://github.com/arquillian/arquillian-extension-rest/tree/master/rest-client
+     * in order to allow registering these via annotations for instance.
+     *
+     * We therefore inject a WebTarget and write more boilerplate code than before.
+     * @param compilerService
+     */
     @Test
     @InSequence(2)
-    public void postDrlCompilerTest(@ArquillianResteasyResource DrlCompilerService compilerService,
-                                    @ArquillianResteasyResource FactInstanceService factService,
-                                    @ArquillianResteasyResource DrlFireService fireService) {
+    public void postDrlCompilerTest(@ArquillianResteasyResource("rest/message/drlCompile") WebTarget compilerService) { // DrlCompilerService
 
         // Given
 
@@ -80,28 +113,97 @@ public class CompileInsertFireIT {
 
         request.setData(DRL);
 
-        final String fact = FACT;
-
-        final String type = "Person";
-
-        final Message request2 = new Message();
+        compilerService.register(new CookieRequestFilter());
+        compilerService.register(new CookieResponseFilter());
+        final Invocation.Builder ib1 = compilerService.request();
+        final Invocation iv1 = ib1.buildPost(Entity.entity(request, MediaType.APPLICATION_JSON_TYPE));
 
 
         // When
 
-        final Message response1 = compilerService.postDrlCompile(request);
-
-        final Message response2 = factService.postInsertFact(type, fact);
-
-        final Message response3 = fireService.postDrlFire(request2);
+        final Response response = iv1.invoke();
 
         // Then
 
-        System.out.println(response1);
-
-        System.out.println(response2);
-
-        System.out.println(response3);
+        assertEquals(HttpStatus.SC_OK, response.getStatus());
+        final Message respMsg = response.readEntity(Message.class);
+        System.out.println(respMsg);
     }
+
+    @Test
+    @InSequence(3)
+    public void postFactInserterTest(@ArquillianResteasyResource("rest/facts/insert/Person") WebTarget factService) { // FactInstanceService
+
+        // Given
+
+        final String fact = FACT;
+
+        factService.register(new CookieRequestFilter());
+        factService.register(new CookieResponseFilter());
+        final Invocation.Builder ib2 = factService.request();
+        final Invocation iv2 = ib2.buildPost(Entity.entity(fact, MediaType.TEXT_PLAIN_TYPE));
+
+        // When
+
+        final Response response = iv2.invoke();
+
+        // Then
+
+        assertEquals(HttpStatus.SC_OK, response.getStatus());
+        final Message respMsg = response.readEntity(Message.class);
+        System.out.println(respMsg);
+    }
+
+    @Test
+    @InSequence(4)
+    public void postDrlFireTest(@ArquillianResteasyResource("rest/message/drlFire") WebTarget fireService) { // DrlFireService
+
+        // Given
+        final Message request = new Message();
+
+        fireService.register(new CookieRequestFilter());
+        fireService.register(new CookieResponseFilter());
+        final Invocation.Builder ib3 = fireService.request();
+        final Invocation iv3 = ib3.buildPost(Entity.entity(request, MediaType.APPLICATION_JSON_TYPE));
+
+        // When
+
+        final Response response = iv3.invoke();
+
+        // Then
+
+        assertEquals(HttpStatus.SC_OK, response.getStatus());
+        final Message respMsg = response.readEntity(Message.class);
+        assertEquals("INFO: fired 1 rules.",respMsg.getLog());
+        System.out.println(respMsg);
+    }
+
+    public class CookieRequestFilter implements ClientRequestFilter {
+
+        public void filter(ClientRequestContext clientRequestContext) throws IOException {
+            if (!cookies.isEmpty()) {
+                List<Object> cookiesList = new ArrayList<Object>(cookies.values());
+                clientRequestContext.getHeaders().put("Cookie",cookiesList);
+            }
+        }
+
+    }
+
+    public class CookieResponseFilter implements ClientResponseFilter {
+
+        public void filter(ClientRequestContext clientRequestContext, ClientResponseContext clientResponseContext) throws IOException {
+            //cookies.putAll(clientResponseContext.getCookies());
+            for (Map.Entry<String,NewCookie> c : clientResponseContext.getCookies().entrySet()) {
+                System.out.println("NEW COOKIE : " + c.getKey() + " -- "+ c.getValue().toString());
+                NewCookie nc = c.getValue();
+                cookies.put(c.getKey(),
+                        new Cookie(nc.getName(),nc.getValue(),nc.getPath(),nc.getDomain(),nc.getVersion()));
+            }
+        }
+
+    }
+
+    private static Map<String,Cookie> cookies = new HashMap<String, Cookie>();
+
 
 }
