@@ -58,7 +58,7 @@ public class DrlCompilerServiceImpl implements DrlCompilerService {
                 for (FactType declare : pack.getFactTypes()) {
                     Fact aFact = new Fact();
                     List<Attribute> attributes = new ArrayList<Attribute>();
-                    aFact.setName(declare.getName());
+                    aFact.setName(declare.getName().replaceAll(pack.getName() + ".", ""));
                     for (FactField field : declare.getFields()) {
                         Attribute attr = new Attribute();
                         attr.setId(field.getIndex());
