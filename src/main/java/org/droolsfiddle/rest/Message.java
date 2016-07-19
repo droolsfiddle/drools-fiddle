@@ -1,5 +1,6 @@
-package com.rest;
+package org.droolsfiddle.rest;
 
+import java.lang.*;
 import java.util.List;
 
 /**

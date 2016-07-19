@@ -1,16 +1,13 @@
-package com.rest;
-
-import java.util.List;
+package org.droolsfiddle.rest;
 
 /**
  * Created by jvipret on 08/06/2016.
  */
-public class Fact {
+public class Attribute {
 
   private int id;
   private String name;
-  private List<Attribute> attributes;
-
+  private String type;
 
   public int getId() {
     return id;
@@ -28,20 +25,20 @@ public class Fact {
     this.name = name;
   }
 
-  public List<Attribute> getAttributes() {
-    return attributes;
+  public String getType() {
+    return type;
   }
 
-  public void setAttributes(List<Attribute> attributes) {
-    this.attributes = attributes;
+  public void setType(String type) {
+    this.type = type;
   }
 
   @Override
   public String toString() {
-    return "Fact{" +
+    return "Attribute{" +
             "id=" + id +
             ", name='" + name + '\'' +
-            ", attributes=" + attributes +
+            ", type='" + type + '\'' +
             '}';
   }
 }
