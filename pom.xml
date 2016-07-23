@@ -11,6 +11,8 @@
     <spring.version>4.3.0.RELEASE</spring.version>
     <drools.version>6.3.0.Final</drools.version>
     <jackson.version>2.7.0</jackson.version>
+    <version.org.jboss.spec.javax.websocket>1.0.0.Final</version.org.jboss.spec.javax.websocket>
+
   </properties>
 
   <dependencies>
@@ -59,6 +61,12 @@
       <version>${drools.version}</version>
     </dependency>
 
+    <dependency>
+      <groupId>org.drools</groupId>
+      <artifactId>knowledge-api</artifactId>
+      <version>${drools.version}</version>
+    </dependency>
+
     <!-- Spring 3 dependencies -->
     <dependency>
       <groupId>org.springframework</groupId>
@@ -95,6 +103,21 @@
       <artifactId>jackson-databind</artifactId>
       <version>${jackson.version}</version>
     </dependency>
+
+    <!-- websocket -->
+    <dependency>
+      <groupId>org.jboss.spec.javax.websocket</groupId>
+      <artifactId>jboss-websocket-api_1.0_spec</artifactId>
+      <version>${version.org.jboss.spec.javax.websocket}</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>javax.servlet-api</artifactId>
+      <version>3.0.1</version>
+    </dependency>
+
 
   </dependencies>
   <build>

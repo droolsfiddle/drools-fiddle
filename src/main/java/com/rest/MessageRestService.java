@@ -1,5 +1,7 @@
 package com.rest;
 
+import com.rest.audit.CustomDebugAgendaEventListener;
+import com.rest.audit.CustomDebugRuleRuntimeEventListener;
 import com.rest.beans.DrlContext;
 import org.drools.compiler.compiler.DrlParser;
 import org.drools.compiler.compiler.DroolsError;
@@ -29,8 +31,12 @@ import org.kie.internal.io.ResourceFactory;
 import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
+import javax.websocket.Session;
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.*;
@@ -40,6 +46,11 @@ import java.util.concurrent.*;
 @Consumes(MediaType.APPLICATION_JSON)
 @Service
 public class MessageRestService {
+
+    @Context
+    private HttpServletRequest request;
+    private Session wsSession;
+
 
     private Logger logger = Logger.getLogger(MessageRestService.class);
 
@@ -138,6 +149,9 @@ public class MessageRestService {
     @Path("/drlCompile")
     public Message postDrlCompile(Message iMessage) {
         logger.debug("Init validation drl: DrlParser");
+        try {
+        wsSession = (Session) request.getSession().getAttribute(Session.class.getName());
+
         StringBuilder aLog = new StringBuilder();
 
         KieServices ks = KieServices.Factory.get();
@@ -153,10 +167,13 @@ public class MessageRestService {
             for (org.kie.api.builder.Message info : kb.getResults().getMessages()) {
                 logger.debug(info.toString());
                 aLog.append(info.toString() + "\n");
+                wsSession.getBasicRemote().sendText(info.toString() + "\n");
+
             }
         } else {
             kContainer = ks.newKieContainer(kr.getDefaultReleaseId());
             aLog.append(kContainer.getClassLoader());
+            wsSession.getBasicRemote().sendText(kContainer.getClassLoader().toString());
 
             drlContext.setKieContainer(kContainer);
 
@@ -189,6 +206,9 @@ public class MessageRestService {
         iMessage.setLog(aLog.toString());
         logger.debug(iMessage.toString());
 
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         return iMessage;
     }
@@ -197,13 +217,15 @@ public class MessageRestService {
     @Path("/drlFire")
     public Message postDrlFire(Message iMessage) {
 
-        iMessage.setData("");
+        try {
+
+            iMessage.setData("");
 
         if (!drlContext.hasKieContainer()) {
             iMessage.setLog("ERROR: No Container defined.");
+            wsSession.getBasicRemote().sendText("ERROR: No Container defined.");
             return iMessage;
         }
-
 
         KieContainer kContainer = drlContext.getKieContainer();
 
@@ -211,6 +233,7 @@ public class MessageRestService {
 
         if (kBase == null) {
             iMessage.setLog("ERROR: No KieBase defined.");
+            wsSession.getBasicRemote().sendText("ERROR: No KieBase defined.");
             return iMessage;
         }
 
@@ -221,6 +244,9 @@ public class MessageRestService {
         } else {
             logger.debug("Firing new kieSession");
             kieSession = kBase.newKieSession();
+            kieSession.addEventListener(new CustomDebugRuleRuntimeEventListener(wsSession));
+            kieSession.addEventListener(new CustomDebugAgendaEventListener(wsSession));
+
         }
 
         ExecutorService service = Executors.newFixedThreadPool(1);
@@ -236,17 +262,24 @@ public class MessageRestService {
         try{
             numberOfFiredRules = futureResult.get(10, TimeUnit.SECONDS);
             iMessage.setLog("INFO: fired " + numberOfFiredRules + " rules.");
+            wsSession.getBasicRemote().sendText("INFO: fired " + numberOfFiredRules + " rules.");
         } catch(TimeoutException e){
             logger.warn("No response after 10 seconds",e);
             iMessage.setLog("ERROR: rule evaluation timed out.");
+            wsSession.getBasicRemote().sendText("ERROR: rule evaluation timed out.");
             futureResult.cancel(true);
         } catch (Exception e2) {
             logger.warn("Other error during rule evaluation",e2);
             iMessage.setLog("ERROR: rule evaluation error " + e2.getMessage());
+            wsSession.getBasicRemote().sendText("ERROR: rule evaluation error " + e2.getMessage());
+
         }
 
         service.shutdown();
 
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return iMessage;
     }
 }
