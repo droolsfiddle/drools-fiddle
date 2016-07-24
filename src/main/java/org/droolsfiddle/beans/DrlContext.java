@@ -1,4 +1,4 @@
-package com.rest.beans;
+package org.droolsfiddle.beans;
 
 import org.kie.api.runtime.KieContainer;
 import org.springframework.context.annotation.Scope;

@@ -5,6 +5,12 @@
 	http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
     <display-name>Restful Web Application</display-name>
 
+    <context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>classpath:META-INF/applicationContext.xml</param-value>
+    </context-param>
+
+
     <!-- Auto scan REST service -->
     <context-param>
         <param-name>resteasy.scan</param-name>
@@ -40,7 +46,7 @@
         </servlet-class>
         <init-param>
             <param-name>javax.ws.rs.Application</param-name>
-            <param-value>com.rest.RESTApplication</param-value>
+            <param-value>org.droolsfiddle.rest.RESTApplication</param-value>
         </init-param>
     </servlet>
 
