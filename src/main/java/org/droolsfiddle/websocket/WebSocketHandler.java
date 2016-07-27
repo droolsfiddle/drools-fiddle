@@ -1,4 +1,4 @@
-package com.rest;
+package org.droolsfiddle.websocket;
 
 /**
  * Created by jvipret on 18/07/2016.

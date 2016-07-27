@@ -1,24 +1,21 @@
 package org.droolsfiddle.beans;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.rest.audit.CustomDebugAgendaEventListener;
-import com.rest.audit.CustomDebugRuleRuntimeEventListener;
+import org.droolsfiddle.websocket.audit.CustomDebugAgendaEventListener;
+import org.droolsfiddle.websocket.audit.CustomDebugRuleRuntimeEventListener;
 import org.droolsfiddle.rest.FactInstanceService;
 import org.droolsfiddle.rest.Message;
 import org.jboss.resteasy.logging.Logger;
 import org.kie.api.KieBase;
 import org.kie.api.definition.KiePackage;
 import org.kie.api.definition.type.FactType;
-import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
 import org.kie.api.runtime.rule.FactHandle;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.websocket.Session;
-import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
 import java.io.IOException;
 import javax.inject.Named;
 

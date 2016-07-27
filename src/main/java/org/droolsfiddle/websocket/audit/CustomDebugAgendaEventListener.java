@@ -1,7 +1,7 @@
-package com.rest.audit;
+package org.droolsfiddle.websocket.audit;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.rest.CustomDroolsEvent;
+import org.droolsfiddle.websocket.CustomDroolsEvent;
 import org.kie.api.event.rule.*;
 
 import javax.websocket.Session;

@@ -22,6 +22,7 @@ public class TestUtils {
                 .create(WebArchive.class, "drools-fiddle.war")
                 .addPackages(true,"org.droolsfiddle.beans")
                 .addPackages(true,"org.droolsfiddle.rest")
+                .addPackages(true,"org.droolsfiddle.websocket")
                 // do not include org.droolsfiddle.persistence on purpose, as we miss redis
                 .setWebXML(new File("src/main/webapp/WEB-INF/web.xml"))
                 .addAsLibraries(files)
