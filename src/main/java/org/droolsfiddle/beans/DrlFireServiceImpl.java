@@ -23,15 +23,13 @@ public class DrlFireServiceImpl implements DrlFireService {
 
         iMessage.setData("");
 
-        if (!drlContext.hasKieContainer()) {
+        if (!drlContext.hasKieBase()) {
             iMessage.setLog("ERROR: No Container defined.");
             return iMessage;
         }
 
 
-        KieContainer kContainer = drlContext.getKieContainer();
-
-        KieBase kBase = kContainer.getKieBase();
+        KieBase kBase = drlContext.getKieBase();
 
         if (kBase == null) {
             iMessage.setLog("ERROR: No KieBase defined.");

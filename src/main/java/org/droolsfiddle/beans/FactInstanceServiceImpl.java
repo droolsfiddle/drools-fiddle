@@ -31,15 +31,13 @@ public class FactInstanceServiceImpl implements FactInstanceService {
 
         resp.setData("");
 
-        if (!drlContext.hasKieContainer()) {
+        if (!drlContext.hasKieBase()) {
             resp.setLog("ERROR: No Container defined.");
             return resp;
         }
 
 
-        KieContainer kContainer = drlContext.getKieContainer();
-
-        KieBase kBase = kContainer.getKieBase();
+        KieBase kBase = drlContext.getKieBase();
 
         if (kBase == null) {
             resp.setLog("ERROR: No KieBase defined.");

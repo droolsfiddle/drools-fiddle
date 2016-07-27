@@ -47,7 +47,7 @@ public class DrlCompilerServiceImpl implements DrlCompilerService {
             kContainer = ks.newKieContainer(kr.getDefaultReleaseId());
             aLog.append(kContainer.getClassLoader());
 
-            drlContext.setKieContainer(kContainer);
+            drlContext.setKieBase(kContainer.getKieBase());
 
             // packages parsing
             List<Package> packs = new ArrayList<Package>();

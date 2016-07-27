@@ -19,3 +19,6 @@ then
     mark.setName("Mark");
     insert( mark );
 end
+
+
+{"id":0,"data":"import java.util.Date\n\ndeclare Address\n    name : String\nend\n\ndeclare Person\n    name : String\n    dateOfBirth : Date\n    address : Address\nend\n\nrule \"Using a declared Type\"\nwhen\n    $p : Person( name == \"Bob\" )\nthen\n    // Insert Mark, who is Bob's mate.\n    Person mark = new Person();\n    mark.setName(\"Mark\");\n    insert( mark );\nend","log":"","packages":[]}

@@ -9,13 +9,4 @@
 
     <context:component-scan base-package="org.droolsfiddle" />
 
-    <bean id="jedisConnFactory"
-          class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory"
-          p:host-name="#{systemEnvironment['REDIS_PORT_6379_TCP_ADDR']}"
-          p:port="#{systemEnvironment['REDIS_PORT_6379_TCP_PORT']}" />
-
-    <!-- redis template definition -->
-    <bean id="redisTemplate"
-          class="org.springframework.data.redis.core.RedisTemplate"
-          p:connection-factory-ref="jedisConnFactory"/>
 </beans>
