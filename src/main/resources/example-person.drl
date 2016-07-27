@@ -1,4 +1,5 @@
 import java.util.Date
+import java.lang.*;
 
 declare Address
     name : String
@@ -10,7 +11,7 @@ declare Person
     address : Address
 end
 
-rule "Using a declared Type"
+rule "Using a declared Type Mark"
 when
     $p : Person( name == "Bob" )
 then
@@ -18,7 +19,19 @@ then
     Person mark = new Person();
     mark.setName("Mark");
     insert( mark );
+    Thread.sleep(1000);
 end
 
+rule "Using a declared Type 2"
+no-loop true
+when
+    p : Person( name == "Mark" )
+then
+    // Insert Mark, who is Bob's mate.
+    Address myadd = new Address();
+    myadd.setName("Poudlard");
+    modify( p ) {setAddress( myadd )}
+    Thread.sleep(1000);
+end
 
-{"id":0,"data":"import java.util.Date\n\ndeclare Address\n    name : String\nend\n\ndeclare Person\n    name : String\n    dateOfBirth : Date\n    address : Address\nend\n\nrule \"Using a declared Type\"\nwhen\n    $p : Person( name == \"Bob\" )\nthen\n    // Insert Mark, who is Bob's mate.\n    Person mark = new Person();\n    mark.setName(\"Mark\");\n    insert( mark );\nend","log":"","packages":[]}
+//{"id":0,"data":"import java.util.Date\n\ndeclare Address\n    name : String\nend\n\ndeclare Person\n    name : String\n    dateOfBirth : Date\n    address : Address\nend\n\nrule \"Using a declared Type\"\nwhen\n    $p : Person( name == \"Bob\" )\nthen\n    // Insert Mark, who is Bob's mate.\n    Person mark = new Person();\n    mark.setName(\"Mark\");\n    insert( mark );\nend","log":"","packages":[]}

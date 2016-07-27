@@ -12,12 +12,9 @@ import org.droolsfiddle.rest.Message;
 import org.jboss.resteasy.logging.Logger;
 import org.kie.api.io.ResourceType;
 import org.kie.internal.io.ResourceFactory;
-import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
 
 @Named
 public class DrlVerifierServiceImpl implements DrlVerifierService {

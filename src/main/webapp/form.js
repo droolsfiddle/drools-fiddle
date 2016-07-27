@@ -16,7 +16,7 @@ helloAjaxApp.controller("myController", ['$scope', '$http', function($scope, $ht
 
 		res.success(function(data, status, headers, config) {
             console.log(data);
-            $scope.message = data;
+            $scope.message.packages = data.packages;
             //$scope.message.packages = JSON.stringify($scope.message.packages, null, 2);
 
 		});
@@ -38,12 +38,12 @@ helloAjaxApp.controller("myController", ['$scope', '$http', function($scope, $ht
 		var res = $http.post('/drools-fiddle/rest/facts/insert/' + iFactName, dataObj, options);
 
 		res.success(function(data, status, headers, config) {
-            $scope.message.log = data.log
+            //$scope.message.log = data.log
             console.log(data);
 
 		});
 		res.error(function(data, status, headers, config) {
-            $scope.message.log = data.log
+            //$scope.message.log = data.log
             console.log(data);
 		});
 
@@ -59,11 +59,11 @@ helloAjaxApp.controller("myController", ['$scope', '$http', function($scope, $ht
 
         res.success(function(data, status, headers, config) {
             console.log(data);
-            $scope.message.log = data.log
+            //$scope.message.log = data.log
 
         });
         res.error(function(data, status, headers, config) {
-            $scope.message.log = data.log
+            //$scope.message.log = data.log
             console.log(data);
         });
     };

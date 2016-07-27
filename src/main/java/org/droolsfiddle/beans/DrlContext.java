@@ -6,6 +6,8 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Component;
 
+import javax.websocket.Session;
+
 /**
  * Created by gurfm on 15/06/16.
  */
@@ -25,7 +27,14 @@ public class DrlContext {
         this.kieBase = kieContainer;
     }
 
+    public Session getWebSocketSession() { return webSocketSession; }
+
+    public void setWebSocketSession(Session webSocketSession) { this.webSocketSession = webSocketSession; }
+
+
     private KieBase kieBase;
+
+    private Session webSocketSession;
 
 
 

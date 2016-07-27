@@ -35,6 +35,10 @@
         <listener-class>org.jboss.resteasy.plugins.spring.SpringContextLoaderListener</listener-class>
     </listener>
 
+    <listener>
+        <listener-class>com.rest.RequestListener</listener-class>
+    </listener>
+
     <servlet>
         <servlet-name>resteasy-servlet</servlet-name>
         <servlet-class>
