@@ -1,4 +1,4 @@
-package com.rest;
+package org.droolsfiddle.websocket;
 
 import org.jboss.resteasy.logging.Logger;
 

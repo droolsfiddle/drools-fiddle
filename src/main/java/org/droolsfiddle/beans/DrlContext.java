@@ -1,5 +1,6 @@
 package org.droolsfiddle.beans;
 
+import org.kie.api.KieBase;
 import org.kie.api.runtime.KieContainer;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
@@ -14,23 +15,24 @@ import javax.websocket.Session;
 @Scope(value="session", proxyMode= ScopedProxyMode.TARGET_CLASS)
 public class DrlContext {
 
-    public boolean hasKieContainer() {
-        return kieContainer != null;
+    public boolean hasKieBase() {
+        return kieBase != null;
     }
 
-    public KieContainer getKieContainer() {
-        return kieContainer;
+    public KieBase getKieBase() {
+        return kieBase;
     }
 
-    public void setKieContainer(KieContainer kieContainer) {
-        this.kieContainer = kieContainer;
+    public void setKieBase(KieBase kieContainer) {
+        this.kieBase = kieContainer;
     }
 
     public Session getWebSocketSession() { return webSocketSession; }
 
     public void setWebSocketSession(Session webSocketSession) { this.webSocketSession = webSocketSession; }
 
-    private KieContainer kieContainer;
+
+    private KieBase kieBase;
 
     private Session webSocketSession;
 
