@@ -11,8 +11,7 @@ window.onload = function () {
 
     var websocket = null;
 
-    var wsURI = 'ws://127.0.0.1:8080/drools-fiddle/websocket/log';
-    websocket = new WebSocket(wsURI);
+    websocket = createWebSocket('/drools-fiddle/websocket/log');
 
     websocket.onopen = function() {
         console.log('Open');
@@ -37,6 +36,11 @@ window.onload = function () {
         displayMessage('The connection was closed or timed out. Please click the Open Connection button to reconnect.');
         document.getElementById('sayHello').disabled = true;
     };
+
+    function createWebSocket(path) {
+        var protocolPrefix = (window.location.protocol === 'https:') ? 'wss:' : 'ws:';
+        return new WebSocket(protocolPrefix + '//' + location.host + path);
+    }
 
     function disconnect() {
         if (websocket !== null) {
