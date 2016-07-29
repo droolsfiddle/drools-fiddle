@@ -1,5 +1,6 @@
 package org.droolsfiddle.persistence.redis;
 
+import org.hashids.Hashids;
 import org.kie.api.KieBase;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.support.atomic.RedisAtomicLong;
@@ -17,6 +18,22 @@ public class DrlRepository {
     private final RedisTemplate<String, KieBase> template;
 
     private final RedisAtomicLong contextIdCounter;
+
+    private static final short minHashLen = 8;
+
+    private static final String salt =
+            "WTHNi59UkQAMCTUXVjVz" +
+            "mL8q82iVdJqcUKNbUXIT" +
+            "uLRVS8iSKe7HJU533NcS" +
+            "qBc9A1AaTFQrffBVwdMb" +
+            "F8UlybL7U3dpVLb42Pj5" +
+            "SCApnLsrnlhWkCKKWVfq" +
+            "ERNHJtGMlxehK0igwyzW" +
+            "q5uG0wHQ5xiREwMXJDvr" +
+            "0MMOAmuQ7xn1sDQ0eGQZ" +
+            "CCkFlf2IICVSYcyd1epS";
+
+    private final Hashids hashids = new Hashids(salt, minHashLen);
 /*
     public static class KieContainerSerializer implements RedisSerializer<KieContainer>
     {
@@ -47,7 +64,7 @@ public class DrlRepository {
 
     public String post(KieBase container) {
 
-        String cid = String.valueOf(contextIdCounter.incrementAndGet());
+        String cid = hashids.encode(contextIdCounter.incrementAndGet());
 
         contexts().put(cid,container);
 
@@ -56,6 +73,10 @@ public class DrlRepository {
 
     public void put(String cid, KieBase container) {
         contexts().put(cid,container);
+    }
+
+    public boolean has(String cid) {
+        return contexts().containsKey(cid);
     }
 
 

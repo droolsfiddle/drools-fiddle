@@ -154,7 +154,7 @@
             <artifactId>javax.inject</artifactId>
             <version>1</version>
         </dependency>
-
+        <!-- redis -->
         <dependency>
             <groupId>org.springframework.data</groupId>
             <artifactId>spring-data-redis</artifactId>
@@ -164,6 +164,12 @@
             <groupId>redis.clients</groupId>
             <artifactId>jedis</artifactId>
             <version>2.9.0</version>
+        </dependency>
+        <!-- hashids for nice unique url ids -->
+        <dependency>
+            <groupId>org.hashids</groupId>
+            <artifactId>hashids</artifactId>
+            <version>1.0.1</version>
         </dependency>
 
         <dependency>
