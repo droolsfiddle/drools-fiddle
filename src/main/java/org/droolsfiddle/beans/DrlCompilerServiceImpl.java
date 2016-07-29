@@ -1,5 +1,6 @@
 package org.droolsfiddle.beans;
 
+import org.droolsfiddle.persistence.beans.KieBaseWrapper;
 import org.droolsfiddle.rest.*;
 import org.droolsfiddle.rest.Package;
 import org.jboss.resteasy.logging.Logger;
@@ -47,7 +48,7 @@ public class DrlCompilerServiceImpl implements DrlCompilerService {
             kContainer = ks.newKieContainer(kr.getDefaultReleaseId());
             aLog.append(kContainer.getClassLoader());
 
-            drlContext.setKieBase(kContainer.getKieBase());
+            drlContext.setKieBase(new KieBaseWrapper(iMessage.getData(),kContainer.getKieBase()));
 
             // packages parsing
             List<Package> packs = new ArrayList<Package>();

@@ -1,5 +1,6 @@
 package org.droolsfiddle.persistence.redis;
 
+import org.droolsfiddle.persistence.beans.KieBaseWrapper;
 import org.hashids.Hashids;
 import org.kie.api.KieBase;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -15,7 +16,7 @@ import javax.inject.Named;
 @Named
 public class DrlRepository {
 
-    private final RedisTemplate<String, KieBase> template;
+    private final RedisTemplate<String, KieBaseWrapper> template;
 
     private final RedisAtomicLong contextIdCounter;
 
@@ -57,12 +58,12 @@ public class DrlRepository {
     }
 */
     @Inject
-    DrlRepository(RedisTemplate<String, KieBase> template) {
+    DrlRepository(RedisTemplate<String, KieBaseWrapper> template) {
         this.template = template;
         contextIdCounter = new RedisAtomicLong("global:cid", template.getConnectionFactory());
     }
 
-    public String post(KieBase container) {
+    public String post(KieBaseWrapper container) {
 
         String cid = hashids.encode(contextIdCounter.incrementAndGet());
 
@@ -71,8 +72,8 @@ public class DrlRepository {
         return cid;
     }
 
-    public void put(String cid, KieBase container) {
-        contexts().put(cid,container);
+    public void put(String cid, KieBaseWrapper kieBase) {
+        contexts().put(cid,kieBase);
     }
 
     public boolean has(String cid) {
@@ -80,12 +81,12 @@ public class DrlRepository {
     }
 
 
-    public KieBase get(String cid) {
+    public KieBaseWrapper get(String cid) {
         return contexts().get(cid);
     }
 
-    private DefaultRedisMap<String, KieBase> contexts() {
-        return new DefaultRedisMap<String, KieBase>("contexts", template);
+    private DefaultRedisMap<String, KieBaseWrapper> contexts() {
+        return new DefaultRedisMap<String, KieBaseWrapper>("contexts", template);
     }
 
 }

@@ -74,6 +74,7 @@ public class DrlContextPersistenceServiceImpl implements DrlContextPersistenceSe
                 dto.setResult(false);
             } else {
                 context.setKieBase(repository.get(cid));
+                dto.setDrl(context.getKieBase().getDrl());
                 dto.setResult(true);
             }
         } catch (Exception e) {
