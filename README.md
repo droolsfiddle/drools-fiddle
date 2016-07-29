@@ -5,6 +5,10 @@
     mvn wildfly:deploy
 ## integration tests
     mvn clean verify -Parq-wildfly-managed
+## docker build and run containers
+    mvn clean install -Pdocker
+## docker stop containers
+    mvn docker:stop -Pdocker
 ## todo
 - [X] figure out why cookie is not kept across subsequent arquillian service calls (hence session is lost)
 - [X] static html files to be served by jboss 
