@@ -25,9 +25,19 @@ public class DrlContextPersistenceServiceImpl implements DrlContextPersistenceSe
     @Override
     public ContextPersistenceDTO post() {
         ContextPersistenceDTO dto = new ContextPersistenceDTO();
-
-        dto.setContextId(repository.post(context.getKieBase()));
-        dto.setResult(true);
+        try {
+            if (context.getKieBase() == null) {
+                dto.setError("No context to be saved");
+                dto.setResult(false);
+            } else {
+                dto.setContextId(repository.post(context.getKieBase()));
+                dto.setResult(true);
+            }
+        } catch (Exception e) {
+            logger.error("Caught exception in post context",e);
+            dto.setResult(false);
+            dto.setError(e.getMessage());
+        }
 
         return dto;
     }
@@ -35,16 +45,42 @@ public class DrlContextPersistenceServiceImpl implements DrlContextPersistenceSe
     @Override
     public ContextPersistenceDTO put(String cid) {
         ContextPersistenceDTO dto = new ContextPersistenceDTO();
-        repository.put(cid,context.getKieBase());
-        dto.setResult(true);
+        dto.setContextId(cid);
+        try {
+            if (!repository.has(cid)) {
+                dto.setError("No context corresponding to id " + cid);
+                dto.setResult(false);
+            } else if (context.getKieBase() == null) {
+                dto.setError("No context to be saved");
+                dto.setResult(false);
+            } else {
+                repository.put(cid, context.getKieBase());
+                dto.setResult(true);
+            }
+        } catch (Exception e) {
+            dto.setResult(false);
+            dto.setError(e.getMessage());
+        }
         return dto;
     }
 
     @Override
     public ContextPersistenceDTO get(String cid) {
         ContextPersistenceDTO dto = new ContextPersistenceDTO();
-        context.setKieBase(repository.get(cid));
-        dto.setResult(true);
+        dto.setContextId(cid);
+        try {
+            if (!repository.has(cid)) {
+                dto.setError("No context corresponding to id " + cid);
+                dto.setResult(false);
+            } else {
+                context.setKieBase(repository.get(cid));
+                dto.setDrl(context.getKieBase().getDrl());
+                dto.setResult(true);
+            }
+        } catch (Exception e) {
+            dto.setResult(false);
+            dto.setError(e.getMessage());
+        }
         return dto;
     }
 

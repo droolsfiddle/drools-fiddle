@@ -29,7 +29,7 @@ public class DrlFireServiceImpl implements DrlFireService {
         }
 
 
-        KieBase kBase = drlContext.getKieBase();
+        KieBase kBase = drlContext.getKieBase().getKieBase();
 
         if (kBase == null) {
             iMessage.setLog("ERROR: No KieBase defined.");

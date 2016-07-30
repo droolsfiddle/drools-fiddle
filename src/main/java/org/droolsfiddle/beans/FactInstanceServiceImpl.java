@@ -51,7 +51,7 @@ public class FactInstanceServiceImpl implements FactInstanceService {
         }
 
 
-        KieBase kBase = drlContext.getKieBase();
+        KieBase kBase = drlContext.getKieBase().getKieBase();
 
         if (kBase == null) {
             resp.setLog("ERROR: No KieBase defined.");

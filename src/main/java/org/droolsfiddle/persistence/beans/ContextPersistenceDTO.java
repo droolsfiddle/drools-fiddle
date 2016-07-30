@@ -9,6 +9,10 @@ public class ContextPersistenceDTO {
 
     private boolean result;
 
+    private String error;
+
+    private String drl;
+
     public String getContextId() {
         return contextId;
     }
@@ -21,7 +25,23 @@ public class ContextPersistenceDTO {
         return result;
     }
 
+    public String getDrl() {
+        return drl;
+    }
+
+    public void setDrl(String drl) {
+        this.drl = drl;
+    }
+
     public void setResult(boolean result) {
         this.result = result;
+    }
+
+    public String getError() {
+        return error;
+    }
+
+    public void setError(String error) {
+        this.error = error;
     }
 }

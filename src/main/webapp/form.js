@@ -1,8 +1,20 @@
-var helloAjaxApp = angular.module("helloAjaxApp", []);
+var helloAjaxApp = angular.module("helloAjaxApp", ['ngRoute']);
 
-helloAjaxApp.controller("myController", ['$scope', '$http', function($scope, $http) {
+helloAjaxApp.config(
+['$routeProvider', function($routeProvider) {
+  $routeProvider.
+  when('/:id', {}).
+  otherwise({
+    redirectTo: '/'
+  });
+}]);
+
+helloAjaxApp.controller("myController", ['$scope',
+        '$http', '$route', '$routeParams', '$location', function($scope, $http, $route, $routeParams, $location) {
 
     $scope.attribute = {};
+
+    $scope.message = {};
 
 	$scope.compileDrl = function(){
 
@@ -67,5 +79,43 @@ helloAjaxApp.controller("myController", ['$scope', '$http', function($scope, $ht
             console.log(data);
         });
     };
+
+    $scope.saveDrl = function(){
+
+            var res = $http.post('/drools-fiddle/rest/context');
+
+            res.success(function(data, status, headers, config) {
+                console.log(data);
+                if (data.result) {
+                    $location.path('/'+data.contextId)
+                }
+            });
+            res.error(function(data, status, headers, config) {
+                //$scope.message.log = data.log
+                console.log(data);
+            });
+     };
+
+    $scope.$on('$routeChangeSuccess', function() {
+        // $routeParams should be populated here
+        console.log($routeParams);
+
+        if (!$routeParams.id) {
+            return;
+        }
+
+        var res = $http.get('/drools-fiddle/rest/context/'+$routeParams.id);
+
+        res.success(function(data, status, headers, config) {
+            console.log(data);
+                if (data.result) {
+                    $scope.message.data = data.drl;
+                }
+            });
+            res.error(function(data, status, headers, config) {
+                //$scope.message.log = data.log
+                console.log(data);
+            });
+    });
 
 }]);
