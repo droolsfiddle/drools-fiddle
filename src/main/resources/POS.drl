@@ -1,0 +1,25 @@
+declare POS
+    office: String
+end
+
+declare POSMatch
+    id: String
+end
+
+rule "POS1"
+when
+    $p : POS( office== "NCE1A0ABR" )
+then
+    // Insert Mark, who is Bob's mate.
+    POSMatch pos = new POSMatch();
+    pos.setId("42");
+    insert( pos);
+    Thread.sleep(1000);
+end
+
+rule "Rule 1"
+when
+    $p : POSMatch( id== "42" )
+then
+    Thread.sleep(1000);
+end

@@ -1,19 +1,52 @@
-    function addNode(data) {
+    function addFactInstance(data) {
         //var newId = (Math.random() * 1e7).toString(32);
-        var newId = data.object.name;
+        var newId = data.id;
         var dataJson = JSON.stringify(data.object, null, 2);
-        nodes.add({id:newId, label:newId, title:dataJson});
+        nodes.add({id:newId, color : 'blue', title:dataJson, group : 2});
+        edges.add({from: data.type, to: newId, dashes:true});
+        if(data.from.length > 0) {
+            edges.add({from: data.from[0], to: newId, arrows:'to'});
+        } else {
+            edges.add({from: 0, to: newId, arrows:'to'});
+        }
+    }
+
+    function addFactType(data) {
+        var newId = (Math.random() * 1e7).toString(32);
+        //var newId = data.object.name;
+        var dataJson = JSON.stringify(data.object.attributes, null, 2);
+        nodes.add({id:data.object.name, label:data.object.name, color : 'red', shape : 'box', title:dataJson, group : 1});
+    }
+
+    function addRule(data) {
+        var newId = (Math.random() * 1e7).toString(32);
+        //var newId = data.object.name;
+        var dataJson = JSON.stringify(data.object, null, 2);
+        nodes.add({id:data.object.name, label:data.object.name, color : 'orange', shape : 'box', title:dataJson, group : 3});
+    }
+
+    function fire(data) {
+        var node = nodes.get(data.object);
+        node.color = {background:'orange', border:'red'};
+        nodes.update(node);
+        for (i = 0; i < data.from.length; i++) {
+            edges.add({from: data.from[i], to: data.object, arrows:'to', color: 'purple'});
+        }
     }
 
     var actionHandle = {
-        "insert-fact": addNode,
+        "insert-fact": addFactInstance,
+        "insert-fact-type": addFactType,
+        "insert-rule": addRule,
         "update-fact": console.log,
         "delete-fact": console.log,
-        "fire": console.log
+        "fire": fire
     }
 
     // create an array with nodes
-    var nodes = new vis.DataSet([]);
+    var nodes = new vis.DataSet([
+    {id:0, label : "User", color : 'pink', shape : 'icon', group : 'users', title : "42"}
+    ]);
 
     // create an array with edges
     var edges = new vis.DataSet([]);
@@ -24,12 +57,41 @@
         nodes: nodes,
         edges: edges
     };
-    var options = {interaction:{hover:true}};
-    var network = new vis.Network(container, data, options);
 
+    /*
+          layout: {
+            hierarchical: {
+              enabled: true,
+             levelSeparation: 150
+            }
+          },
+          physics: {
+            hierarchicalRepulsion: {
+              nodeDistance: 150
+            }
+          },
+    */
+   // var options = {interaction:{hover:true}};
+    var options = {
+      interaction:{hover:true},
+      height: '90%',
+      groups: {
+        users: {
+          shape: 'icon',
+          icon: {
+            face: 'Ionicons',
+            code: '\uf47e',
+            size: 50,
+            color: '#aa00ff'
+          }
+        }
+      }
+    };
+
+    var network = new vis.Network(container, data, options);
     network.on("click", function (params) {
         params.event = "[original event]";
-        document.getElementById('eventSpan').innerHTML = '<h2>Click event:</h2>' + JSON.stringify(params, null, 4);
+        document.getElementById('eventSpan').innerHTML = '<h4>Node: ' + params.nodes + '</h4>' + nodes.get(params.nodes)[0].title;
     });
 /*
 network.on("doubleClick", function (params) {

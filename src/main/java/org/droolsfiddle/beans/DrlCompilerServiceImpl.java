@@ -1,20 +1,27 @@
 package org.droolsfiddle.beans;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.droolsfiddle.persistence.beans.KieBaseWrapper;
 import org.droolsfiddle.rest.*;
 import org.droolsfiddle.rest.Package;
+import org.droolsfiddle.websocket.CustomDroolsEvent;
 import org.jboss.resteasy.logging.Logger;
 import org.kie.api.KieServices;
 import org.kie.api.builder.KieBuilder;
 import org.kie.api.builder.KieFileSystem;
 import org.kie.api.builder.KieRepository;
 import org.kie.api.definition.KiePackage;
+import org.kie.api.definition.rule.Rule;
 import org.kie.api.definition.type.FactField;
 import org.kie.api.definition.type.FactType;
 import org.kie.api.runtime.KieContainer;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.servlet.http.HttpServletRequest;
+import javax.websocket.Session;
+import javax.ws.rs.core.Context;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,12 +30,20 @@ public class DrlCompilerServiceImpl implements DrlCompilerService {
 
     private Logger logger = Logger.getLogger(DrlCompilerServiceImpl.class);
 
+    @Context
+    private HttpServletRequest request;
+
     @Inject
     DrlContext drlContext;
+
+    private ObjectMapper mapper = new ObjectMapper();
+
 
     public Message postDrlCompile(Message iMessage) {
         logger.debug("Init validation drl: DrlParser");
         StringBuilder aLog = new StringBuilder();
+
+        Session wsSession = (Session) request.getSession().getAttribute(Session.class.getName());
 
         KieServices ks = KieServices.Factory.get();
         KieRepository kr = ks.getRepository();
@@ -56,6 +71,16 @@ public class DrlCompilerServiceImpl implements DrlCompilerService {
                 Package aPack = new Package();
                 aPack.setName(pack.getName());
                 List<Fact> facts = new ArrayList<Fact>();
+                for (Rule rule : pack.getRules()) {
+                    org.droolsfiddle.rest.Rule aRule = new org.droolsfiddle.rest.Rule();
+                    aRule.setName(rule.getName());
+                    CustomDroolsEvent aEvent = new CustomDroolsEvent("insert-rule").map(aRule);
+                    try {
+                        wsSession.getBasicRemote().sendText(mapper.writeValueAsString(aEvent));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
                 for (FactType declare : pack.getFactTypes()) {
                     Fact aFact = new Fact();
                     List<Attribute> attributes = new ArrayList<Attribute>();
@@ -69,6 +94,12 @@ public class DrlCompilerServiceImpl implements DrlCompilerService {
                     }
                     aFact.setAttributes(attributes);
                     facts.add(aFact);
+                    CustomDroolsEvent aEvent = new CustomDroolsEvent("insert-fact-type").map(aFact);
+                    try {
+                        wsSession.getBasicRemote().sendText(mapper.writeValueAsString(aEvent));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
                 aPack.setFacts(facts);
                 packs.add(aPack);
