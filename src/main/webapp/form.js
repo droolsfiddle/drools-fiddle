@@ -19,7 +19,7 @@ helloAjaxApp.controller("myController", ['$scope',
 	$scope.compileDrl = function(){
 
 		var dataObj = {
-		        data : $scope.message.data,
+		        data : btoa($scope.message.data),
 		};
 
 		var res = $http.post('/drools-fiddle/rest/message/drlCompile', dataObj);
@@ -41,13 +41,15 @@ helloAjaxApp.controller("myController", ['$scope',
 	    console.log(iFactName);
         console.log($scope.attribute[iFactName]);
 
-		var dataObj = $scope.attribute[iFactName];
+		var dataObj = {
+		    data : btoa(JSON.stringify($scope.attribute[iFactName]))
+		}
 
-		var options = {
-          headers: { 'Content-Type': ['text/plain'] }
-        };
+		//var options = {
+        //  headers: { 'Content-Type': ['text/plain'] }
+        //};
 
-		var res = $http.post('/drools-fiddle/rest/facts/insert/' + iFactName, dataObj, options);
+		var res = $http.post('/drools-fiddle/rest/facts/insert/' + iFactName, dataObj);
 
 		res.success(function(data, status, headers, config) {
             //$scope.message.log = data.log

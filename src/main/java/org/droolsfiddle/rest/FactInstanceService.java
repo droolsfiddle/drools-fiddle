@@ -8,10 +8,10 @@ import javax.ws.rs.core.MediaType;
  */
 @Path("/facts")
 @Produces(MediaType.APPLICATION_JSON)
-@Consumes(MediaType.TEXT_PLAIN) //TODO: find a way to make it work with APPLICATION_JSON!
+@Consumes(MediaType.APPLICATION_JSON)
 public interface FactInstanceService {
 
     @POST
     @Path("/insert/{type}")
-    Message postInsertFact(@PathParam("type")String iType, String iPayload);
+    Message postInsertFact(@PathParam("type")String iType, Message iMessage);
 }

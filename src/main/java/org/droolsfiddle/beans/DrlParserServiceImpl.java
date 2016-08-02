@@ -7,10 +7,13 @@ import org.drools.compiler.lang.descr.AbstractClassTypeDeclarationDescr;
 import org.drools.compiler.lang.descr.PackageDescr;
 import org.droolsfiddle.rest.*;
 import org.jboss.resteasy.logging.Logger;
+import org.jboss.resteasy.util.Base64;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+import java.io.IOException;
 import java.lang.*;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,10 +34,22 @@ public class DrlParserServiceImpl implements DrlParserService {
 
     public Message postDrlParser(Message iMessage) throws DroolsParserException {
         logger.debug("Init validation drl: DrlParser");
+
+        String drl;
+        try {
+            drl = new String(Base64.decode(iMessage.getData()),
+                    Charset.forName("UTF-8"));
+        } catch (IOException e) {
+            iMessage.setLog("error while decoding input drl: "+e.getMessage());
+            return iMessage;
+        }
+
+        iMessage.setData("");
+
         StringBuilder aLog = new StringBuilder();
 
         DrlParser parser = new DrlParser();
-        PackageDescr descr = parser.parse(true, iMessage.getData());
+        PackageDescr descr = parser.parse(true, drl);
         logger.debug(parser.getErrors().toString());
 
         if (parser.hasErrors()) {
