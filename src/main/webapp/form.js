@@ -22,7 +22,7 @@ helloAjaxApp.controller("myController", ['$scope',
 		        data : btoa($scope.message.data),
 		};
 
-		var res = $http.post('/drools-fiddle/rest/message/drlCompile', dataObj);
+		var res = $http.post('/rest/message/drlCompile', dataObj);
 //		var res = $http.post('http://127.0.0.1:8080/drools-fiddle/rest/message/drlParser', dataObj);
 //		var res = $http.post('http://127.0.0.1:8080/drools-fiddle/rest/message/droolsverifier', dataObj);
 
@@ -49,7 +49,7 @@ helloAjaxApp.controller("myController", ['$scope',
         //  headers: { 'Content-Type': ['text/plain'] }
         //};
 
-		var res = $http.post('/drools-fiddle/rest/facts/insert/' + iFactName, dataObj);
+		var res = $http.post('/rest/facts/insert/' + iFactName, dataObj);
 
 		res.success(function(data, status, headers, config) {
             //$scope.message.log = data.log
@@ -69,7 +69,7 @@ helloAjaxApp.controller("myController", ['$scope',
                 data : "",
         };
 
-        var res = $http.post('/drools-fiddle/rest/message/drlFire', dataObj);
+        var res = $http.post('/rest/message/drlFire', dataObj);
 
         res.success(function(data, status, headers, config) {
             console.log(data);
@@ -84,7 +84,7 @@ helloAjaxApp.controller("myController", ['$scope',
 
     $scope.saveDrl = function(){
 
-            var res = $http.post('/drools-fiddle/rest/context');
+            var res = $http.post('/rest/context');
 
             res.success(function(data, status, headers, config) {
                 console.log(data);
@@ -106,7 +106,7 @@ helloAjaxApp.controller("myController", ['$scope',
             return;
         }
 
-        var res = $http.get('/drools-fiddle/rest/context/'+$routeParams.id);
+        var res = $http.get('/rest/context/'+$routeParams.id);
 
         res.success(function(data, status, headers, config) {
             console.log(data);

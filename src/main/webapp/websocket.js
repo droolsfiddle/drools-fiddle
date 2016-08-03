@@ -11,7 +11,7 @@ window.onload = function () {
 
     var websocket = null;
 
-    websocket = createWebSocket('/drools-fiddle/websocket/log');
+    websocket = createWebSocket('/websocket/log');
 
     websocket.onopen = function() {
         console.log('Open');

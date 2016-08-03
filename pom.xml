@@ -370,7 +370,7 @@
 
                                     <run>
                                         <ports>
-                                            <port>8080:8080</port>
+                                            <port>80:8080</port>
                                         </ports>
                                         <links>
                                             <link>redis:redis</link>
