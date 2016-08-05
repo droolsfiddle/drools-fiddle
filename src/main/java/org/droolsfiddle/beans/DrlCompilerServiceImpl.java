@@ -6,6 +6,7 @@ import org.droolsfiddle.rest.*;
 import org.droolsfiddle.rest.Package;
 import org.droolsfiddle.websocket.CustomDroolsEvent;
 import org.jboss.resteasy.logging.Logger;
+import org.jboss.resteasy.util.Base64;
 import org.kie.api.KieServices;
 import org.kie.api.builder.KieBuilder;
 import org.kie.api.builder.KieFileSystem;
@@ -22,6 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.websocket.Session;
 import javax.ws.rs.core.Context;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,6 +43,18 @@ public class DrlCompilerServiceImpl implements DrlCompilerService {
 
     public Message postDrlCompile(Message iMessage) {
         logger.debug("Init validation drl: DrlParser");
+
+        String drl;
+        try {
+            drl = new String(Base64.decode(iMessage.getData()),
+                    Charset.forName("UTF-8"));
+        } catch (IOException e) {
+            iMessage.setLog("error while decoding input drl: "+e.getMessage());
+            return iMessage;
+        }
+
+        iMessage.setData("");
+
         StringBuilder aLog = new StringBuilder();
 
         Session wsSession = (Session) request.getSession().getAttribute(Session.class.getName());
@@ -49,7 +63,7 @@ public class DrlCompilerServiceImpl implements DrlCompilerService {
         KieRepository kr = ks.getRepository();
         KieFileSystem kfs = ks.newKieFileSystem();
 
-        kfs.write("src/main/resources/temp.drl", iMessage.getData());
+        kfs.write("src/main/resources/temp.drl", drl);
 
         KieBuilder kb = ks.newKieBuilder(kfs);
         KieContainer kContainer;
@@ -63,7 +77,7 @@ public class DrlCompilerServiceImpl implements DrlCompilerService {
             kContainer = ks.newKieContainer(kr.getDefaultReleaseId());
             aLog.append(kContainer.getClassLoader());
 
-            drlContext.setKieBase(new KieBaseWrapper(iMessage.getData(),kContainer.getKieBase()));
+            drlContext.setKieBase(new KieBaseWrapper(drl,kContainer.getKieBase()));
 
             // packages parsing
             List<Package> packs = new ArrayList<Package>();

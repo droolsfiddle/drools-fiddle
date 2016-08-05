@@ -6,6 +6,7 @@ import org.droolsfiddle.websocket.audit.CustomDebugRuleRuntimeEventListener;
 import org.droolsfiddle.rest.FactInstanceService;
 import org.droolsfiddle.rest.Message;
 import org.jboss.resteasy.logging.Logger;
+import org.jboss.resteasy.util.Base64;
 import org.kie.api.KieBase;
 import org.kie.api.definition.KiePackage;
 import org.kie.api.definition.type.FactType;
@@ -17,6 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.websocket.Session;
 import javax.ws.rs.core.Context;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import javax.inject.Named;
 
 /**
@@ -33,7 +35,7 @@ public class FactInstanceServiceImpl implements FactInstanceService {
     @Inject
     DrlContext drlContext;
 
-    public Message postInsertFact(String iType, String iPayload) {
+    public Message postInsertFact(String iType, Message iMessage) {
 
         Message resp = new Message();
 
@@ -73,7 +75,8 @@ public class FactInstanceServiceImpl implements FactInstanceService {
 
         Object fact;
         try {
-            fact = mapper.readValue(iPayload,factType.getFactClass());
+            fact = mapper.readValue(new String(Base64.decode(iMessage.getData()),
+                    Charset.forName("UTF-8")), factType.getFactClass());
         } catch (Exception e) {
             logger.error("Error while parsing fact",e);
             resp.setLog("ERROR: Error while parsing fact: " + e.getMessage());
