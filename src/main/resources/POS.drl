@@ -12,14 +12,26 @@ when
 then
     // Insert Mark, who is Bob's mate.
     POSMatch pos = new POSMatch();
-    pos.setId("42");
+    pos.setId("POS1");
+    insert( pos);
+    Thread.sleep(1000);
+end
+
+rule "POS2"
+when
+    $p : POS( office== "NCE1A0950" )
+then
+    // Insert Mark, who is Bob's mate.
+    POSMatch pos = new POSMatch();
+    pos.setId("POS2");
     insert( pos);
     Thread.sleep(1000);
 end
 
 rule "Rule 1"
 when
-    $p : POSMatch( id== "42" )
+    POSMatch( id== "POS1" )
+    POSMatch( id== "POS2" )
 then
     Thread.sleep(1000);
 end
