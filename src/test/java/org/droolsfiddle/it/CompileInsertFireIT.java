@@ -8,6 +8,7 @@ import org.jboss.arquillian.extension.rest.client.ArquillianResteasyResource;
 import org.jboss.arquillian.extension.rest.client.Header;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.junit.InSequence;
+import org.jboss.resteasy.util.Base64;
 import org.jboss.shrinkwrap.api.Archive;
 import static org.junit.Assert.*;
 import org.junit.Test;
@@ -20,6 +21,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -79,8 +81,7 @@ public class CompileInsertFireIT {
         // Given
 
         final Message request = new Message();
-
-        request.setData(DRL);
+        request.setData(Base64.encodeBytes(DRL.getBytes(Charset.forName("UTF-8"))));
 
         // When
 
@@ -110,8 +111,7 @@ public class CompileInsertFireIT {
         // Given
 
         final Message request = new Message();
-
-        request.setData(DRL);
+        request.setData(Base64.encodeBytes(DRL.getBytes(Charset.forName("UTF-8"))));
 
         compilerService.register(new CookieRequestFilter());
         compilerService.register(new CookieResponseFilter());
@@ -136,12 +136,13 @@ public class CompileInsertFireIT {
 
         // Given
 
-        final String fact = FACT;
+        final Message request = new Message();
+        request.setData(Base64.encodeBytes(FACT.getBytes(Charset.forName("UTF-8"))));
 
         factService.register(new CookieRequestFilter());
         factService.register(new CookieResponseFilter());
         final Invocation.Builder ib2 = factService.request();
-        final Invocation iv2 = ib2.buildPost(Entity.entity(fact, MediaType.TEXT_PLAIN_TYPE));
+        final Invocation iv2 = ib2.buildPost(Entity.entity(request, MediaType.APPLICATION_JSON_TYPE));
 
         // When
 

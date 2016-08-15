@@ -337,6 +337,7 @@
                                     <alias>redis</alias>
                                     <name>redis</name>
                                     <run>
+                                        <cmd>redis-server --appendonly yes</cmd>
                                         <wait>
                                             <log>The server is now ready to accept connections</log>
                                             <time>20000</time>
@@ -345,6 +346,11 @@
                                             <prefix>RD</prefix>
                                             <color>yellow</color>
                                         </log>
+                                        <volumes>
+                                            <bind>
+                                                <volume>redis-volume:/data</volume>
+                                            </bind>
+                                        </volumes>
                                     </run>
                                 </image>
                                 <image>
@@ -364,7 +370,7 @@
 
                                     <run>
                                         <ports>
-                                            <port>8080:8080</port>
+                                            <port>80:8080</port>
                                         </ports>
                                         <links>
                                             <link>redis:redis</link>
