@@ -18,6 +18,9 @@ helloAjaxApp.controller("myController", ['$scope',
 
 	$scope.compileDrl = function(){
 
+        // reset the graph
+        resetGraph();
+
 		var dataObj = {
 		        data : btoa($scope.message.data),
 		};

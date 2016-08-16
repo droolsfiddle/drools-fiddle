@@ -43,56 +43,51 @@
         "fire": fire
     }
 
-    // create an array with nodes
-    var nodes = new vis.DataSet([
-    {id:0, label : "User", color : 'pink', shape : 'icon', group : 'users', title : "42"}
-    ]);
+    var nodes;
+    var edges;
+    var network;
 
-    // create an array with edges
-    var edges = new vis.DataSet([]);
+    function resetGraph() {
+        // create an array with nodes
+        nodes = new vis.DataSet([
+        {id:0, label : "User", color : 'pink', shape : 'icon', group : 'users', title : "42"}
+        ]);
 
-    // create a network
-    var container = document.getElementById('mynetwork');
-    var data = {
-        nodes: nodes,
-        edges: edges
-    };
+        // create an array with edges
+        edges = new vis.DataSet([]);
 
-    /*
-          layout: {
-            hierarchical: {
-              enabled: true,
-             levelSeparation: 150
+        // create a network
+        var container = document.getElementById('mynetwork');
+        var data = {
+            nodes: nodes,
+            edges: edges
+        };
+
+        var options = {
+          interaction:{hover:true},
+          height: '90%',
+          groups: {
+            users: {
+              shape: 'icon',
+              icon: {
+                face: 'Ionicons',
+                code: '\uf47e',
+                size: 50,
+                color: '#aa00ff'
+              }
             }
-          },
-          physics: {
-            hierarchicalRepulsion: {
-              nodeDistance: 150
-            }
-          },
-    */
-   // var options = {interaction:{hover:true}};
-    var options = {
-      interaction:{hover:true},
-      height: '90%',
-      groups: {
-        users: {
-          shape: 'icon',
-          icon: {
-            face: 'Ionicons',
-            code: '\uf47e',
-            size: 50,
-            color: '#aa00ff'
           }
-        }
-      }
-    };
+        };
 
-    var network = new vis.Network(container, data, options);
-    network.on("click", function (params) {
-        params.event = "[original event]";
-        document.getElementById('eventSpan').innerHTML = '<h4>Node: ' + params.nodes + '</h4>' + nodes.get(params.nodes)[0].title;
-    });
+        network = new vis.Network(container, data, options);
+        network.on("click", function (params) {
+            params.event = "[original event]";
+            document.getElementById('eventSpan').innerHTML = '<h4>Node: ' + params.nodes + '</h4>' + nodes.get(params.nodes)[0].title;
+        });
+    }
+
+    resetGraph();
+
 /*
 network.on("doubleClick", function (params) {
     params.event = "[original event]";
