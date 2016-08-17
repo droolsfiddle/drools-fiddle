@@ -20,6 +20,8 @@ helloAjaxApp.controller("myController", ['$scope',
 
         // reset the graph
         resetGraph();
+        queue = [];
+        index = queue.length - 1;
 
 		var dataObj = {
 		        data : btoa($scope.message.data),

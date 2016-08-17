@@ -1,36 +1,54 @@
     function addFactInstance(data) {
-        //var newId = (Math.random() * 1e7).toString(32);
-        var newId = data.id;
-        var dataJson = JSON.stringify(data.object, null, 2);
-        nodes.add({id:newId, color : 'blue', title:dataJson, group : 2});
-        edges.add({from: data.type, to: newId, dashes:true});
-        if(data.from.length > 0) {
-            edges.add({from: data.from[0], to: newId, arrows:'to'});
-        } else {
-            edges.add({from: 0, to: newId, arrows:'to'});
+        event = {'action' : 'insert-fact', 'after' : data};
+        queue.push(event);
+        if ($("[name='checkbox-live']").bootstrapSwitch('state')) {
+            nextFI(data);
         }
     }
 
     function addFactType(data) {
         var newId = (Math.random() * 1e7).toString(32);
-        //var newId = data.object.name;
-        var dataJson = JSON.stringify(data.object.attributes, null, 2);
-        nodes.add({id:data.object.name, label:data.object.name, color : 'red', shape : 'box', title:dataJson, group : 1});
+        data.id = newId;
+        event = {'action' : 'insert-fact-type', 'after' : data};
+        queue.push(event);
+        if ($("[name='checkbox-live']").bootstrapSwitch('state')) {
+            nextFT(data);
+        }
     }
 
     function addRule(data) {
-        var newId = (Math.random() * 1e7).toString(32);
-        //var newId = data.object.name;
-        var dataJson = JSON.stringify(data.object, null, 2);
-        nodes.add({id:data.object.name, label:data.object.name, color : 'orange', shape : 'box', title:dataJson, group : 3});
+        event = {'action' : 'insert-rule', 'after' : data};
+        queue.push(event);
+        if ($("[name='checkbox-live']").bootstrapSwitch('state')) {
+            nextR(data);
+        }
     }
 
     function fire(data) {
-        var node = nodes.get(data.object);
-        node.color = {background:'orange', border:'red'};
-        nodes.update(node);
-        for (i = 0; i < data.from.length; i++) {
-            edges.add({from: data.from[i], to: data.object, arrows:'to', color: 'purple'});
+        event = {'action' : 'fire', 'after' : data};
+        queue.push(event);
+        if ($("[name='checkbox-live']").bootstrapSwitch('state')) {
+            nextF(data);
+        }
+    }
+
+    function previous() {
+        console.log(index);
+        if (index >= 0) {
+            previousHandle[queue[index].action](queue[index]['after'])
+            index = index - 1;
+        } else {
+            alert("No previous events");
+        }
+    }
+
+    function next() {
+        console.log(index);
+        if (index < queue.length - 1) {
+            index = index + 1;
+            nextHandle[queue[index].action](queue[index]['after'])
+        } else {
+            alert("No next events");
         }
     }
 
@@ -43,9 +61,95 @@
         "fire": fire
     }
 
+    var nextHandle = {
+        "insert-fact": nextFI,
+        "insert-fact-type": nextFT,
+        "insert-rule": nextR,
+        "update-fact": console.log,
+        "delete-fact": console.log,
+        "fire": nextF
+    }
+
+    var previousHandle = {
+        "insert-fact": nextFIR,
+        "insert-fact-type": nextFTR,
+        "insert-rule": nextRR,
+        "update-fact": console.log,
+        "delete-fact": console.log,
+        "fire": nextFR
+    }
+
+    function nextFI(data) {
+        var newId = data.id;
+        var dataJson = JSON.stringify(data.object, null, 2);
+        nodes.add({id:newId, color : 'blue', title:dataJson, group : 2});
+        var edgesId = data.type + "-" + newId;
+        edges.add({id:edgesId, from: data.type, to: newId, dashes:true});
+        if(data.from.length > 0) {
+            edgesId = data.from[0] + "-" + newId;
+            edges.add({id:edgesId, from: data.from[0], to: newId, arrows:'to'});
+        } else {
+            edgesId = "0-" + newId;
+            edges.add({id:edgesId, from: 0, to: newId, arrows:'to'});
+        }
+    }
+
+    function nextFT(data) {
+        var newId = data.id;
+        //var newId = data.object.name;
+        var dataJson = JSON.stringify(data.object.attributes, null, 2);
+        nodes.add({id:data.object.name, label:data.object.name, color : 'red', shape : 'box', title:dataJson, group : 1});
+    }
+
+    function nextR(data) {
+        var dataJson = JSON.stringify(data.object, null, 2);
+        nodes.add({id:data.object.name, label:data.object.name, color : 'orange', shape : 'box', title:dataJson, group : 3});
+    }
+
+    function nextF(data) {
+        var node = nodes.get(data.object);
+        node.color = {background:'orange', border:'red'};
+        nodes.update(node);
+        var edgesId;
+        for (i = 0; i < data.from.length; i++) {
+            edgesId = data.from[i] + "-" + data.object;
+            edges.add({id:edgesId, from: data.from[i], to: data.object, arrows:'to', color: 'purple'});
+        }
+    }
+
+    function nextFIR(data) {
+        edges.remove(data.type + "-" + data.id);
+        if(data.from.length > 0) {
+            edges.remove(data.from[0] + "-" + data.id);
+        } else {
+            edges.remove("0-" + data.id);
+        }
+        nodes.remove(data.id);
+    }
+
+    function nextFTR(data) {
+        nodes.remove(data.object.name);
+    }
+
+    function nextRR(data) {
+        nodes.remove(data.object.name);
+    }
+
+    function nextFR(data) {
+        var node = nodes.get(data.object);
+        node.color = {background:'orange'};
+        nodes.update(node);
+        var edgesId;
+        for (i = 0; i < data.from.length; i++) {
+            edgesId = data.from[i] + "-" + data.object;
+            edges.remove(edgesId);
+        }
+    }
+
     var nodes;
     var edges;
     var network;
+    var queue = [];
 
     function resetGraph() {
         // create an array with nodes

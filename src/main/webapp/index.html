@@ -96,11 +96,11 @@
 
                 <input name="checkbox-live" type="checkbox" checked data-on-color="success" data-off-color="danger" data-on-text="Live">
 
-                <button type="button" class="btn btn-primary disabled todisable">
+                <button id="previous" type="button" class="btn btn-primary disabled todisable" onclick="previous();">
                     <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
                 </button>
 
-                <button type="button" class="btn btn-primary disabled todisable">
+                <button id="next" type="button" class="btn btn-primary disabled todisable" onclick="next();">
                     <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
                 </button>
 
@@ -129,13 +129,16 @@
 <script>
 
 $("[name='checkbox-live']").bootstrapSwitch();
+var index;
 $("[name='checkbox-live']").on('switchChange.bootstrapSwitch', function(event, state) {
     if (state) {
         $('.todisable').addClass("disabled");
     } else {
         $('.todisable').removeClass("disabled");
+        index = queue.length - 1;
     }
 });
+
 
 </script>
 </body>
