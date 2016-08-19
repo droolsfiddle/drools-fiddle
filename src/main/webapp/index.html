@@ -96,12 +96,24 @@
 
                 <input name="checkbox-live" type="checkbox" checked data-on-color="success" data-off-color="danger" data-on-text="Live">
 
-                <button id="previous" type="button" class="btn btn-primary disabled todisable" onclick="previous();">
+                <button id="previousbegin" type="button" class="btn btn-primary disabled stepbystep" onclick="previousbegin();">
+                    <span class="glyphicon glyphicon-step-backward" aria-hidden="true"></span>
+                </button>
+
+                <button id="previous" type="button" class="btn btn-primary disabled stepbystep" onclick="previous();">
                     <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
                 </button>
 
-                <button id="next" type="button" class="btn btn-primary disabled todisable" onclick="next();">
+                <button id="next" type="button" class="btn btn-primary disabled stepbystep" onclick="next();">
                     <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                </button>
+
+                <button id="nextend" type="button" class="btn btn-primary disabled stepbystep" onclick="nextend();">
+                    <span class="glyphicon glyphicon-step-forward" aria-hidden="true"></span>
+                </button>
+
+                <button  type="button" class="btn btn-primary">
+                    <b>step</b> <span id="counter" class="badge">0/0</span>
                 </button>
 
                 <form role="form" class="btn-group inline pull-right" ng-submit="saveDrl()" id="saveform">
@@ -132,9 +144,11 @@ $("[name='checkbox-live']").bootstrapSwitch();
 var index;
 $("[name='checkbox-live']").on('switchChange.bootstrapSwitch', function(event, state) {
     if (state) {
-        $('.todisable').addClass("disabled");
+        $('.stepbystep').addClass("disabled");
+        <!-- dequeue all events -->
+        nextend();
     } else {
-        $('.todisable').removeClass("disabled");
+        $('.stepbystep').removeClass("disabled");
         index = queue.length - 1;
     }
 });

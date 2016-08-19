@@ -3,6 +3,7 @@
         queue.push(event);
         if ($("[name='checkbox-live']").bootstrapSwitch('state')) {
             nextFI(data);
+            index++;
         }
     }
 
@@ -13,6 +14,7 @@
         queue.push(event);
         if ($("[name='checkbox-live']").bootstrapSwitch('state')) {
             nextFT(data);
+            index++;
         }
     }
 
@@ -21,6 +23,7 @@
         queue.push(event);
         if ($("[name='checkbox-live']").bootstrapSwitch('state')) {
             nextR(data);
+            index++;
         }
     }
 
@@ -29,26 +32,39 @@
         queue.push(event);
         if ($("[name='checkbox-live']").bootstrapSwitch('state')) {
             nextF(data);
+            index++;
+        }
+    }
+
+    function previousbegin() {
+        while (index >= 0) {
+            previousHandle[queue[index].action](queue[index]['after'])
+            index = index - 1;
+            $("#counter").text((index + 1) + " / " + queue.length);
         }
     }
 
     function previous() {
-        console.log(index);
         if (index >= 0) {
             previousHandle[queue[index].action](queue[index]['after'])
             index = index - 1;
-        } else {
-            alert("No previous events");
+            $("#counter").text((index + 1) + " / " + queue.length);
         }
     }
 
     function next() {
-        console.log(index);
         if (index < queue.length - 1) {
             index = index + 1;
             nextHandle[queue[index].action](queue[index]['after'])
-        } else {
-            alert("No next events");
+            $("#counter").text((index + 1) + " / " + queue.length);
+        }
+    }
+
+    function nextend() {
+        while (index < queue.length - 1) {
+            index = index + 1;
+            nextHandle[queue[index].action](queue[index]['after'])
+            $("#counter").text((index + 1) + " / " + queue.length);
         }
     }
 
@@ -151,7 +167,12 @@
     var network;
     var queue = [];
 
-    function resetGraph() {
+    function reset() {
+
+        queue = [];
+        index = queue.length - 1;
+        $("#counter").text((index + 1) + " / " + queue.length);
+
         // create an array with nodes
         nodes = new vis.DataSet([
         {id:0, label : "User", color : 'pink', shape : 'icon', group : 'users', title : "42"}
@@ -190,7 +211,7 @@
         });
     }
 
-    resetGraph();
+    reset();
 
 /*
 network.on("doubleClick", function (params) {

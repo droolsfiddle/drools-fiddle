@@ -24,6 +24,7 @@ window.onload = function () {
             jsonObject = JSON.parse(event.data);
             if (jsonObject.action != null) {
                 actionHandle[jsonObject.action](jsonObject);
+                $("#counter").text((index + 1) + " / " + queue.length);
             }
         }
     };
