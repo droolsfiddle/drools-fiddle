@@ -1,0 +1,15 @@
+declare enum sex
+M,F;
+end
+
+declare Customer
+age : int
+name: String
+sexe: sex
+end
+
+rule "Male"
+when
+Customer(sexe == sex.M)
+then
+end

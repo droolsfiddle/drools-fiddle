@@ -99,21 +99,32 @@ public class DrlCompilerServiceImpl implements DrlCompilerService {
                     Fact aFact = new Fact();
                     List<Attribute> attributes = new ArrayList<Attribute>();
                     aFact.setName(declare.getName().replaceAll(pack.getName() + ".", ""));
+
                     for (FactField field : declare.getFields()) {
                         Attribute attr = new Attribute();
                         attr.setId(field.getIndex());
                         attr.setName(field.getName());
                         attr.setType(field.getType().getCanonicalName());
+                        if (field.getType().isEnum()) {
+                            Object[] aEnumValues = field.getType().getEnumConstants();
+//                                for(Object a : aEnumValues) {
+//                                    logger.debug(String.valueOf(a));
+//                                }
+                            attr.setEnumValues(field.getType().getEnumConstants());
+                        }
                         attributes.add(attr);
                     }
                     aFact.setAttributes(attributes);
-                    facts.add(aFact);
+                    if(!declare.getFactClass().isEnum()) {
+                        facts.add(aFact);
+                    }
                     CustomDroolsEvent aEvent = new CustomDroolsEvent("insert-fact-type").map(aFact);
                     try {
                         wsSession.getBasicRemote().sendText(mapper.writeValueAsString(aEvent));
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
+
                 }
                 aPack.setFacts(facts);
                 packs.add(aPack);

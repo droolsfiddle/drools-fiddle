@@ -1,8 +1,28 @@
     function addFactInstance(data) {
-        event = {'action' : 'insert-fact', 'after' : data};
+        event = {'action' : 'insert-fact', 'before' : {}, 'after' : data};
         queue.push(event);
         if ($("[name='checkbox-live']").bootstrapSwitch('state')) {
-            nextFI(data);
+            nextFI({}, data);
+            index++;
+        }
+    }
+
+    function updateFactInstance(data) {
+        var node = nodes.get(data.id);
+        event = {'action' : 'update-fact', 'before' : node, 'after' : data};
+        queue.push(event);
+        if ($("[name='checkbox-live']").bootstrapSwitch('state')) {
+            nextUFI(node, data);
+            index++;
+        }
+    }
+
+    function removeFactInstance(data) {
+        var node = nodes.get(data.id);
+        event = {'action' : 'update-fact', 'before' : node, 'after' : data};
+        queue.push(event);
+        if ($("[name='checkbox-live']").bootstrapSwitch('state')) {
+            nextRFI(node, data);
             index++;
         }
     }
@@ -10,35 +30,35 @@
     function addFactType(data) {
         var newId = (Math.random() * 1e7).toString(32);
         data.id = newId;
-        event = {'action' : 'insert-fact-type', 'after' : data};
+        event = {'action' : 'insert-fact-type', 'before' : {}, 'after' : data};
         queue.push(event);
         if ($("[name='checkbox-live']").bootstrapSwitch('state')) {
-            nextFT(data);
+            nextFT({}, data);
             index++;
         }
     }
 
     function addRule(data) {
-        event = {'action' : 'insert-rule', 'after' : data};
+        event = {'action' : 'insert-rule', 'before' : {}, 'after' : data};
         queue.push(event);
         if ($("[name='checkbox-live']").bootstrapSwitch('state')) {
-            nextR(data);
+            nextR({}, data);
             index++;
         }
     }
 
     function fire(data) {
-        event = {'action' : 'fire', 'after' : data};
+        event = {'action' : 'fire', 'before' : {}, 'after' : data};
         queue.push(event);
         if ($("[name='checkbox-live']").bootstrapSwitch('state')) {
-            nextF(data);
+            nextF({}, data);
             index++;
         }
     }
 
     function previousbegin() {
         while (index >= 0) {
-            previousHandle[queue[index].action](queue[index]['after'])
+            previousHandle[queue[index].action](queue[index]['before'], queue[index]['after'])
             index = index - 1;
             $("#counter").text((index + 1) + " / " + queue.length);
         }
@@ -46,7 +66,7 @@
 
     function previous() {
         if (index >= 0) {
-            previousHandle[queue[index].action](queue[index]['after'])
+            previousHandle[queue[index].action](queue[index]['before'], queue[index]['after'])
             index = index - 1;
             $("#counter").text((index + 1) + " / " + queue.length);
         }
@@ -55,7 +75,7 @@
     function next() {
         if (index < queue.length - 1) {
             index = index + 1;
-            nextHandle[queue[index].action](queue[index]['after'])
+            nextHandle[queue[index].action](queue[index]['before'], queue[index]['after'])
             $("#counter").text((index + 1) + " / " + queue.length);
         }
     }
@@ -63,7 +83,7 @@
     function nextend() {
         while (index < queue.length - 1) {
             index = index + 1;
-            nextHandle[queue[index].action](queue[index]['after'])
+            nextHandle[queue[index].action](queue[index]['before'], queue[index]['after'])
             $("#counter").text((index + 1) + " / " + queue.length);
         }
     }
@@ -72,8 +92,8 @@
         "insert-fact": addFactInstance,
         "insert-fact-type": addFactType,
         "insert-rule": addRule,
-        "update-fact": console.log,
-        "delete-fact": console.log,
+        "update-fact": updateFactInstance,
+        "delete-fact": removeFactInstance,
         "fire": fire
     }
 
@@ -81,8 +101,8 @@
         "insert-fact": nextFI,
         "insert-fact-type": nextFT,
         "insert-rule": nextR,
-        "update-fact": console.log,
-        "delete-fact": console.log,
+        "update-fact": nextUFI,
+        "delete-fact": nextRFI,
         "fire": nextF
     }
 
@@ -90,76 +110,118 @@
         "insert-fact": nextFIR,
         "insert-fact-type": nextFTR,
         "insert-rule": nextRR,
-        "update-fact": console.log,
-        "delete-fact": console.log,
+        "update-fact": nextUFIR,
+        "delete-fact": nextRFIR,
         "fire": nextFR
     }
 
-    function nextFI(data) {
-        var newId = data.id;
-        var dataJson = JSON.stringify(data.object, null, 2);
-        nodes.add({id:newId, color : 'blue', title:dataJson, group : 2});
-        var edgesId = data.type + "-" + newId;
-        edges.add({id:edgesId, from: data.type, to: newId, dashes:true});
-        if(data.from.length > 0) {
-            edgesId = data.from[0] + "-" + newId;
-            edges.add({id:edgesId, from: data.from[0], to: newId, arrows:'to'});
+    function nextFI(dataP, dataA) {
+        var newId = dataA.id;
+        var dataJson = JSON.stringify(dataA.object, null, 2);
+        nodes.add({id:newId, color : 'blue', title:dataJson, group : "factinstance"});
+        var edgesId = dataA.type + "-" + newId;
+        edges.add({id:edgesId, from: dataA.type, to: newId, dashes:true});
+        if(dataA.from.length > 0) {
+            edgesId = dataA.from[0] + "-" + newId;
+            edges.add({id:edgesId, from: dataA.from[0], to: newId, arrows:'to'});
         } else {
             edgesId = "0-" + newId;
             edges.add({id:edgesId, from: 0, to: newId, arrows:'to'});
         }
     }
 
-    function nextFT(data) {
-        var newId = data.id;
-        //var newId = data.object.name;
-        var dataJson = JSON.stringify(data.object.attributes, null, 2);
-        nodes.add({id:data.object.name, label:data.object.name, color : 'red', shape : 'box', title:dataJson, group : 1});
+    function nextUFI(dataP, dataA) {
+        var node = nodes.get(dataA.id);
+        node.borderWidth = 3;
+        node.color = {background:'blue', border:'red'};
+        var dataJson = JSON.stringify(dataA.object, null, 2);
+        node.title = dataJson;
+        nodes.update(node);
+        if(dataA.from.length > 0) {
+            var edgesId = dataA.from[0] + "-" + dataA.id;
+            edges.add({id:edgesId, from: dataA.from[0], to: dataA.id, arrows:'to'});
+        }
     }
 
-    function nextR(data) {
-        var dataJson = JSON.stringify(data.object, null, 2);
-        nodes.add({id:data.object.name, label:data.object.name, color : 'orange', shape : 'box', title:dataJson, group : 3});
+    function nextRFI(dataP, dataA) {
+//        var node = nodes.get(dataA.id);
+//        node.borderWidth = 3;
+//        node.color = {background:'blue', border:'red'};
+//        var dataJson = JSON.stringify(dataA.object, null, 2);
+//        node.title = dataJson;
+//        nodes.update(node);
+//        if(dataA.from.length > 0) {
+//            var edgesId = dataA.from[0] + "-" + dataA.id;
+//            edges.add({id:edgesId, from: dataA.from[0], to: dataA.id, arrows:'to'});
+//        }
     }
 
-    function nextF(data) {
-        var node = nodes.get(data.object);
+    function nextFT(dataP, dataA) {
+        var newId = dataA.id;
+        //var newId = dataA.object.name;
+        var dataJson = JSON.stringify(dataA.object.attributes, null, 2);
+        nodes.add({id:dataA.object.name, label:dataA.object.name, color : 'red', shape : 'box', title:dataJson, group : "facttype"});
+    }
+
+    function nextR(dataP, dataA) {
+        var dataJson = JSON.stringify(dataA.object, null, 2);
+        nodes.add({id:dataA.object.name, label:dataA.object.name, color : 'orange', shape : 'box', title:dataJson, group : "rule"});
+    }
+
+    function nextF(dataP, dataA) {
+        var node = nodes.get(dataA.object);
+        node.borderWidth = 3;
         node.color = {background:'orange', border:'red'};
         nodes.update(node);
         var edgesId;
-        for (i = 0; i < data.from.length; i++) {
-            edgesId = data.from[i] + "-" + data.object;
-            edges.add({id:edgesId, from: data.from[i], to: data.object, arrows:'to', color: 'purple'});
+        for (i = 0; i < dataA.from.length; i++) {
+            edgesId = dataA.from[i] + "-" + dataA.object;
+            edges.add({id:edgesId, from: dataA.from[i], to: dataA.object, arrows:'to', color: 'purple'});
         }
     }
 
-    function nextFIR(data) {
-        edges.remove(data.type + "-" + data.id);
-        if(data.from.length > 0) {
-            edges.remove(data.from[0] + "-" + data.id);
+    function nextFIR(dataP, dataA) {
+        edges.remove(dataA.type + "-" + dataA.id);
+        if(dataA.from.length > 0) {
+            edges.remove(dataA.from[0] + "-" + dataA.id);
         } else {
-            edges.remove("0-" + data.id);
+            edges.remove("0-" + dataA.id);
         }
-        nodes.remove(data.id);
+        nodes.remove(dataA.id);
     }
 
-    function nextFTR(data) {
-        nodes.remove(data.object.name);
+    function nextFTR(dataP, dataA) {
+        nodes.remove(dataA.object.name);
     }
 
-    function nextRR(data) {
-        nodes.remove(data.object.name);
+    function nextRR(dataP, dataA) {
+        nodes.remove(dataA.object.name);
     }
 
-    function nextFR(data) {
-        var node = nodes.get(data.object);
-        node.color = {background:'orange'};
+    function nextFR(dataP, dataA) {
+        var node = nodes.get(dataA.object);
+        node.borderWidth = 1;
+        node.color = {background:'orange', border:'orange'};
         nodes.update(node);
         var edgesId;
-        for (i = 0; i < data.from.length; i++) {
-            edgesId = data.from[i] + "-" + data.object;
+        for (i = 0; i < dataA.from.length; i++) {
+            edgesId = dataA.from[i] + "-" + dataA.object;
             edges.remove(edgesId);
         }
+    }
+
+    function nextUFIR(dataP, dataA) {
+        nodes.update(dataP);
+        if(dataA.from.length > 0) {
+            edges.remove(dataA.from[0] + "-" + dataA.id);
+        }
+    }
+
+    function nextRFIR(dataP, dataA) {
+//            nodes.update(dataP);
+//            if(dataA.from.length > 0) {
+//                edges.remove(dataA.from[0] + "-" + dataA.id);
+//            }
     }
 
     var nodes;
@@ -173,16 +235,29 @@
         index = queue.length - 1;
         $("#counter").text((index + 1) + " / " + queue.length);
 
+        // create a network
+        var container = document.getElementById('mynetwork');
+
+        var x = - container.clientWidth / 2 + 10;
+        var y = - container.clientHeight / 2 + 10;
+        var step = 70;
+//        nodes.push({id: 1, x: x, y: y, label: 'Rule', group: 'rule', value: 1, fixed: true, physics:false});
+//        nodes.push({id: 2, x: x, y: y + step, label: 'Fact Type', group: 'facttype', value: 1, fixed: true,  physics:false});
+//        nodes.push({id: 3, x: x, y: y + 2 * step, label: 'Fact Instance', group: 'factinstance', value: 1, fixed: true,  physics:false});
+//        nodes.push({id: 1003, x: x, y: y + 3 * step, label: 'Computer', group: 'desktop', value: 1, fixed: true,  physics:false});
+//        nodes.push({id: 1004, x: x, y: y + 4 * step, label: 'Smartphone', group: 'mobile', value: 1, fixed: true,  physics:false});
+
         // create an array with nodes
         nodes = new vis.DataSet([
-        {id:0, label : "User", color : 'pink', shape : 'icon', group : 'users', title : "42"}
+        {id:0, label : "User", color : 'pink', shape : 'icon', group : 'users', title : "42"},
+        {id: 1, x: x, y: y, label: 'Rule', group: 'rule', color : 'orange', shape : 'box', value: 1, fixed: true, physics:false},
+        {id: 2, x: x, y: y + step, label: 'Fact Type', group: 'facttype', color : 'red', shape : 'box', value: 1, fixed: true,  physics:false},
+        {id: 3, x: x, y: y + 2 * step, label: 'Fact Instance', group: 'factinstance', color : 'blue', shape : 'box', value: 1, fixed: true,  physics:false}
         ]);
 
         // create an array with edges
         edges = new vis.DataSet([]);
 
-        // create a network
-        var container = document.getElementById('mynetwork');
         var data = {
             nodes: nodes,
             edges: edges

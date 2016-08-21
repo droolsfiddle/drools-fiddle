@@ -72,7 +72,10 @@
                                                     <th scope="row">{{attr.id}}</th>
                                                     <td>{{attr.name}}
                                                     <td>
-                                                        <input ng-model="attribute[facts.name][attr.name]" class="form-control" >
+                                                        <input ng-if="!attr.enumValues" ng-model="attribute[facts.name][attr.name]"  class="form-control" >
+                                                        <select ng-if="attr.enumValues" ng-model="attribute[facts.name][attr.name]" class="form-control" id="exampleSelect1">
+                                                            <option ng-repeat="enum in attr.enumValues" value="{{enum}}">{{enum}}</option>
+                                                        </select>
                                                     </td>
                                                     <td>{{attr.type}}</td>
                                                 </tr>
