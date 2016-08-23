@@ -1,0 +1,41 @@
+declare Fact1
+    attribute : int
+end
+
+declare Fact2
+    attribute : int
+end
+
+declare Fact3
+    attribute : int
+end
+
+
+
+rule "Rule 1"
+when
+    Fact1(attribute == 42)
+then
+    Fact2 fact = new Fact2();
+    fact.setAttribute(42);
+    insert(fact);
+end
+
+rule "Rule 2"
+when
+    f : Fact2(attribute == 42)
+then
+    modify( f ) {setAttribute( 41 )}
+    Fact3 fact = new Fact3();
+    fact.setAttribute(43);
+    insert(fact);
+end
+
+rule "Rule 3"
+when
+    f2 : Fact2(attribute == 41)
+    f3 : Fact3(attribute == 43)
+then
+    retract( f2 );
+    retract( f3 );
+end

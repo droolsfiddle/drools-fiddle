@@ -1,15 +1,15 @@
 declare enum sex
-M,F;
-end
+   M,F;
+   end
 
-declare Customer
-age : int
-name: String
-sexe: sex
-end
+   declare Customer
+   age : int
+   name: String
+   sexe: sex
+   end
 
-rule "Male"
-when
-Customer(sexe == sex.M)
-then
-end
+   rule "Male"
+   when
+   Customer(sexe == sex.M)
+   then
+   end

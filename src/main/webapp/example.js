@@ -19,7 +19,7 @@
 
     function removeFactInstance(data) {
         var node = nodes.get(data.id);
-        event = {'action' : 'update-fact', 'before' : node, 'after' : data};
+        event = {'action' : 'delete-fact', 'before' : node, 'after' : data};
         queue.push(event);
         if ($("[name='checkbox-live']").bootstrapSwitch('state')) {
             nextRFI(node, data);
@@ -144,16 +144,15 @@
     }
 
     function nextRFI(dataP, dataA) {
-//        var node = nodes.get(dataA.id);
-//        node.borderWidth = 3;
-//        node.color = {background:'blue', border:'red'};
-//        var dataJson = JSON.stringify(dataA.object, null, 2);
-//        node.title = dataJson;
-//        nodes.update(node);
-//        if(dataA.from.length > 0) {
-//            var edgesId = dataA.from[0] + "-" + dataA.id;
-//            edges.add({id:edgesId, from: dataA.from[0], to: dataA.id, arrows:'to'});
-//        }
+        var node = nodes.get(dataA.id);
+        node.color = {background:'black', border:'black'};
+        var dataJson = "The fact instance has been deleted";
+        node.title = dataJson;
+        nodes.update(node);
+        if(dataA.from.length > 0) {
+            var edgesId = dataA.from[0] + "-" + dataA.id;
+            edges.add({id:edgesId, from: dataA.from[0], to: dataA.id, arrows:'to'});
+        }
     }
 
     function nextFT(dataP, dataA) {
@@ -218,10 +217,10 @@
     }
 
     function nextRFIR(dataP, dataA) {
-//            nodes.update(dataP);
-//            if(dataA.from.length > 0) {
-//                edges.remove(dataA.from[0] + "-" + dataA.id);
-//            }
+        nodes.update(dataP);
+        if(dataA.from.length > 0) {
+            edges.remove(dataA.from[0] + "-" + dataA.id);
+        }
     }
 
     var nodes;

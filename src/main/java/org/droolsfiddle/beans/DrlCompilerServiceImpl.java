@@ -43,12 +43,18 @@ public class DrlCompilerServiceImpl implements DrlCompilerService {
 
     public Message postDrlCompile(Message iMessage) {
         logger.debug("Init validation drl: DrlParser");
+        Session wsSession = (Session) request.getSession().getAttribute(Session.class.getName());
 
         String drl;
         try {
             drl = new String(Base64.decode(iMessage.getData()),
                     Charset.forName("UTF-8"));
         } catch (IOException e) {
+            try {
+                wsSession.getBasicRemote().sendText("error while decoding input drl: "+e.getMessage());
+            } catch (IOException e2) {
+                e2.printStackTrace();
+            }
             iMessage.setLog("error while decoding input drl: "+e.getMessage());
             return iMessage;
         }
@@ -56,8 +62,6 @@ public class DrlCompilerServiceImpl implements DrlCompilerService {
         iMessage.setData("");
 
         StringBuilder aLog = new StringBuilder();
-
-        Session wsSession = (Session) request.getSession().getAttribute(Session.class.getName());
 
         KieServices ks = KieServices.Factory.get();
         KieRepository kr = ks.getRepository();
@@ -73,6 +77,12 @@ public class DrlCompilerServiceImpl implements DrlCompilerService {
                 logger.debug(info.toString());
                 aLog.append(info.toString() + "\n");
             }
+            try {
+                wsSession.getBasicRemote().sendText(mapper.writeValueAsString(aLog));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
         } else {
             kContainer = ks.newKieContainer(kr.getDefaultReleaseId());
             aLog.append(kContainer.getClassLoader());
@@ -107,9 +117,6 @@ public class DrlCompilerServiceImpl implements DrlCompilerService {
                         attr.setType(field.getType().getCanonicalName());
                         if (field.getType().isEnum()) {
                             Object[] aEnumValues = field.getType().getEnumConstants();
-//                                for(Object a : aEnumValues) {
-//                                    logger.debug(String.valueOf(a));
-//                                }
                             attr.setEnumValues(field.getType().getEnumConstants());
                         }
                         attributes.add(attr);
