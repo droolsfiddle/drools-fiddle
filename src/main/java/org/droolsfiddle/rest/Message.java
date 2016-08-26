@@ -12,6 +12,7 @@ public class Message {
   private String data;
   private String log;
   private List<Package> packages;
+  private JsonSchemaNode jsonSchema;
 
 
   public int getId() {
@@ -44,6 +45,14 @@ public class Message {
 
   public void setPackages(List<Package> packages) {
     this.packages = packages;
+  }
+
+  public JsonSchemaNode getJsonSchema() {
+    return jsonSchema;
+  }
+
+  public void setJsonSchema(JsonSchemaNode jsonSchema) {
+    this.jsonSchema = jsonSchema;
   }
 
   @Override

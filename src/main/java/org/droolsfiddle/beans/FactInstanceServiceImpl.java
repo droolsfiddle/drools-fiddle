@@ -67,9 +67,8 @@ public class FactInstanceServiceImpl implements FactInstanceService {
             return resp;
         }
 
-        KiePackage kiePackage = kBase.getKiePackages().iterator().next();
-
-        FactType factType = kBase.getFactType(kiePackage.getName(), iType);
+        FactType factType = kBase.getFactType(iType.substring(0,iType.lastIndexOf('.')),
+                iType.substring(iType.lastIndexOf('.') + 1));
 
         ObjectMapper mapper = new ObjectMapper();
 

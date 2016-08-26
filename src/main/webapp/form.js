@@ -1,12 +1,25 @@
-var helloAjaxApp = angular.module("helloAjaxApp", ['ngRoute']);
+var helloAjaxApp = angular.module("helloAjaxApp", ['ngRoute', 'angular-json-editor']);
 
 helloAjaxApp.config(
-['$routeProvider', function($routeProvider) {
+['$routeProvider', 'JSONEditorProvider', function($routeProvider, JSONEditorProvider) {
   $routeProvider.
   when('/:id', {}).
   otherwise({
     redirectTo: '/'
   });
+
+  JSONEditorProvider.configure({
+          defaults: {
+              options: {
+                  iconlib: 'bootstrap3',
+                  theme: 'bootstrap3',
+                  disable_edit_json: true,
+                  disable_properties: false,
+                  no_additional_properties: true
+              }
+          }
+  });
+
 }]);
 
 helloAjaxApp.controller("myController", ['$scope',
@@ -15,6 +28,15 @@ helloAjaxApp.controller("myController", ['$scope',
     $scope.attribute = {};
 
     $scope.message = {};
+
+    $scope.mySchema = {};
+
+    $scope.myStartVal = {};
+
+    $scope.onChange = function (data) {
+        console.log('Form changed!');
+        console.dir(data);
+    };
 
 	$scope.compileDrl = function(){
 
@@ -32,6 +54,7 @@ helloAjaxApp.controller("myController", ['$scope',
 		res.success(function(data, status, headers, config) {
             console.log(data);
             $scope.message.packages = data.packages;
+            $scope.mySchema = data.jsonSchema;
             //$scope.message.packages = JSON.stringify($scope.message.packages, null, 2);
 
 		});
@@ -39,7 +62,7 @@ helloAjaxApp.controller("myController", ['$scope',
             console.log(data);
 		});
     };
-
+/*
 	$scope.pushAttribute = function(iFactName){
 	    console.log(iFactName);
         console.log($scope.attribute[iFactName]);
@@ -65,7 +88,7 @@ helloAjaxApp.controller("myController", ['$scope',
 		});
 
 	};
-
+*/
     $scope.fireDrl = function(){
 
         var dataObj = {
@@ -123,4 +146,34 @@ helloAjaxApp.controller("myController", ['$scope',
             });
     });
 
-}]);
+}]).controller('SyncButtonsController', function ($scope,$http) {
+
+       /**
+        * Custom actions controller which allows you to add any other buttons/actions to the form.
+        */
+
+         $scope.onSubmit = function () {
+              var data = $scope.editor.getValue();
+              console.log('onSubmit data in sync controller', data);
+
+              for (var key in data) {
+                  console.log(key);
+                  console.log(data[key]);
+
+                  var msg = {
+                    "data" : btoa(JSON.stringify(data[key]))
+                  }
+
+                  var res = $http.post('/rest/facts/insert/' + key, msg);
+
+                  res.success(function(data, status, headers, config) {
+                      console.log(data);
+
+                  });
+                  res.error(function(data, status, headers, config) {
+                      console.log(data);
+                  });
+              }
+          };
+
+   });
