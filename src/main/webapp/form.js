@@ -28,6 +28,7 @@ helloAjaxApp.controller("myController", ['$scope',
     $scope.attribute = {};
 
     $scope.message = {};
+    $scope.editor = ace.edit("editor");
 
     $scope.mySchema = {};
 
@@ -44,7 +45,7 @@ helloAjaxApp.controller("myController", ['$scope',
         reset();
 
 		var dataObj = {
-		        data : btoa($scope.message.data),
+		        data : btoa($scope.editor.getValue()),
 		};
 
 		var res = $http.post('/rest/message/drlCompile', dataObj);
