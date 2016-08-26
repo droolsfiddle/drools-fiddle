@@ -98,19 +98,23 @@ public class DrlCompilerServiceImpl implements DrlCompilerService {
             for (KiePackage pack : kbs.getKiePackages()) { // first assume all types are root types
                 rootTypes.addAll(pack.getFactTypes());
             }
+            /*
             for (KiePackage pack : kbs.getKiePackages()) {  // then filter out non-root types
                 for (FactType type : pack.getFactTypes()) { // for each type
                     for (FactField field : type.getFields()) { // for each field inside
-                        FactType fieldType = kbs.getFactType(field.getType().getPackage().getName(),
-                                field.getType().getSimpleName());
-                        if (fieldType != null) { // field type is a declared type
-                            if (rootTypes.contains(fieldType)) { // then it's not a root type
-                                rootTypes.remove(fieldType);
+                        if (!field.getType().isPrimitive()) { // if not primitive
+                            FactType fieldType = kbs.getFactType(field.getType().getPackage().getName(),
+                                    field.getType().getSimpleName());
+                            if (fieldType != null) { // field type is a declared type
+                                if (rootTypes.contains(fieldType)) { // then it's not a root type
+                                    rootTypes.remove(fieldType);
+                                }
                             }
                         }
                     }
                 }
             }
+            */
             logger.debug("root types: "+rootTypes);
             JsonSchemaNode root = new JsonSchemaNode();
             root.setType("object");
@@ -187,9 +191,10 @@ public class DrlCompilerServiceImpl implements DrlCompilerService {
 
         for (FactField field : type.getFields()) {
             Class<?> fieldType = field.getType();
-
-            FactType fieldFactType = kbs.getFactType(fieldType.getPackage().getName(), fieldType.getSimpleName());
-
+            FactType fieldFactType = null;
+            if (!fieldType.isPrimitive()) {
+                fieldFactType = kbs.getFactType(fieldType.getPackage().getName(), fieldType.getSimpleName());
+            }
             if (fieldFactType != null) {
                 node.getProperties().put(field.getName(),
                         factType2JsonSchemaNode(field.getName(),fieldFactType,kbs));
