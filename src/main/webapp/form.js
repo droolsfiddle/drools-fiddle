@@ -27,7 +27,7 @@ helloAjaxApp.controller("myController", ['$scope',
 
     $scope.attribute = {};
 
-    $scope.message = {};
+    //$scope.message = {};
     $scope.editor = ace.edit("editor");
 
     $scope.mySchema = {};
@@ -49,12 +49,10 @@ helloAjaxApp.controller("myController", ['$scope',
 		};
 
 		var res = $http.post('/rest/message/drlCompile', dataObj);
-//		var res = $http.post('http://127.0.0.1:8080/drools-fiddle/rest/message/drlParser', dataObj);
-//		var res = $http.post('http://127.0.0.1:8080/drools-fiddle/rest/message/droolsverifier', dataObj);
 
 		res.success(function(data, status, headers, config) {
             console.log(data);
-            $scope.message.packages = data.packages;
+            //$scope.message.packages = data.packages;
             $scope.mySchema = data.jsonSchema;
             //$scope.message.packages = JSON.stringify($scope.message.packages, null, 2);
 
@@ -63,35 +61,8 @@ helloAjaxApp.controller("myController", ['$scope',
             console.log(data);
 		});
     };
-/*
-	$scope.pushAttribute = function(iFactName){
-	    console.log(iFactName);
-        console.log($scope.attribute[iFactName]);
 
-		var dataObj = {
-		    data : btoa(JSON.stringify($scope.attribute[iFactName]))
-		}
-
-		//var options = {
-        //  headers: { 'Content-Type': ['text/plain'] }
-        //};
-
-		var res = $http.post('/rest/facts/insert/' + iFactName, dataObj);
-
-		res.success(function(data, status, headers, config) {
-            //$scope.message.log = data.log
-            console.log(data);
-
-		});
-		res.error(function(data, status, headers, config) {
-            //$scope.message.log = data.log
-            console.log(data);
-		});
-
-	};
-*/
     $scope.fireDrl = function(){
-
         var dataObj = {
                 data : "",
         };
@@ -110,7 +81,6 @@ helloAjaxApp.controller("myController", ['$scope',
     };
 
     $scope.saveDrl = function(){
-
             var res = $http.post('/rest/context');
 
             res.success(function(data, status, headers, config) {
@@ -138,11 +108,10 @@ helloAjaxApp.controller("myController", ['$scope',
         res.success(function(data, status, headers, config) {
             console.log(data);
                 if (data.result) {
-                    $scope.message.data = data.drl;
+                    $scope.editor.setValue(data.drl);
                 }
             });
             res.error(function(data, status, headers, config) {
-                //$scope.message.log = data.log
                 console.log(data);
             });
     });
