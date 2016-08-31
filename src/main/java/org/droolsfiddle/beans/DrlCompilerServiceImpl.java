@@ -118,9 +118,13 @@ public class DrlCompilerServiceImpl implements DrlCompilerService {
             logger.debug("root types: "+rootTypes);
             JsonSchemaNode root = new JsonSchemaNode();
             root.setType("object");
+            root.setTitle("Facts");
+            Map<String,Object> emptyMap = new HashMap<>();
             for (FactType type : rootTypes) {
                 root.getProperties().put(type.getName(),
-                        factType2JsonSchemaNode(type.getName(),type,kbs));
+                        factType2JsonSchemaNode(type.getSimpleName(),type,kbs));
+                iMessage.getJsonValue().put(type.getName(),emptyMap);
+
             }
             iMessage.setJsonSchema(root);
 

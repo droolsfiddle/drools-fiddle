@@ -1,7 +1,9 @@
 package org.droolsfiddle.rest;
 
 import java.lang.*;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by jvipret on 08/06/2016.
@@ -13,6 +15,7 @@ public class Message {
   private String log;
   private List<Package> packages;
   private JsonSchemaNode jsonSchema;
+  private Map<String,Object> jsonValue = new HashMap<>();
 
 
   public int getId() {
@@ -53,6 +56,14 @@ public class Message {
 
   public void setJsonSchema(JsonSchemaNode jsonSchema) {
     this.jsonSchema = jsonSchema;
+  }
+
+  public Map<String, Object> getJsonValue() {
+    return jsonValue;
+  }
+
+  public void setJsonValue(Map<String, Object> jsonValue) {
+    this.jsonValue = jsonValue;
   }
 
   @Override

@@ -15,7 +15,8 @@ helloAjaxApp.config(
                   theme: 'bootstrap3',
                   disable_edit_json: true,
                   disable_properties: false,
-                  no_additional_properties: true
+                  no_additional_properties: true,
+                  display_required_only: false
               }
           }
   });
@@ -27,12 +28,11 @@ helloAjaxApp.controller("myController", ['$scope',
 
     $scope.attribute = {};
 
-    //$scope.message = {};
     $scope.editor = ace.edit("editor");
 
-    $scope.mySchema = {};
+    $scope.mySchema = {"type":"object", "title":"Facts"};
 
-    $scope.myStartVal = {};
+    $scope.myStartVal = undefined;
 
     $scope.onChange = function (data) {
         console.log('Form changed!');
@@ -52,10 +52,9 @@ helloAjaxApp.controller("myController", ['$scope',
 
 		res.success(function(data, status, headers, config) {
             console.log(data);
-            //$scope.message.packages = data.packages;
+            $scope.myStartVal = undefined;
             $scope.mySchema = data.jsonSchema;
-            //$scope.message.packages = JSON.stringify($scope.message.packages, null, 2);
-
+            $('#theTabs a[data-target="#facts"]').tab('show');
 		});
 		res.error(function(data, status, headers, config) {
             console.log(data);
@@ -71,11 +70,9 @@ helloAjaxApp.controller("myController", ['$scope',
 
         res.success(function(data, status, headers, config) {
             console.log(data);
-            //$scope.message.log = data.log
 
         });
         res.error(function(data, status, headers, config) {
-            //$scope.message.log = data.log
             console.log(data);
         });
     };
@@ -90,7 +87,6 @@ helloAjaxApp.controller("myController", ['$scope',
                 }
             });
             res.error(function(data, status, headers, config) {
-                //$scope.message.log = data.log
                 console.log(data);
             });
      };

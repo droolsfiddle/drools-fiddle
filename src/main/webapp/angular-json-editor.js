@@ -66,7 +66,7 @@ angular.module('angular-json-editor', []).provider('JSONEditor', function () {
             }
         }],
         link: function (scope, element, attrs, controller, transclude) {
-            var startValPromise = $q.when({}),
+            var startValPromise = $q.when(undefined),
                 schemaPromise = $q.when(null);
 
             scope.isValid = false;
@@ -87,7 +87,7 @@ angular.module('angular-json-editor', []).provider('JSONEditor', function () {
 
                 // Support $http promise response with the 'data' property.
                 var schema = result[0].data || result[0],
-                    startVal = result[1].data || result[1];
+                    startVal = result[1] === undefined ? undefined : result[1].data || result[1];
                 if (schema === null) {
                     throw new Error('angular-json-editor: could not resolve schema data.');
                 }
@@ -95,7 +95,7 @@ angular.module('angular-json-editor', []).provider('JSONEditor', function () {
                 function restart() {
                     var values = startVal;
                     if (scope.editor && scope.editor.destroy) {
-                        values = scope.editor.getValue();
+                        //values = scope.editor.getValue();
                         scope.editor.destroy();
                     }
 
