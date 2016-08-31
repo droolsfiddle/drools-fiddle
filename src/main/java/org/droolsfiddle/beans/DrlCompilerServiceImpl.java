@@ -121,6 +121,9 @@ public class DrlCompilerServiceImpl implements DrlCompilerService {
             root.setTitle("Facts");
             Map<String,Object> emptyMap = new HashMap<>();
             for (FactType type : rootTypes) {
+                if (type.getFactClass().isEnum()) // skip enums
+                    continue;
+
                 root.getProperties().put(type.getName(),
                         factType2JsonSchemaNode(type.getSimpleName(),type,kbs));
                 iMessage.getJsonValue().put(type.getName(),emptyMap);
@@ -199,14 +202,11 @@ public class DrlCompilerServiceImpl implements DrlCompilerService {
             if (!fieldType.isPrimitive()) {
                 fieldFactType = kbs.getFactType(fieldType.getPackage().getName(), fieldType.getSimpleName());
             }
-            if (fieldFactType != null) {
+            if (fieldFactType != null && !fieldType.isEnum()) {
                 node.getProperties().put(field.getName(),
                         factType2JsonSchemaNode(field.getName(),fieldFactType,kbs));
             } else {
-                JsonSchemaNode fieldNode = new JsonSchemaNode();
-                fieldNode.setTitle(field.getName());
-                fieldNode.setType(type2String(field.getType()));
-                node.getProperties().put(field.getName(),fieldNode);
+                node.getProperties().put(field.getName(),factType2JsonSchemaLeafNode(field));
             }
 
         }
@@ -214,21 +214,39 @@ public class DrlCompilerServiceImpl implements DrlCompilerService {
         return node;
     }
 
-    private String type2String(Class<?> type) {
+    private JsonSchemaNode factType2JsonSchemaLeafNode(FactField field) {
+
+        JsonSchemaNode node = new JsonSchemaNode();
+        Class<?> type = field.getType();
+
         if (type.equals(Integer.class) || type.equals(Long.class) || type.equals(Short.class)
                 || type.equals(int.class) || type.equals(long.class) || type.equals(short.class)) {
-            return "integer";
+            node.setType("integer");
         } else if (type.equals(Float.class) || type.equals(Double.class)
                 || type.equals(float.class) || type.equals(double.class)) {
-            return "number";
+            node.setType("number");
         } else if (type.equals(Boolean.class) || type.equals(boolean.class)) {
-            return "boolean";
+            node.setType("boolean");
         }  else if (type.equals(Date.class)) {
-            return "string";
+            JsonSchemaFormattedNode fnode = new JsonSchemaFormattedNode();
+            fnode.setType("string");
+            fnode.setFormat("date");
+            node = fnode;
         } else if (type.equals(String.class)) {
-            return "string";
+            node.setType("string");
+        } else if (type.isEnum()) {
+            JsonSchemaEnumNode enode = new JsonSchemaEnumNode();
+            enode.setType("string");
+            enode.setFormat("select");
+            for (Object ec : type.getEnumConstants()) {
+                enode.getEnum().add(ec.toString());
+            }
+            node = enode;
         }
-        return "null";
+
+        node.setTitle(field.getName());
+
+        return node;
     }
 
 }
