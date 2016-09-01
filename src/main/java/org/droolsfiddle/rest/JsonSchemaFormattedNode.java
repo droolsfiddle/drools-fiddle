@@ -3,7 +3,7 @@ package org.droolsfiddle.rest;
 /**
  * Created by gurfm on 31/08/16.
  */
-public class JsonSchemaFormattedNode extends JsonSchemaNode {
+public class JsonSchemaFormattedNode extends JsonSchemaLeafNode {
 
     private String format;
 

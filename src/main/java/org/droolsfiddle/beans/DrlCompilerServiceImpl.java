@@ -197,27 +197,52 @@ public class DrlCompilerServiceImpl implements DrlCompilerService {
         node.setType("object");
 
         for (FactField field : type.getFields()) {
-            Class<?> fieldType = field.getType();
-            FactType fieldFactType = null;
-            if (!fieldType.isPrimitive()) {
-                fieldFactType = kbs.getFactType(fieldType.getPackage().getName(), fieldType.getSimpleName());
-            }
-            if (fieldFactType != null && !fieldType.isEnum()) {
-                node.getProperties().put(field.getName(),
-                        factType2JsonSchemaNode(field.getName(),fieldFactType,kbs));
-            } else {
-                node.getProperties().put(field.getName(),factType2JsonSchemaLeafNode(field));
-            }
-
+            node.getProperties().put(field.getName(),
+                    javaType2JsonSchemaNode(field.getName(), field.getType(), kbs));
         }
 
         return node;
     }
 
-    private JsonSchemaNode factType2JsonSchemaLeafNode(FactField field) {
+    private JsonSchemaBaseNode javaType2JsonSchemaNode(String name, Class<?> type, KieBase kbs) {
 
-        JsonSchemaNode node = new JsonSchemaNode();
-        Class<?> type = field.getType();
+        if (Collection.class.isAssignableFrom(type)) {
+            JsonSchemaArrayNode node = new JsonSchemaArrayNode();
+            node.setTitle(name);
+            node.setType("array");
+            JsonSchemaMultiTypeNode typeNode = new JsonSchemaMultiTypeNode();
+            typeNode.getType().add("string");
+            typeNode.getType().add("boolean");
+            typeNode.getType().add("integer");
+            typeNode.getType().add("number");
+            node.setItems(typeNode);
+            return node;
+        }
+
+        if (type.isArray()) {
+            JsonSchemaArrayNode node = new JsonSchemaArrayNode();
+            node.setTitle(name);
+            node.setFormat("table");
+            node.setType("array");
+            node.setItems(javaType2JsonSchemaNode(name,type.getComponentType(),kbs));
+            return node;
+        }
+
+        FactType factType = null;
+        if (!type.isPrimitive()) {
+            factType = kbs.getFactType(type.getPackage().getName(), type.getSimpleName());
+        }
+
+        if (factType != null && !type.isEnum()) {
+            return factType2JsonSchemaNode(name, factType, kbs);
+        }
+
+        return javaType2JsonSchemaLeafNode(name, type);
+    }
+
+    private JsonSchemaLeafNode javaType2JsonSchemaLeafNode(String name, Class<?> type) {
+
+        JsonSchemaLeafNode node = new JsonSchemaNode();
 
         if (type.equals(Integer.class) || type.equals(Long.class) || type.equals(Short.class)
                 || type.equals(int.class) || type.equals(long.class) || type.equals(short.class)) {
@@ -244,7 +269,7 @@ public class DrlCompilerServiceImpl implements DrlCompilerService {
             node = enode;
         }
 
-        node.setTitle(field.getName());
+        node.setTitle(name);
 
         return node;
     }

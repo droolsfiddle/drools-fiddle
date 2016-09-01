@@ -8,33 +8,13 @@ import java.util.Map;
 /**
  * Created by gurfm on 25/08/16.
  */
-public class JsonSchemaNode {
+public class JsonSchemaNode extends JsonSchemaLeafNode {
 
-    private String type;
-
-    private String title;
-
-    private Map<String,JsonSchemaNode> properties = new HashMap<>();
+    private Map<String,JsonSchemaBaseNode> properties = new HashMap<>();
 
     //private boolean required;
 
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public Map<String,JsonSchemaNode> getProperties() {
+    public Map<String,JsonSchemaBaseNode> getProperties() {
         return properties;
     }
 
