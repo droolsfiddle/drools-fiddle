@@ -118,9 +118,16 @@ public class DrlCompilerServiceImpl implements DrlCompilerService {
             logger.debug("root types: "+rootTypes);
             JsonSchemaNode root = new JsonSchemaNode();
             root.setType("object");
+            root.setTitle("Facts");
+            Map<String,Object> emptyMap = new HashMap<>();
             for (FactType type : rootTypes) {
+                if (type.getFactClass().isEnum()) // skip enums
+                    continue;
+
                 root.getProperties().put(type.getName(),
-                        factType2JsonSchemaNode(type.getName(),type,kbs));
+                        factType2JsonSchemaNode(type.getSimpleName(),type,kbs));
+                iMessage.getJsonValue().put(type.getName(),emptyMap);
+
             }
             iMessage.setJsonSchema(root);
 
@@ -190,41 +197,81 @@ public class DrlCompilerServiceImpl implements DrlCompilerService {
         node.setType("object");
 
         for (FactField field : type.getFields()) {
-            Class<?> fieldType = field.getType();
-            FactType fieldFactType = null;
-            if (!fieldType.isPrimitive()) {
-                fieldFactType = kbs.getFactType(fieldType.getPackage().getName(), fieldType.getSimpleName());
-            }
-            if (fieldFactType != null) {
-                node.getProperties().put(field.getName(),
-                        factType2JsonSchemaNode(field.getName(),fieldFactType,kbs));
-            } else {
-                JsonSchemaNode fieldNode = new JsonSchemaNode();
-                fieldNode.setTitle(field.getName());
-                fieldNode.setType(type2String(field.getType()));
-                node.getProperties().put(field.getName(),fieldNode);
-            }
-
+            node.getProperties().put(field.getName(),
+                    javaType2JsonSchemaNode(field.getName(), field.getType(), kbs));
         }
 
         return node;
     }
 
-    private String type2String(Class<?> type) {
+    private JsonSchemaBaseNode javaType2JsonSchemaNode(String name, Class<?> type, KieBase kbs) {
+
+        if (Collection.class.isAssignableFrom(type)) {
+            JsonSchemaArrayNode node = new JsonSchemaArrayNode();
+            node.setTitle(name);
+            node.setType("array");
+            JsonSchemaMultiTypeNode typeNode = new JsonSchemaMultiTypeNode();
+            typeNode.getType().add("string");
+            typeNode.getType().add("boolean");
+            typeNode.getType().add("integer");
+            typeNode.getType().add("number");
+            node.setItems(typeNode);
+            return node;
+        }
+
+        if (type.isArray()) {
+            JsonSchemaArrayNode node = new JsonSchemaArrayNode();
+            node.setTitle(name);
+            node.setFormat("table");
+            node.setType("array");
+            node.setItems(javaType2JsonSchemaNode(name,type.getComponentType(),kbs));
+            return node;
+        }
+
+        FactType factType = null;
+        if (!type.isPrimitive()) {
+            factType = kbs.getFactType(type.getPackage().getName(), type.getSimpleName());
+        }
+
+        if (factType != null && !type.isEnum()) {
+            return factType2JsonSchemaNode(name, factType, kbs);
+        }
+
+        return javaType2JsonSchemaLeafNode(name, type);
+    }
+
+    private JsonSchemaLeafNode javaType2JsonSchemaLeafNode(String name, Class<?> type) {
+
+        JsonSchemaLeafNode node = new JsonSchemaNode();
+
         if (type.equals(Integer.class) || type.equals(Long.class) || type.equals(Short.class)
                 || type.equals(int.class) || type.equals(long.class) || type.equals(short.class)) {
-            return "integer";
+            node.setType("integer");
         } else if (type.equals(Float.class) || type.equals(Double.class)
                 || type.equals(float.class) || type.equals(double.class)) {
-            return "number";
+            node.setType("number");
         } else if (type.equals(Boolean.class) || type.equals(boolean.class)) {
-            return "boolean";
+            node.setType("boolean");
         }  else if (type.equals(Date.class)) {
-            return "string";
+            JsonSchemaFormattedNode fnode = new JsonSchemaFormattedNode();
+            fnode.setType("string");
+            fnode.setFormat("date");
+            node = fnode;
         } else if (type.equals(String.class)) {
-            return "string";
+            node.setType("string");
+        } else if (type.isEnum()) {
+            JsonSchemaEnumNode enode = new JsonSchemaEnumNode();
+            enode.setType("string");
+            enode.setFormat("select");
+            for (Object ec : type.getEnumConstants()) {
+                enode.getEnum().add(ec.toString());
+            }
+            node = enode;
         }
-        return "null";
+
+        node.setTitle(name);
+
+        return node;
     }
 
 }

@@ -15,7 +15,8 @@ helloAjaxApp.config(
                   theme: 'bootstrap3',
                   disable_edit_json: true,
                   disable_properties: false,
-                  no_additional_properties: true
+                  no_additional_properties: true,
+                  display_required_only: false
               }
           }
   });
@@ -27,12 +28,11 @@ helloAjaxApp.controller("myController", ['$scope',
 
     $scope.attribute = {};
 
-    $scope.message = {};
     $scope.editor = ace.edit("editor");
 
-    $scope.mySchema = {};
+    $scope.mySchema = {"type":"object", "title":"Facts"};
 
-    $scope.myStartVal = {};
+    $scope.myStartVal = undefined;
 
     $scope.onChange = function (data) {
         console.log('Form changed!');
@@ -49,49 +49,19 @@ helloAjaxApp.controller("myController", ['$scope',
 		};
 
 		var res = $http.post('/rest/message/drlCompile', dataObj);
-//		var res = $http.post('http://127.0.0.1:8080/drools-fiddle/rest/message/drlParser', dataObj);
-//		var res = $http.post('http://127.0.0.1:8080/drools-fiddle/rest/message/droolsverifier', dataObj);
 
 		res.success(function(data, status, headers, config) {
             console.log(data);
-            $scope.message.packages = data.packages;
+            $scope.myStartVal = undefined;
             $scope.mySchema = data.jsonSchema;
-            //$scope.message.packages = JSON.stringify($scope.message.packages, null, 2);
-
+            $('#theTabs a[data-target="#facts"]').tab('show');
 		});
 		res.error(function(data, status, headers, config) {
             console.log(data);
 		});
     };
-/*
-	$scope.pushAttribute = function(iFactName){
-	    console.log(iFactName);
-        console.log($scope.attribute[iFactName]);
 
-		var dataObj = {
-		    data : btoa(JSON.stringify($scope.attribute[iFactName]))
-		}
-
-		//var options = {
-        //  headers: { 'Content-Type': ['text/plain'] }
-        //};
-
-		var res = $http.post('/rest/facts/insert/' + iFactName, dataObj);
-
-		res.success(function(data, status, headers, config) {
-            //$scope.message.log = data.log
-            console.log(data);
-
-		});
-		res.error(function(data, status, headers, config) {
-            //$scope.message.log = data.log
-            console.log(data);
-		});
-
-	};
-*/
     $scope.fireDrl = function(){
-
         var dataObj = {
                 data : "",
         };
@@ -100,17 +70,14 @@ helloAjaxApp.controller("myController", ['$scope',
 
         res.success(function(data, status, headers, config) {
             console.log(data);
-            //$scope.message.log = data.log
 
         });
         res.error(function(data, status, headers, config) {
-            //$scope.message.log = data.log
             console.log(data);
         });
     };
 
     $scope.saveDrl = function(){
-
             var res = $http.post('/rest/context');
 
             res.success(function(data, status, headers, config) {
@@ -120,7 +87,6 @@ helloAjaxApp.controller("myController", ['$scope',
                 }
             });
             res.error(function(data, status, headers, config) {
-                //$scope.message.log = data.log
                 console.log(data);
             });
      };
@@ -138,11 +104,10 @@ helloAjaxApp.controller("myController", ['$scope',
         res.success(function(data, status, headers, config) {
             console.log(data);
                 if (data.result) {
-                    $scope.message.data = data.drl;
+                    $scope.editor.setValue(data.drl);
                 }
             });
             res.error(function(data, status, headers, config) {
-                //$scope.message.log = data.log
                 console.log(data);
             });
     });

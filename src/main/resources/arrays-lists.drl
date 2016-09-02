@@ -1,0 +1,59 @@
+//
+// copy paste your drl
+//
+
+declare Fact
+    values : int[]
+    value: int
+end
+
+
+rule "Rule"
+when
+    f : Fact(values[0] == 42)
+then
+    modify( f ) { values[0] = 41; }
+    modify( f ) { setValue(100); }
+end
+
+
+//
+// copy paste your drl
+//
+
+declare X
+    x : int
+end
+
+declare Fact
+    values : X[]
+    value: int
+end
+
+
+rule "Rule"
+when
+    f : Fact(values[0].x == 42)
+then
+    //nothing
+end
+
+
+//
+// copy paste your drl
+//
+import java.util.ArrayList;
+
+declare Fact
+    values : ArrayList
+    value: int
+end
+
+
+rule "Rule"
+when
+    f : Fact(v : values)
+    Integer(intValue() == 42) from v
+then
+    //nothing
+end
