@@ -99,7 +99,7 @@ helloAjaxApp.controller("myController", ['$scope',
             return;
         }
 
-        var res = $http.get('/rest/context/'+$routeParams.id);
+        var res = $http.get(window.location.pathname+'rest/context/'+$routeParams.id);
 
         res.success(function(data, status, headers, config) {
             console.log(data);
