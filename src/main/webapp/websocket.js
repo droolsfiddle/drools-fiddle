@@ -40,7 +40,8 @@ window.onload = function () {
 
     function createWebSocket(path) {
         var protocolPrefix = (window.location.protocol === 'https:') ? 'wss:' : 'ws:';
-        return new WebSocket(protocolPrefix + '//' + window.location.hostname + window.location.pathname + path);
+		var port = window.location.port ? ":"+window.location.port : "";
+        return new WebSocket(protocolPrefix + '//' + window.location.hostname + port + window.location.pathname + path);
     }
 
     function disconnect() {
