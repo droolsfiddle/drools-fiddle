@@ -11,7 +11,7 @@ window.onload = function () {
 
     var websocket = null;
 
-    websocket = createWebSocket('/websocket/log');
+    websocket = createWebSocket('websocket/log');
 
     websocket.onopen = function() {
         console.log('Open');
@@ -40,7 +40,7 @@ window.onload = function () {
 
     function createWebSocket(path) {
         var protocolPrefix = (window.location.protocol === 'https:') ? 'wss:' : 'ws:';
-        return new WebSocket(protocolPrefix + '//' + location.host + path);
+        return new WebSocket(protocolPrefix + '//' + window.location.hostname + window.location.pathname + path);
     }
 
     function disconnect() {

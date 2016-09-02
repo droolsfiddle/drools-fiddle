@@ -48,7 +48,7 @@ helloAjaxApp.controller("myController", ['$scope',
 		        data : btoa($scope.editor.getValue()),
 		};
 
-		var res = $http.post('/rest/message/drlCompile', dataObj);
+		var res = $http.post(window.location.pathname+'rest/message/drlCompile', dataObj);
 
 		res.success(function(data, status, headers, config) {
             console.log(data);
@@ -66,7 +66,7 @@ helloAjaxApp.controller("myController", ['$scope',
                 data : "",
         };
 
-        var res = $http.post('/rest/message/drlFire', dataObj);
+        var res = $http.post(window.location.pathname+'rest/message/drlFire', dataObj);
 
         res.success(function(data, status, headers, config) {
             console.log(data);
@@ -78,7 +78,7 @@ helloAjaxApp.controller("myController", ['$scope',
     };
 
     $scope.saveDrl = function(){
-            var res = $http.post('/rest/context');
+            var res = $http.post(window.location.pathname+'rest/context');
 
             res.success(function(data, status, headers, config) {
                 console.log(data);
@@ -130,7 +130,7 @@ helloAjaxApp.controller("myController", ['$scope',
                     "data" : btoa(JSON.stringify(data[key]))
                   }
 
-                  var res = $http.post('/rest/facts/insert/' + key, msg);
+                  var res = $http.post(window.location.pathname+'rest/facts/insert/' + key, msg);
 
                   res.success(function(data, status, headers, config) {
                       console.log(data);
