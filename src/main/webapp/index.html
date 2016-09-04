@@ -53,8 +53,8 @@
     </div>
     <form class="navbar-form navbar-left" role="form">
         <div class="btn-group inline">
-            <button type="submit" class="btn btn-primary" ng-click="compileDrl()">Build</button>
-            <button type="submit" class="btn btn-primary" ng-click="fireDrl()">Fire</button>
+            <button type="submit" class="btn btn-primary" ng-click="compileDrl()"><span class="glyphicon glyphicon-cog" aria-hidden="true"></span> Build</button>
+            <button id="firebtn" type="submit" class="btn btn-primary disabled" ng-click="fireDrl()"><span class="glyphicon glyphicon-play" aria-hidden="true"></span> Fire</button>
         </div>
         <div class="form-group inline">
             <input name="checkbox-live" type="checkbox" checked data-on-color="success" data-off-color="danger" data-on-text="Live">
@@ -79,7 +79,7 @@
     </form>
     <form role="form" class="navbar-form navbar-right" ng-submit="saveDrl()" id="saveform">
         <div class="btn-group inline">
-            <button type="submit" class="btn btn-primary">Save</button>
+            <button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-floppy-save" aria-hidden="true"></span> Save</button>
         </div>
     </form>
 </div>
@@ -140,13 +140,19 @@ end
     </div>
     <div class="col-md-6">
         <div class="panel panel-default">
-            <div class="panel-heading"><h3 class="panel-title">Visualization</h3></div>
+            <div class="panel-heading"><h3 class="panel-title">Visualization <a data-html="true" data-toggle="popover" data-trigger="hover" title="Legend" data-popover-content="#legend"><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span></a></h3></div>
             <div class="panel-body">
                 <div id="mynetwork" class="row"></div>
                 <pre id="eventSpan" class="row"></pre>
             </div>
         </div>
     </div>
+</div>
+
+<div id="legend" class="hide">
+    <span class="label label-info">Fact Instance</span>
+    <span class="label label-warning">Rule</span>
+    <span class="label label-danger">Fact Type</span>
 </div>
 
 
