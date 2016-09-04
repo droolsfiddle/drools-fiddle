@@ -285,7 +285,31 @@
         });
     }
 
-    reset();
+    $(function() {
+
+        $("[name='checkbox-live']").bootstrapSwitch();
+        var index;
+        $("[name='checkbox-live']").on('switchChange.bootstrapSwitch', function(event, state) {
+            if (state) {
+                    $('.stepbystep').addClass("disabled");
+                    nextend();
+            } else {
+                    $('.stepbystep').removeClass("disabled");
+                    index = queue.length - 1;
+            }
+        });
+
+        $("#previousbegin").click(previousbegin);
+
+        $("#previous").click(previous);
+
+        $("#next").click(next);
+
+        $("#nextend").click(nextend);
+
+        reset();
+    });
+
 
 /*
 network.on("doubleClick", function (params) {

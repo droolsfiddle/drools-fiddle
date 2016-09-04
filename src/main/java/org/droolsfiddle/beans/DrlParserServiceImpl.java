@@ -25,13 +25,6 @@ public class DrlParserServiceImpl implements DrlParserService {
     @Inject
     DrlContext drlContext;
 
-    public Message printMessage() {
-        Message aMessage = new Message();
-        aMessage.setId(1);
-        aMessage.setData("Hello World!");
-        return aMessage;
-    }
-
     public Message postDrlParser(Message iMessage) throws DroolsParserException {
         logger.debug("Init validation drl: DrlParser");
 
@@ -75,12 +68,12 @@ public class DrlParserServiceImpl implements DrlParserService {
                 aFact.setAttributes(attributes);
                 facts.add(aFact);
             }
-            List<org.droolsfiddle.rest.Package> packs = new ArrayList<org.droolsfiddle.rest.Package>();
-            org.droolsfiddle.rest.Package pack = new org.droolsfiddle.rest.Package();
-            pack.setName("default");
-            pack.setFacts(facts);
-            packs.add(pack);
-            iMessage.setPackages(packs);
+            //List<org.droolsfiddle.rest.Package> packs = new ArrayList<org.droolsfiddle.rest.Package>();
+            //org.droolsfiddle.rest.Package pack = new org.droolsfiddle.rest.Package();
+            //pack.setName("default");
+            //pack.setFacts(facts);
+            //packs.add(pack);
+            //iMessage.setPackages(packs);
             aLog.append(descr.getName());
         }
         iMessage.setLog(aLog.toString());

@@ -52,9 +52,11 @@ helloAjaxApp.controller("myController", ['$scope',
 
 		res.success(function(data, status, headers, config) {
             console.log(data);
-            $scope.myStartVal = undefined;
-            $scope.mySchema = data.jsonSchema;
-            $('#theTabs a[data-target="#facts"]').tab('show');
+            if (data.success) {
+                $scope.myStartVal = undefined;
+                $scope.mySchema = data.jsonSchema;
+                $('#theTabs a[data-target="#facts"]').tab('show');
+            }
 		});
 		res.error(function(data, status, headers, config) {
             console.log(data);

@@ -89,7 +89,7 @@ public class CompileInsertFireIT {
 
         // Then
 
-        System.out.println(response.getPackages());
+        System.out.println(response.getJsonSchema());
     }
 
 

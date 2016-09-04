@@ -36,10 +36,9 @@ public class FactInstanceServiceImpl implements FactInstanceService {
     DrlContext drlContext;
 
     public Message postInsertFact(String iType, Message iMessage) {
-
+        logger.debug("Fact insert service");
         Message resp = new Message();
-
-        try {
+        resp.setSuccess(false);
 
         Session wsSession = (Session) request.getSession().getAttribute(Session.class.getName());
 
@@ -47,7 +46,11 @@ public class FactInstanceServiceImpl implements FactInstanceService {
 
         if (!drlContext.hasKieBase()) {
             resp.setLog("ERROR: No Container defined.");
-            wsSession.getBasicRemote().sendText("ERROR: No Container defined.");
+            try {
+                wsSession.getBasicRemote().sendText("ERROR: No Container defined.");
+            } catch (IOException e) {
+                logger.error("Websocket exception",e);
+            }
 
             return resp;
         }
@@ -57,18 +60,36 @@ public class FactInstanceServiceImpl implements FactInstanceService {
 
         if (kBase == null) {
             resp.setLog("ERROR: No KieBase defined.");
-            wsSession.getBasicRemote().sendText("ERROR: No KieBase defined.");
+            try {
+                wsSession.getBasicRemote().sendText("ERROR: No KieBase defined.");
+            } catch (IOException e) {
+                logger.error("Websocket exception",e);
+            }
             return resp;
         }
 
         if (kBase.getKiePackages().size() == 0) {
             resp.setLog("ERROR: No Package defined.");
-            wsSession.getBasicRemote().sendText("ERROR: No Package defined.");
+            try {
+                wsSession.getBasicRemote().sendText("ERROR: No Package defined.");
+            } catch (IOException e) {
+                logger.error("Websocket exception",e);
+            }
             return resp;
         }
 
         FactType factType = kBase.getFactType(iType.substring(0,iType.lastIndexOf('.')),
                 iType.substring(iType.lastIndexOf('.') + 1));
+
+        if (factType == null) {
+            resp.setLog("ERROR: fact type "+iType+" not found.");
+            try {
+                wsSession.getBasicRemote().sendText("ERROR: fact type "+iType+" not found.");
+            } catch (IOException e) {
+                logger.error("Websocket exception",e);
+            }
+            return resp;
+        }
 
         ObjectMapper mapper = new ObjectMapper();
 
@@ -79,7 +100,11 @@ public class FactInstanceServiceImpl implements FactInstanceService {
         } catch (Exception e) {
             logger.error("Error while parsing fact",e);
             resp.setLog("ERROR: Error while parsing fact: " + e.getMessage());
-            wsSession.getBasicRemote().sendText("ERROR: Error while parsing fact: " + e.getMessage());
+            try {
+                wsSession.getBasicRemote().sendText("ERROR: Error while parsing fact: " + e.getMessage());
+            } catch (IOException e1) {
+                logger.error("Websocket exception",e);
+            }
             return resp;
         }
 
@@ -97,10 +122,9 @@ public class FactInstanceServiceImpl implements FactInstanceService {
         FactHandle handle = kieSession.insert(fact);
         resp.setData(handle.toString());
         resp.setLog("INFO: inserted fact handle: " + handle.toString());
+        resp.setSuccess(true);
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        logger.debug("End Fact Insert service: " + resp);
 
         return resp;
 

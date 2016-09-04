@@ -65,6 +65,6 @@ public class DrlParserIT {
 
         // Then
 
-        System.out.println(response.getPackages());
+        System.out.println(response.isSuccess());
     }
 }

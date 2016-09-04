@@ -42,9 +42,12 @@ public class DrlCompilerServiceImpl implements DrlCompilerService {
     private ObjectMapper mapper = new ObjectMapper();
 
 
-    public Message postDrlCompile(Message iMessage) {
+    public Message postDrlCompile(final Message iMessage) {
         logger.debug("Init validation drl: DrlParser");
         Session wsSession = (Session) request.getSession().getAttribute(Session.class.getName());
+
+        Message resp = new Message();
+        resp.setSuccess(false);
 
         String drl;
         try {
@@ -54,13 +57,11 @@ public class DrlCompilerServiceImpl implements DrlCompilerService {
             try {
                 wsSession.getBasicRemote().sendText("error while decoding input drl: "+e.getMessage());
             } catch (IOException e2) {
-                e2.printStackTrace();
+                logger.error("Websocket error",e2);
             }
-            iMessage.setLog("error while decoding input drl: "+e.getMessage());
-            return iMessage;
+            resp.setLog("error while decoding input drl: "+e.getMessage());
+            return resp;
         }
-
-        iMessage.setData("");
 
         StringBuilder aLog = new StringBuilder();
 
@@ -81,112 +82,91 @@ public class DrlCompilerServiceImpl implements DrlCompilerService {
             try {
                 wsSession.getBasicRemote().sendText(mapper.writeValueAsString(aLog));
             } catch (IOException e) {
-                e.printStackTrace();
+                logger.error("Websocket error",e);
             }
-
-        } else {
-            kContainer = ks.newKieContainer(kr.getDefaultReleaseId());
-            aLog.append(kContainer.getClassLoader());
-
-            KieBase kbs = kContainer.getKieBase();
-            drlContext.setKieBase(new KieBaseWrapper(drl,kbs));
-
-            // packages parsing
-
-
-            Set<FactType> rootTypes = new HashSet<FactType>();
-            for (KiePackage pack : kbs.getKiePackages()) { // first assume all types are root types
-                rootTypes.addAll(pack.getFactTypes());
-            }
-            /*
-            for (KiePackage pack : kbs.getKiePackages()) {  // then filter out non-root types
-                for (FactType type : pack.getFactTypes()) { // for each type
-                    for (FactField field : type.getFields()) { // for each field inside
-                        if (!field.getType().isPrimitive()) { // if not primitive
-                            FactType fieldType = kbs.getFactType(field.getType().getPackage().getName(),
-                                    field.getType().getSimpleName());
-                            if (fieldType != null) { // field type is a declared type
-                                if (rootTypes.contains(fieldType)) { // then it's not a root type
-                                    rootTypes.remove(fieldType);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            */
-            logger.debug("root types: "+rootTypes);
-            JsonSchemaNode root = new JsonSchemaNode();
-            root.setType("object");
-            root.setTitle("Facts");
-            Map<String,Object> emptyMap = new HashMap<>();
-            for (FactType type : rootTypes) {
-                if (type.getFactClass().isEnum()) // skip enums
-                    continue;
-
-                root.getProperties().put(type.getName(),
-                        factType2JsonSchemaNode(type.getSimpleName(),type,kbs));
-                iMessage.getJsonValue().put(type.getName(),emptyMap);
-
-            }
-            iMessage.setJsonSchema(root);
-
-
-            List<Package> packs = new ArrayList<Package>();
-            for (KiePackage pack : kbs.getKiePackages()) {
-                Package aPack = new Package();
-                aPack.setName(pack.getName());
-                List<Fact> facts = new ArrayList<Fact>();
-                for (Rule rule : pack.getRules()) {
-                    org.droolsfiddle.rest.Rule aRule = new org.droolsfiddle.rest.Rule();
-                    aRule.setName(rule.getName());
-                    CustomDroolsEvent aEvent = new CustomDroolsEvent("insert-rule").map(aRule);
-                    try {
-                        wsSession.getBasicRemote().sendText(mapper.writeValueAsString(aEvent));
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-
-                for (FactType declare : pack.getFactTypes()) {
-                    Fact aFact = new Fact();
-                    List<Attribute> attributes = new ArrayList<Attribute>();
-                    aFact.setName(declare.getName().replaceAll(pack.getName() + ".", ""));
-
-                    for (FactField field : declare.getFields()) {
-                        Attribute attr = new Attribute();
-                        attr.setId(field.getIndex());
-                        attr.setName(field.getName());
-                        attr.setType(field.getType().getCanonicalName());
-                        if (field.getType().isEnum()) {
-                            Object[] aEnumValues = field.getType().getEnumConstants();
-                            attr.setEnumValues(field.getType().getEnumConstants());
-                        }
-                        attributes.add(attr);
-                    }
-                    aFact.setAttributes(attributes);
-                    if(!declare.getFactClass().isEnum()) {
-                        facts.add(aFact);
-                    }
-                    CustomDroolsEvent aEvent = new CustomDroolsEvent("insert-fact-type").map(aFact);
-                    try {
-                        wsSession.getBasicRemote().sendText(mapper.writeValueAsString(aEvent));
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-
-                }
-                aPack.setFacts(facts);
-                packs.add(aPack);
-            }
-            iMessage.setPackages(packs);
+            resp.setLog(aLog.toString());
+            return resp;
         }
 
-        iMessage.setLog(aLog.toString());
-        logger.debug(iMessage.toString());
+        kContainer = ks.newKieContainer(kr.getDefaultReleaseId());
+        aLog.append(kContainer.getClassLoader());
 
+        KieBase kbs = kContainer.getKieBase();
+        drlContext.setKieBase(new KieBaseWrapper(drl,kbs));
 
-        return iMessage;
+        // packages parsing
+        Set<FactType> rootTypes = new HashSet<FactType>();
+        for (KiePackage pack : kbs.getKiePackages()) {
+            rootTypes.addAll(pack.getFactTypes());
+        }
+
+        JsonSchemaNode root = new JsonSchemaNode();
+        root.setType("object");
+        root.setTitle("Facts");
+        for (FactType type : rootTypes) {
+            if (type.getFactClass().isEnum()) // skip enums
+                continue;
+
+            root.getProperties().put(type.getName(),
+                    factType2JsonSchemaNode(type.getSimpleName(),type,kbs));
+
+        }
+        resp.setJsonSchema(root);
+
+        List<Package> packs = new ArrayList<Package>();
+        for (KiePackage pack : kbs.getKiePackages()) {
+            //Package aPack = new Package();
+            //aPack.setName(pack.getName());
+            //List<Fact> facts = new ArrayList<Fact>();
+            for (Rule rule : pack.getRules()) {
+                org.droolsfiddle.rest.Rule aRule = new org.droolsfiddle.rest.Rule();
+                aRule.setName(rule.getName());
+                CustomDroolsEvent aEvent = new CustomDroolsEvent("insert-rule").map(aRule);
+                try {
+                    wsSession.getBasicRemote().sendText(mapper.writeValueAsString(aEvent));
+                } catch (IOException e) {
+                    logger.error("Websocket error",e);
+                }
+            }
+
+            for (FactType declare : pack.getFactTypes()) {
+                Fact aFact = new Fact();
+                List<Attribute> attributes = new ArrayList<Attribute>();
+                aFact.setName(declare.getName().replaceAll(pack.getName() + ".", ""));
+
+                for (FactField field : declare.getFields()) {
+                    Attribute attr = new Attribute();
+                    attr.setId(field.getIndex());
+                    attr.setName(field.getName());
+                    attr.setType(field.getType().getCanonicalName());
+                    if (field.getType().isEnum()) {
+                        attr.setEnumValues(field.getType().getEnumConstants());
+                    }
+                    attributes.add(attr);
+                }
+                aFact.setAttributes(attributes);
+                //if(!declare.getFactClass().isEnum()) {
+                //    facts.add(aFact);
+                //}
+                CustomDroolsEvent aEvent = new CustomDroolsEvent("insert-fact-type").map(aFact);
+                try {
+                    wsSession.getBasicRemote().sendText(mapper.writeValueAsString(aEvent));
+                } catch (IOException e) {
+                    logger.error("Websocket error",e);
+                }
+
+            }
+            //aPack.setFacts(facts);
+            //packs.add(aPack);
+        }
+        //iMessage.setPackages(packs);
+
+        resp.setLog(aLog.toString());
+        resp.setSuccess(true);
+
+        logger.debug("End DRL compile service: "+resp.toString());
+
+        return resp;
     }
 
     private JsonSchemaNode factType2JsonSchemaNode(String name, FactType type, KieBase kbs) {

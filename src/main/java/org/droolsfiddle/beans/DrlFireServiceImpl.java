@@ -9,6 +9,10 @@ import org.kie.api.runtime.KieSession;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.servlet.http.HttpServletRequest;
+import javax.websocket.Session;
+import javax.ws.rs.core.Context;
+import java.io.IOException;
 import java.util.concurrent.*;
 
 @Named
@@ -16,24 +20,38 @@ public class DrlFireServiceImpl implements DrlFireService {
 
     private Logger logger = Logger.getLogger(DrlFireServiceImpl.class);
 
+    @Context
+    private HttpServletRequest request;
+
     @Inject
-    DrlContext drlContext;
+    private DrlContext drlContext;
 
-    public Message postDrlFire(Message iMessage) {
+    public Message postDrlFire(final Message iMessage) {
+        logger.debug("Fire Rules service");
+        Session wsSession = (Session) request.getSession().getAttribute(Session.class.getName());
 
-        iMessage.setData("");
+        Message resp = new Message();
+        resp.setSuccess(false);
 
         if (!drlContext.hasKieBase()) {
-            iMessage.setLog("ERROR: No Container defined.");
-            return iMessage;
+            resp.setLog("ERROR: No Container defined.");
+            try {
+                wsSession.getBasicRemote().sendText("ERROR: No Container defined.");
+            } catch (IOException e) {
+                logger.error("Websocket exception",e);
+            }
+            return resp;
         }
 
-
         KieBase kBase = drlContext.getKieBase().getKieBase();
-
         if (kBase == null) {
-            iMessage.setLog("ERROR: No KieBase defined.");
-            return iMessage;
+            resp.setLog("ERROR: No KieBase defined.");
+            try {
+                wsSession.getBasicRemote().sendText("ERROR: No KieBase defined.");
+            } catch (IOException e) {
+                logger.error("Websocket exception",e);
+            }
+            return resp;
         }
 
         final KieSession kieSession ;
@@ -53,22 +71,37 @@ public class DrlFireServiceImpl implements DrlFireService {
             }
         });
 
-        int numberOfFiredRules;
-
         try{
-            numberOfFiredRules = futureResult.get(10, TimeUnit.SECONDS);
-            iMessage.setLog("INFO: fired " + numberOfFiredRules + " rules.");
+            int numberOfFiredRules = futureResult.get(10, TimeUnit.SECONDS);
+            resp.setLog("INFO: fired " + numberOfFiredRules + " rules.");
+            try {
+                wsSession.getBasicRemote().sendText("INFO: fired " + numberOfFiredRules + " rules.");
+            } catch (IOException e) {
+                logger.error("Websocket exception",e);
+            }
+            resp.setSuccess(true);
         } catch(TimeoutException e){
             logger.warn("No response after 10 seconds",e);
-            iMessage.setLog("ERROR: rule evaluation timed out.");
+            resp.setLog("ERROR: rule evaluation timed out.");
+            try {
+                wsSession.getBasicRemote().sendText("ERROR: rule evaluation timed out.");
+            } catch (IOException e1) {
+                logger.error("Websocket exception",e1);
+            }
             futureResult.cancel(true);
         } catch (Exception e2) {
             logger.warn("Other error during rule evaluation",e2);
-            iMessage.setLog("ERROR: rule evaluation error " + e2.getMessage());
+            resp.setLog("ERROR: rule evaluation error " + e2.getMessage());
+            try {
+                wsSession.getBasicRemote().sendText("ERROR: rule evaluation error " + e2.getMessage());
+            } catch (IOException e1) {
+                logger.error("Websocket exception",e1);
+            }
+        } finally {
+            service.shutdown();
         }
 
-        service.shutdown();
-
-        return iMessage;
+        logger.debug("End Fire Rules service: "+resp);
+        return resp;
     }
 }
