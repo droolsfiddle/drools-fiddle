@@ -19,7 +19,7 @@ public class WebSocketHandler {
 
   @OnMessage
   public String echo(String name) {
-    System.out.println("Say hello to '" + name + "'");
+    logger.debug("Say hello to '" + name + "'");
     return ("Hello " + name + " from websocket endpoint");
   }
 
@@ -32,11 +32,11 @@ public class WebSocketHandler {
     aHttpSession.setAttribute(Session.class.getName(), session);
 
 //    drlContext.setWebSocketSession(session);
-    System.out.println("WebSocket opened: " + session.getId());
+    logger.info("WebSocket opened: " + session.getId());
   }
 
   @OnClose
   public void close(CloseReason reason) {
-    System.out.println("WebSocket connection closed with CloseCode: " + reason.getCloseCode());
+    logger.info("WebSocket connection closed with CloseCode: " + reason.getCloseCode());
   }
 }
