@@ -118,7 +118,7 @@
     function nextFI(dataP, dataA) {
         var newId = dataA.id;
         var dataJson = JSON.stringify(dataA.object, null, 2);
-        nodes.add({id:newId, color : 'blue', title:dataJson, group : "factinstance"});
+        nodes.add({id:newId, color : '#51c1db', title:dataJson, group : "factinstance"});
         var edgesId = dataA.type + "-" + newId;
         edges.add({id:edgesId, from: dataA.type, to: newId, dashes:true});
         if(dataA.from.length > 0) {
@@ -133,7 +133,7 @@
     function nextUFI(dataP, dataA) {
         var node = nodes.get(dataA.id);
         node.borderWidth = 3;
-        node.color = {background:'blue', border:'red'};
+        node.color = {background:'#51c1db', border:'#de5152'};
         var dataJson = JSON.stringify(dataA.object, null, 2);
         node.title = dataJson;
         nodes.update(node);
@@ -159,18 +159,18 @@
         var newId = dataA.id;
         //var newId = dataA.object.name;
         var dataJson = JSON.stringify(dataA.object.attributes, null, 2);
-        nodes.add({id:dataA.object.name, label:dataA.object.name, color : 'red', shape : 'box', title:dataJson, group : "facttype"});
+        nodes.add({id:dataA.object.name, label:dataA.object.name, color : '#de5152', shape : 'box', title:dataJson, group : "facttype"});
     }
 
     function nextR(dataP, dataA) {
         var dataJson = JSON.stringify(dataA.object, null, 2);
-        nodes.add({id:dataA.object.name, label:dataA.object.name, color : 'orange', shape : 'box', title:dataJson, group : "rule"});
+        nodes.add({id:dataA.object.name, label:dataA.object.name, color : '#f3ac5d', shape : 'box', title:dataJson, group : "rule"});
     }
 
     function nextF(dataP, dataA) {
         var node = nodes.get(dataA.object);
         node.borderWidth = 3;
-        node.color = {background:'orange', border:'red'};
+        node.color = {background:'#f3ac5d', border:'#de5152'};
         nodes.update(node);
         var edgesId;
         for (i = 0; i < dataA.from.length; i++) {
@@ -200,7 +200,7 @@
     function nextFR(dataP, dataA) {
         var node = nodes.get(dataA.object);
         node.borderWidth = 1;
-        node.color = {background:'orange', border:'orange'};
+        node.color = {background:'#f3ac5d', border:'#f3ac5d'};
         nodes.update(node);
         var edgesId;
         for (i = 0; i < dataA.from.length; i++) {
@@ -249,9 +249,9 @@
         // create an array with nodes
         nodes = new vis.DataSet([
         {id:0, label : "User", color : 'pink', shape : 'icon', group : 'users', title : "42"},
-        {id: 1, x: x, y: y, label: 'Rule', group: 'rule', color : 'orange', shape : 'box', value: 1, fixed: true, physics:false},
-        {id: 2, x: x, y: y + step, label: 'Fact Type', group: 'facttype', color : 'red', shape : 'box', value: 1, fixed: true,  physics:false},
-        {id: 3, x: x, y: y + 2 * step, label: 'Fact Instance', group: 'factinstance', color : 'blue', shape : 'box', value: 1, fixed: true,  physics:false}
+        //{id: 1, x: x, y: y, label: 'Rule', group: 'rule', color : 'orange', shape : 'box', value: 1, fixed: true, physics:false},
+        //{id: 2, x: x, y: y + step, label: 'Fact Type', group: 'facttype', color : 'red', shape : 'box', value: 1, fixed: true,  physics:false},
+        //{id: 3, x: x, y: y + 2 * step, label: 'Fact Instance', group: 'factinstance', color : 'blue', shape : 'box', value: 1, fixed: true,  physics:false}
         ]);
 
         // create an array with edges
@@ -285,7 +285,39 @@
         });
     }
 
-    reset();
+    $(function() {
+
+        $("[name='checkbox-live']").bootstrapSwitch();
+        var index;
+        $("[name='checkbox-live']").on('switchChange.bootstrapSwitch', function(event, state) {
+            if (state) {
+                    $('.stepbystep').addClass("disabled");
+                    nextend();
+            } else {
+                    $('.stepbystep').removeClass("disabled");
+                    index = queue.length - 1;
+            }
+        });
+
+        $("#previousbegin").click(previousbegin);
+        $("#previous").click(previous);
+        $("#next").click(next);
+        $("#nextend").click(nextend);
+
+        $('[data-toggle="popover"]').popover({
+            container: 'body',
+            html: true,
+            content: function () {
+                var clone = $($(this).data('popover-content')).clone(true).removeClass('hide');
+                return clone;
+            }
+        }).click(function(e) {
+            e.preventDefault();
+        });
+
+        reset();
+    });
+
 
 /*
 network.on("doubleClick", function (params) {

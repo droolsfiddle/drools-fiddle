@@ -43,6 +43,10 @@ helloAjaxApp.controller("myController", ['$scope',
 
         // reset data and graph
         reset();
+        $('#theTabs a[data-target="#drl"]').tab('show');
+        $('#firebtn').addClass("disabled");
+        $scope.mySchema = {"type":"object", "title":"Facts"};
+        $scope.myStartVal = undefined;
 
 		var dataObj = {
 		        data : btoa($scope.editor.getValue()),
@@ -52,9 +56,12 @@ helloAjaxApp.controller("myController", ['$scope',
 
 		res.success(function(data, status, headers, config) {
             console.log(data);
-            $scope.myStartVal = undefined;
-            $scope.mySchema = data.jsonSchema;
-            $('#theTabs a[data-target="#facts"]').tab('show');
+            if (data.success) {
+                $scope.myStartVal = undefined;
+                $scope.mySchema = data.jsonSchema;
+                $('#theTabs a[data-target="#facts"]').tab('show');
+                $('#firebtn').removeClass("disabled");
+            }
 		});
 		res.error(function(data, status, headers, config) {
             console.log(data);

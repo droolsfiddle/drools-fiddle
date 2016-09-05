@@ -13,9 +13,6 @@ import javax.ws.rs.core.MediaType;
 @Consumes(MediaType.APPLICATION_JSON)
 public interface DrlParserService {
 
-    @GET
-    Message printMessage();
-
     @POST
     @Path("/drlParser")
     Message postDrlParser(Message iMessage) throws DroolsParserException;

@@ -13,9 +13,10 @@ public class Message {
   private int id;
   private String data;
   private String log;
-  private List<Package> packages;
+  private boolean success;
+  // private List<Package> packages;
   private JsonSchemaNode jsonSchema;
-  private Map<String,Object> jsonValue = new HashMap<>();
+  // private Map<String,Object> jsonValue = new HashMap<>();
 
 
   public int getId() {
@@ -42,13 +43,13 @@ public class Message {
     this.log = log;
   }
 
-  public List<Package> getPackages() {
-    return packages;
-  }
+  // public List<Package> getPackages() {
+  //  return packages;
+  //}
 
-  public void setPackages(List<Package> packages) {
-    this.packages = packages;
-  }
+  // public void setPackages(List<Package> packages) {
+  //  this.packages = packages;
+  // }
 
   public JsonSchemaNode getJsonSchema() {
     return jsonSchema;
@@ -58,12 +59,21 @@ public class Message {
     this.jsonSchema = jsonSchema;
   }
 
-  public Map<String, Object> getJsonValue() {
-    return jsonValue;
+  // public Map<String, Object> getJsonValue() {
+  //   return jsonValue;
+  // }
+
+  // public void setJsonValue(Map<String, Object> jsonValue) {
+  //   this.jsonValue = jsonValue;
+  // }
+
+
+  public boolean isSuccess() {
+    return success;
   }
 
-  public void setJsonValue(Map<String, Object> jsonValue) {
-    this.jsonValue = jsonValue;
+  public void setSuccess(boolean success) {
+    this.success = success;
   }
 
   @Override
@@ -72,7 +82,9 @@ public class Message {
             "id=" + id +
             ", data='" + data + '\'' +
             ", log='" + log + '\'' +
-            ", packages=" + packages +
+            ", success=" + success +
+            ", jsonSchema=" + jsonSchema +
             '}';
   }
+
 }

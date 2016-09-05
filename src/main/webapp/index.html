@@ -2,6 +2,8 @@
 <html ng-app="helloAjaxApp">
 <head>
     <title>Drools Fiddle</title>
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular-route.min.js"></script>
@@ -18,6 +20,8 @@
     <script src="ace.js" type="text/javascript" charset="utf-8"></script>
     <script src="form.js"></script>
     <script src="websocket.js"></script>
+    <script src="example.js"></script>
+
     <style type="text/css">
         #top-left {
             height: 500px;
@@ -37,28 +41,68 @@
             margin-left: 0px;
             margin-right: 0px;
         }
+        body { padding-top: 70px; }
+
+ 
 
     </style>
 
 </head>
 
 <body ng-controller="myController">
+<nav class="navbar navbar-default navbar-fixed-top">
+<div class="container-fluid">
+    <div class="navbar-header">
+        <a class="navbar-brand" href="#"><span><img src="drlfdl_30x30.png"/></span> Drools Fiddle</a>
+    </div>
+    <form class="navbar-form navbar-left" role="form">
+        <div class="btn-group inline">
+            <button type="submit" class="btn btn-primary" ng-click="compileDrl()"><span class="glyphicon glyphicon-cog" aria-hidden="true"></span> Build</button>
+            <button id="firebtn" type="submit" class="btn btn-primary disabled" ng-click="fireDrl()"><span class="glyphicon glyphicon-play" aria-hidden="true"></span> Fire</button>
+        </div>
+        <div class="form-group inline">
+            <input name="checkbox-live" type="checkbox" checked data-on-color="success" data-off-color="danger" data-on-text="Live">
+        </div>
+        <div class="btn-group inline">
+            <button id="previousbegin" type="button" class="btn btn-primary disabled stepbystep" >
+                <span class="glyphicon glyphicon-step-backward" aria-hidden="true"></span>
+            </button>
+            <button id="previous" type="button" class="btn btn-primary disabled stepbystep" >
+                <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+            </button>
+            <button id="next" type="button" class="btn btn-primary disabled stepbystep" >
+                <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+            </button>
+            <button id="nextend" type="button" class="btn btn-primary disabled stepbystep" >
+                <span class="glyphicon glyphicon-step-forward" aria-hidden="true"></span>
+            </button>
+            <button  type="button" class="btn btn-primary">
+                <b>step</b> <span id="counter" class="badge">0/0</span>
+            </button>
+        </div>
+    </form>
+    <form role="form" class="navbar-form navbar-right" ng-submit="saveDrl()" id="saveform">
+        <div class="btn-group inline">
+            <button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-floppy-save" aria-hidden="true"></span> Save</button>
+        </div>
+    </form>
+</div>
+</nav>
 <div class="container-fluid">
     <div class="col-md-6">
         <div class="row">
-            <div class="form-group">
-                <ul class="nav nav-pills" id="theTabs">
+            <div>
+                <ul class="nav nav-tabs" id="theTabs">
                     <li class="active">
-                        <h3><a data-toggle="tab" data-target="#drl" class="label label-default">Drools rules</a></h3>
+                        <a data-toggle="tab" data-target="#drl">Drools rules</a>
                     </li>
                     <li>
-                        <h3><a data-toggle="tab" data-target="#facts" class="label label-default">Drools facts</a></h3>
+                        <a data-toggle="tab" data-target="#facts">Drools facts</a>
                     </li>
                 </ul>
-                <br />
                 <div id="top-left" class="tab-content">
                     <div id="drl" class="tab-pane fade in active">
-                        <div id="editor" class="form-control"  name="data" form="drlform">
+                        <div id="editor"  name="data" form="drlform">
 //
 // copy paste your drl
 //
@@ -85,74 +129,37 @@ end
                         </json-editor>
                     </div>
                 </div>
-                <br />
-                <form role="form" class="btn-group " ng-submit="compileDrl()" id="drlform">
-                    <button type="submit" class="btn btn-primary">Build</button>
-                </form>
-
-                <form role="form" class="btn-group inline" ng-submit="fireDrl()" id="fireform">
-                    <button type="submit" class="btn btn-primary">Fire</button>
-                </form>
-
-                <input name="checkbox-live" type="checkbox" checked data-on-color="success" data-off-color="danger" data-on-text="Live">
-
-                <button id="previousbegin" type="button" class="btn btn-primary disabled stepbystep" onclick="previousbegin();">
-                    <span class="glyphicon glyphicon-step-backward" aria-hidden="true"></span>
-                </button>
-
-                <button id="previous" type="button" class="btn btn-primary disabled stepbystep" onclick="previous();">
-                    <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
-                </button>
-
-                <button id="next" type="button" class="btn btn-primary disabled stepbystep" onclick="next();">
-                    <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
-                </button>
-
-                <button id="nextend" type="button" class="btn btn-primary disabled stepbystep" onclick="nextend();">
-                    <span class="glyphicon glyphicon-step-forward" aria-hidden="true"></span>
-                </button>
-
-                <button  type="button" class="btn btn-primary">
-                    <b>step</b> <span id="counter" class="badge">0/0</span>
-                </button>
-
-                <form role="form" class="btn-group inline pull-right" ng-submit="saveDrl()" id="saveform">
-                    <button type="submit" class="btn btn-primary">Save</button>
-                </form>
             </div>
+
 
         </div>
         <div id="bottom-left" class="row">
-            <h3><span class="label label-default">Log</span></h3>
-            <br />
-            <textarea rows="8" id="log" class="form-control"  name="log" ng-model="message.log"></textarea>
-            </p>
+            <div class="panel panel-default">
+                <div class="panel-heading"><h3 class="panel-title">Logs</h3></div>
+                <div class="panel-body">
+                    <textarea rows="8" id="log" class="form-control"  name="log" ng-model="message.log"></textarea>
+                </div>
+            </div>
         </div>
     </div>
     <div class="col-md-6">
-            <h3><span class="label label-default">Visualization</span></h3>
-            <br />
-            <div id="mynetwork" class="row"></div>
-             <pre id="eventSpan" class="row"></pre>
+        <div class="panel panel-default">
+            <div class="panel-heading"><h3 class="panel-title">Visualization <a data-html="true" data-toggle="popover" data-trigger="hover" title="Legend" data-popover-content="#legend"><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span></a></h3></div>
+            <div class="panel-body">
+                <div id="mynetwork" class="row"></div>
+                <pre id="eventSpan" class="row"></pre>
+            </div>
         </div>
+    </div>
 </div>
 
-<script src="example.js"></script>
-<script>
-$("[name='checkbox-live']").bootstrapSwitch();
-var index;
-$("[name='checkbox-live']").on('switchChange.bootstrapSwitch', function(event, state) {
-    if (state) {
-        $('.stepbystep').addClass("disabled");
-        <!-- dequeue all events -->
-        nextend();
-    } else {
-        $('.stepbystep').removeClass("disabled");
-        index = queue.length - 1;
-    }
-});
+<div id="legend" class="hide">
+    <span class="label label-info">Fact Instance</span>
+    <span class="label label-warning">Rule</span>
+    <span class="label label-danger">Fact Type</span>
+</div>
 
 
-</script>
+
 </body>
 </html>
