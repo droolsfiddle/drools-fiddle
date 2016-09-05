@@ -2,8 +2,8 @@
 <html ng-app="helloAjaxApp">
 <head>
     <title>Drools Fiddle</title>
-    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
-    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular-route.min.js"></script>
@@ -17,6 +17,7 @@
     <script type="text/javascript" src="vis.min.js"></script>
     <link href="vis.min.css" rel="stylesheet" type="text/css"/>
     <link rel="stylesheet" href="http://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <link href="panel-with-tab.css" rel="stylesheet">
     <script src="ace.js" type="text/javascript" charset="utf-8"></script>
     <script src="form.js"></script>
     <script src="websocket.js"></script>
@@ -24,18 +25,15 @@
 
     <style type="text/css">
         #top-left {
-            height: 500px;
+            height: 550px;
             overflow:scroll;
-        }
-        #bottom-left{
-            margin-top: 50px;
         }
         #mynetwork {
             border: 1px solid lightgray;
             height: 750px;
         }
         #editor {
-            height: 500px;
+            height: 540px;
         }
         .row {
             margin-left: 0px;
@@ -43,7 +41,6 @@
         }
         body { padding-top: 70px; }
 
- 
 
     </style>
 
@@ -91,18 +88,21 @@
 <div class="container-fluid">
     <div class="col-md-6">
         <div class="row">
-            <div>
-                <ul class="nav nav-tabs" id="theTabs">
-                    <li class="active">
-                        <a data-toggle="tab" data-target="#drl">Drools rules</a>
-                    </li>
-                    <li>
-                        <a data-toggle="tab" data-target="#facts">Drools facts</a>
-                    </li>
-                </ul>
-                <div id="top-left" class="tab-content">
-                    <div id="drl" class="tab-pane fade in active">
-                        <div id="editor"  name="data" form="drlform">
+            <div class="panel with-nav-tabs panel-default">
+                <div class="panel-heading">
+                    <ul class="nav nav-tabs" id="theTabs">
+                        <li class="active">
+                            <a data-toggle="tab" data-target="#drl">Drools Rules</a>
+                        </li>
+                        <li>
+                            <a data-toggle="tab" data-target="#facts">Drools Facts</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="panel-body">
+                    <div id="top-left" class="tab-content">
+                        <div id="drl" class="tab-pane fade in active">
+                            <div id="editor"  name="data" form="drlform">
 //
 // copy paste your drl
 //
@@ -118,20 +118,18 @@ when
 then
     modify( f ) {setValue( 41 )}
 end
+                            </div>
                         </div>
-                    </div>
-                    <div id="facts" class="tab-pane fade">
-                        <json-editor schema="mySchema" startval="myStartVal" on-change="onChange($editorValue)" buttons-controller="SyncButtonsController">
-                            <button type="submit" class="btn btn-success" ng-click="onSubmit($event)" ng-disabled="!isValid">
-                                <span class="glyphicon glyphicon-check"></span>
-                                Submit
-                            </button>
-                        </json-editor>
+                        <div id="facts" class="tab-pane fade">
+                            <json-editor schema="mySchema" startval="myStartVal" on-change="onChange($editorValue)" buttons-controller="SyncButtonsController">
+                                <button type="submit" class="btn btn-success" ng-click="onSubmit($event)" ng-disabled="!isValid">
+                                    <span class="glyphicon glyphicon-check"></span> Submit
+                                </button>
+                            </json-editor>
+                        </div>
                     </div>
                 </div>
             </div>
-
-
         </div>
         <div id="bottom-left" class="row">
             <div class="panel panel-default">
