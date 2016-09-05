@@ -22,8 +22,12 @@ public class GetHttpSessionConfigurator extends ServerEndpointConfig.Configurato
                               HandshakeRequest request,
                               HandshakeResponse response)
   {
-    HttpSession httpSession = (HttpSession)request.getHttpSession();
-    logger.debug("session id: " + httpSession.getId());
-    config.getUserProperties().put(HttpSession.class.getName(),httpSession);
+	try {
+      HttpSession httpSession = (HttpSession)request.getHttpSession();
+      logger.debug("session id: " + httpSession.getId());
+      config.getUserProperties().put(HttpSession.class.getName(),httpSession);
+	} catch(Exception e) {
+		logger.error("Exception caught while trying to bind HTTP session to WS session.",e);
+	}
   }
 }

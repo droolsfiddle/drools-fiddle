@@ -25,14 +25,17 @@ public class WebSocketHandler {
 
   @OnOpen
   public void open(Session session, EndpointConfig config) {
+	try {
+		HttpSession aHttpSession = (HttpSession) config.getUserProperties().get(HttpSession.class.getName());
+		logger.debug("session id: " + aHttpSession.getId());
 
-    HttpSession aHttpSession = (HttpSession) config.getUserProperties().get(HttpSession.class.getName());
-    logger.debug("session id: " + aHttpSession.getId());
+		aHttpSession.setAttribute(Session.class.getName(), session);
 
-    aHttpSession.setAttribute(Session.class.getName(), session);
-
-//    drlContext.setWebSocketSession(session);
-    logger.info("WebSocket opened: " + session.getId());
+		//    drlContext.setWebSocketSession(session);
+		logger.info("WebSocket opened: " + session.getId());
+	} catch (Exception e) {
+		logger.error("Exception caught while opening WebSocket.",e);
+	}
   }
 
   @OnClose
