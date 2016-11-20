@@ -1,6 +1,7 @@
 package org.droolsfiddle.websocket;
 
-import org.droolsfiddle.rest.Fact;
+import org.droolsfiddle.rest.model.FactDTO;
+import org.droolsfiddle.rest.model.RuleDTO;
 import org.kie.api.event.rule.BeforeMatchFiredEvent;
 import org.kie.api.event.rule.ObjectDeletedEvent;
 import org.kie.api.event.rule.ObjectInsertedEvent;
@@ -104,19 +105,13 @@ public class CustomDroolsEvent {
     return this;
   }
 
-  public CustomDroolsEvent map(Fact iFactType) {
+  public CustomDroolsEvent map(FactDTO iFactType) {
     setObject(iFactType);
     return this;
   }
 
-  public CustomDroolsEvent map(org.droolsfiddle.rest.Rule iRule) {
+  public CustomDroolsEvent map(RuleDTO iRule) {
     setObject(iRule);
     return this;
   }
-
-
-//  public String getJson() throws JsonProcessingException {
-//    ObjectMapper mapper = new ObjectMapper();
-//    return mapper.writeValueAsString(this);
-//  }
 }

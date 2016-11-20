@@ -2,19 +2,14 @@ package org.droolsfiddle.it;
 
 import org.drools.compiler.compiler.DroolsParserException;
 import org.droolsfiddle.rest.DrlParserService;
-import org.droolsfiddle.rest.Message;
+import org.droolsfiddle.rest.model.Request;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.extension.rest.client.ArquillianResteasyResource;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.Archive;
-import org.jboss.shrinkwrap.api.ShrinkWrap;
-import org.jboss.shrinkwrap.api.spec.WebArchive;
-import org.jboss.shrinkwrap.resolver.api.maven.Maven;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
-
-import java.io.File;
 
 
 /**
@@ -35,7 +30,7 @@ public class DrlParserIT {
 
         // Given
 
-        Message request = new Message();
+        Request request = new Request();
 
         request.setData("import java.util.Date\n" +
                 "\n" +
@@ -61,7 +56,7 @@ public class DrlParserIT {
 
         // When
 
-        final Message response = service.postDrlParser(request);
+        final Request response = service.postDrlParser(request);
 
         // Then
 

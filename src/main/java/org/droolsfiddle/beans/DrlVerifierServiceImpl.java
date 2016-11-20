@@ -8,7 +8,7 @@ import org.drools.verifier.data.VerifierReport;
 import org.drools.verifier.report.components.Severity;
 import org.drools.verifier.report.components.VerifierMessageBase;
 import org.droolsfiddle.rest.DrlVerifierService;
-import org.droolsfiddle.rest.Message;
+import org.droolsfiddle.rest.model.Request;
 import org.jboss.resteasy.logging.Logger;
 import org.kie.api.io.ResourceType;
 import org.kie.internal.io.ResourceFactory;
@@ -24,7 +24,7 @@ public class DrlVerifierServiceImpl implements DrlVerifierService {
     @Inject
     DrlContext drlContext;
 
-    public Message postDroolsVerifier(Message iMessage) {
+    public Request postDroolsVerifier(Request iRequest) {
         logger.debug("Init validation drl: DroolsVerifier");
         StringBuilder aLog = new StringBuilder();
 
@@ -32,7 +32,7 @@ public class DrlVerifierServiceImpl implements DrlVerifierService {
 
         Verifier verifier = vBuilder.newVerifier();
 
-        verifier.addResourcesToVerify(ResourceFactory.newByteArrayResource(iMessage.getData().getBytes()), ResourceType.DRL);
+        verifier.addResourcesToVerify(ResourceFactory.newByteArrayResource(iRequest.getData().getBytes()), ResourceType.DRL);
 
         if (verifier.hasErrors()) {
             for (VerifierError error : verifier.getErrors()) {
@@ -49,10 +49,10 @@ public class DrlVerifierServiceImpl implements DrlVerifierService {
                 aLog.append(base + "\n");
             }
         }
-        iMessage.setLog(aLog.toString());
-        logger.debug(iMessage.toString());
+        iRequest.setLog(aLog.toString());
+        logger.debug(iRequest.toString());
 
-        return iMessage;
+        return iRequest;
     }
 
 

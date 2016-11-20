@@ -6,6 +6,9 @@ import org.drools.compiler.compiler.DroolsParserException;
 import org.drools.compiler.lang.descr.AbstractClassTypeDeclarationDescr;
 import org.drools.compiler.lang.descr.PackageDescr;
 import org.droolsfiddle.rest.*;
+import org.droolsfiddle.rest.model.AttributeDTO;
+import org.droolsfiddle.rest.model.FactDTO;
+import org.droolsfiddle.rest.model.Request;
 import org.jboss.resteasy.logging.Logger;
 import org.jboss.resteasy.util.Base64;
 
@@ -25,19 +28,19 @@ public class DrlParserServiceImpl implements DrlParserService {
     @Inject
     DrlContext drlContext;
 
-    public Message postDrlParser(Message iMessage) throws DroolsParserException {
+    public Request postDrlParser(Request iRequest) throws DroolsParserException {
         logger.debug("Init validation drl: DrlParser");
 
         String drl;
         try {
-            drl = new String(Base64.decode(iMessage.getData()),
+            drl = new String(Base64.decode(iRequest.getData()),
                     Charset.forName("UTF-8"));
         } catch (IOException e) {
-            iMessage.setLog("error while decoding input drl: "+e.getMessage());
-            return iMessage;
+            iRequest.setLog("error while decoding input drl: "+e.getMessage());
+            return iRequest;
         }
 
-        iMessage.setData("");
+        iRequest.setData("");
 
         StringBuilder aLog = new StringBuilder();
 
@@ -51,22 +54,22 @@ public class DrlParserServiceImpl implements DrlParserService {
                 aLog.append(error.getMessage() + "\n");
             }
         } else {
-            logger.debug("List facts");
-            List<Fact> facts = new ArrayList<Fact>();
+            logger.debug("List factDTOs");
+            List<FactDTO> factDTOs = new ArrayList<FactDTO>();
             for (AbstractClassTypeDeclarationDescr declare : descr.getClassAndEnumDeclarationDescrs()) {
-                Fact aFact = new Fact();
-                aFact.setId(declare.getLine());
-                List<Attribute> attributes = new ArrayList<Attribute>();
-                aFact.setName(declare.getTypeName());
+                FactDTO aFactDTO = new FactDTO();
+                aFactDTO.setId(declare.getLine());
+                List<AttributeDTO> attributeDTOs = new ArrayList<AttributeDTO>();
+                aFactDTO.setName(declare.getTypeName());
                 for (String field : declare.getFields().keySet()) {
-                    Attribute attr = new Attribute();
+                    AttributeDTO attr = new AttributeDTO();
                     attr.setId(declare.getFields().get(field).getLine());
                     attr.setName(field);
                     attr.setType(declare.getFields().get(field).getPattern().getObjectType());
-                    attributes.add(attr);
+                    attributeDTOs.add(attr);
                 }
-                aFact.setAttributes(attributes);
-                facts.add(aFact);
+                aFactDTO.setAttributes(attributeDTOs);
+                factDTOs.add(aFactDTO);
             }
             //List<org.droolsfiddle.rest.Package> packs = new ArrayList<org.droolsfiddle.rest.Package>();
             //org.droolsfiddle.rest.Package pack = new org.droolsfiddle.rest.Package();
@@ -76,10 +79,10 @@ public class DrlParserServiceImpl implements DrlParserService {
             //iMessage.setPackages(packs);
             aLog.append(descr.getName());
         }
-        iMessage.setLog(aLog.toString());
-        logger.debug(iMessage.toString());
+        iRequest.setLog(aLog.toString());
+        logger.debug(iRequest.toString());
 
-        return iMessage;
+        return iRequest;
     }
 
 }

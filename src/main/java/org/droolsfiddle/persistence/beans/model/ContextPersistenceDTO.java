@@ -1,4 +1,4 @@
-package org.droolsfiddle.persistence.beans;
+package org.droolsfiddle.persistence.beans.model;
 
 /**
  * Created by gurfm on 27/07/16.

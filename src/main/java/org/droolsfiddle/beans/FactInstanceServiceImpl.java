@@ -1,14 +1,14 @@
 package org.droolsfiddle.beans;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.droolsfiddle.rest.FactInstanceService;
+import org.droolsfiddle.rest.model.Request;
+import org.droolsfiddle.websocket.WebSocketUtil;
 import org.droolsfiddle.websocket.audit.CustomDebugAgendaEventListener;
 import org.droolsfiddle.websocket.audit.CustomDebugRuleRuntimeEventListener;
-import org.droolsfiddle.rest.FactInstanceService;
-import org.droolsfiddle.rest.Message;
 import org.jboss.resteasy.logging.Logger;
 import org.jboss.resteasy.util.Base64;
 import org.kie.api.KieBase;
-import org.kie.api.definition.KiePackage;
 import org.kie.api.definition.type.FactType;
 import org.kie.api.runtime.KieSession;
 import org.kie.api.runtime.rule.FactHandle;
@@ -17,7 +17,6 @@ import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.websocket.Session;
 import javax.ws.rs.core.Context;
-import java.io.IOException;
 import java.nio.charset.Charset;
 import javax.inject.Named;
 
@@ -35,9 +34,9 @@ public class FactInstanceServiceImpl implements FactInstanceService {
     @Inject
     DrlContext drlContext;
 
-    public Message postInsertFact(String iType, Message iMessage) {
-        logger.debug("Fact insert service");
-        Message resp = new Message();
+    public Request postInsertFact(String iType, Request iRequest) {
+        logger.debug("FactDTO insert service");
+        Request resp = new Request();
         resp.setSuccess(false);
 
         Session wsSession = (Session) request.getSession().getAttribute(Session.class.getName());
@@ -46,12 +45,7 @@ public class FactInstanceServiceImpl implements FactInstanceService {
 
         if (!drlContext.hasKieBase()) {
             resp.setLog("ERROR: No Container defined.");
-            try {
-                wsSession.getBasicRemote().sendText("ERROR: No Container defined.");
-            } catch (IOException e) {
-                logger.error("Websocket exception",e);
-            }
-
+            WebSocketUtil.sendToWebSocket(wsSession, "ERROR: No Container defined.");
             return resp;
         }
 
@@ -60,21 +54,13 @@ public class FactInstanceServiceImpl implements FactInstanceService {
 
         if (kBase == null) {
             resp.setLog("ERROR: No KieBase defined.");
-            try {
-                wsSession.getBasicRemote().sendText("ERROR: No KieBase defined.");
-            } catch (IOException e) {
-                logger.error("Websocket exception",e);
-            }
+            WebSocketUtil.sendToWebSocket(wsSession, "ERROR: No KieBase defined.");
             return resp;
         }
 
         if (kBase.getKiePackages().size() == 0) {
-            resp.setLog("ERROR: No Package defined.");
-            try {
-                wsSession.getBasicRemote().sendText("ERROR: No Package defined.");
-            } catch (IOException e) {
-                logger.error("Websocket exception",e);
-            }
+            resp.setLog("ERROR: No PackageDTO defined.");
+            WebSocketUtil.sendToWebSocket(wsSession, "ERROR: No PackageDTO defined.");
             return resp;
         }
 
@@ -83,11 +69,7 @@ public class FactInstanceServiceImpl implements FactInstanceService {
 
         if (factType == null) {
             resp.setLog("ERROR: fact type "+iType+" not found.");
-            try {
-                wsSession.getBasicRemote().sendText("ERROR: fact type "+iType+" not found.");
-            } catch (IOException e) {
-                logger.error("Websocket exception",e);
-            }
+            WebSocketUtil.sendToWebSocket(wsSession, "ERROR: fact type "+iType+" not found.");
             return resp;
         }
 
@@ -95,16 +77,12 @@ public class FactInstanceServiceImpl implements FactInstanceService {
 
         Object fact;
         try {
-            fact = mapper.readValue(new String(Base64.decode(iMessage.getData()),
+            fact = mapper.readValue(new String(Base64.decode(iRequest.getData()),
                     Charset.forName("UTF-8")), factType.getFactClass());
         } catch (Exception e) {
             logger.error("Error while parsing fact",e);
             resp.setLog("ERROR: Error while parsing fact: " + e.getMessage());
-            try {
-                wsSession.getBasicRemote().sendText("ERROR: Error while parsing fact: " + e.getMessage());
-            } catch (IOException e1) {
-                logger.error("Websocket exception",e);
-            }
+            WebSocketUtil.sendToWebSocket(wsSession, "ERROR: Error while parsing fact: " + e.getMessage());
             return resp;
         }
 
@@ -124,7 +102,7 @@ public class FactInstanceServiceImpl implements FactInstanceService {
         resp.setLog("INFO: inserted fact handle: " + handle.toString());
         resp.setSuccess(true);
 
-        logger.debug("End Fact Insert service: " + resp);
+        logger.debug("End FactDTO Insert service: " + resp);
 
         return resp;
 

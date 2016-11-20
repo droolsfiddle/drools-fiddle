@@ -1,9 +1,9 @@
-package org.droolsfiddle.rest;
+package org.droolsfiddle.rest.model;
 
 /**
  * Created by jvipret on 31/07/2016.
  */
-public class Rule {
+public class RuleDTO {
 
   private String name;
 
@@ -17,7 +17,7 @@ public class Rule {
 
   @Override
   public String toString() {
-    return "Rule{" +
+    return "RuleDTO{" +
             "name='" + name + '\'' +
             '}';
   }

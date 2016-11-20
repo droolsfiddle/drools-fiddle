@@ -21,7 +21,6 @@ public class RequestListener implements ServletRequestListener {
 
   public void requestInitialized(ServletRequestEvent sre) {
     ((HttpServletRequest) sre.getServletRequest()).getSession();
-    logger.debug("session id: " + ((HttpServletRequest) sre.getServletRequest()).getSession().getId());
   }
 
 }

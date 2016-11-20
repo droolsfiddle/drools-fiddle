@@ -1,15 +1,15 @@
-package org.droolsfiddle.rest;
+package org.droolsfiddle.rest.model;
 
 import java.util.List;
 
 /**
  * Created by jvipret on 08/06/2016.
  */
-public class Package {
+public class PackageDTO {
 
   private int id;
   private String name;
-  private List<Fact> facts;
+  private List<FactDTO> factDTOs;
 
   public int getId() {
     return id;
@@ -27,20 +27,20 @@ public class Package {
     this.name = name;
   }
 
-  public List<Fact> getFacts() {
-    return facts;
+  public List<FactDTO> getFacts() {
+    return factDTOs;
   }
 
-  public void setFacts(List<Fact> facts) {
-    this.facts = facts;
+  public void setFacts(List<FactDTO> factDTOs) {
+    this.factDTOs = factDTOs;
   }
 
   @Override
   public String toString() {
-    return "Package{" +
+    return "PackageDTO{" +
             "id=" + id +
             ", name='" + name + '\'' +
-            ", facts=" + facts +
+            ", factDTOs=" + factDTOs +
             '}';
   }
 }

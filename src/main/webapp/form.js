@@ -52,7 +52,7 @@ helloAjaxApp.controller("myController", ['$scope',
 		        data : btoa($scope.editor.getValue()),
 		};
 
-		var res = $http.post(window.location.pathname+'rest/message/drlCompile', dataObj);
+		var res = $http.post(window.location.pathname+'rest/drools/drlCompile', dataObj);
 
 		res.success(function(data, status, headers, config) {
             console.log(data);
@@ -73,7 +73,7 @@ helloAjaxApp.controller("myController", ['$scope',
                 data : "",
         };
 
-        var res = $http.post(window.location.pathname+'rest/message/drlFire', dataObj);
+        var res = $http.post(window.location.pathname+'rest/drools/drlFire', dataObj);
 
         res.success(function(data, status, headers, config) {
             console.log(data);

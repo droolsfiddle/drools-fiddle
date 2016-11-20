@@ -1,10 +1,10 @@
 package org.droolsfiddle.beans;
 
 import org.droolsfiddle.rest.DrlFireService;
-import org.droolsfiddle.rest.Message;
+import org.droolsfiddle.rest.model.Request;
+import org.droolsfiddle.websocket.WebSocketUtil;
 import org.jboss.resteasy.logging.Logger;
 import org.kie.api.KieBase;
-import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
 
 import javax.inject.Inject;
@@ -12,7 +12,6 @@ import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 import javax.websocket.Session;
 import javax.ws.rs.core.Context;
-import java.io.IOException;
 import java.util.concurrent.*;
 
 @Named
@@ -26,31 +25,23 @@ public class DrlFireServiceImpl implements DrlFireService {
     @Inject
     private DrlContext drlContext;
 
-    public Message postDrlFire(final Message iMessage) {
+    public Request postDrlFire(final Request iRequest) {
         logger.debug("Fire Rules service");
         Session wsSession = (Session) request.getSession().getAttribute(Session.class.getName());
 
-        Message resp = new Message();
+        Request resp = new Request();
         resp.setSuccess(false);
 
         if (!drlContext.hasKieBase()) {
             resp.setLog("ERROR: No Container defined.");
-            try {
-                wsSession.getBasicRemote().sendText("ERROR: No Container defined.");
-            } catch (IOException e) {
-                logger.error("Websocket exception",e);
-            }
+            WebSocketUtil.sendToWebSocket(wsSession, "ERROR: No Container defined.");
             return resp;
         }
 
         KieBase kBase = drlContext.getKieBase().getKieBase();
         if (kBase == null) {
             resp.setLog("ERROR: No KieBase defined.");
-            try {
-                wsSession.getBasicRemote().sendText("ERROR: No KieBase defined.");
-            } catch (IOException e) {
-                logger.error("Websocket exception",e);
-            }
+            WebSocketUtil.sendToWebSocket(wsSession, "ERROR: No KieBase defined.");
             return resp;
         }
 
@@ -74,21 +65,13 @@ public class DrlFireServiceImpl implements DrlFireService {
         try{
             int numberOfFiredRules = futureResult.get(500, TimeUnit.MILLISECONDS);
             resp.setLog("INFO: fired " + numberOfFiredRules + " rules.");
-            try {
-                wsSession.getBasicRemote().sendText("INFO: fired " + numberOfFiredRules + " rules.");
-            } catch (IOException e) {
-                logger.error("Websocket exception",e);
-            }
+            WebSocketUtil.sendToWebSocket(wsSession, "INFO: fired " + numberOfFiredRules + " rules.");
             resp.setSuccess(true);
         } catch(TimeoutException e){
             logger.warn("No response after 500 milliseconds",e);
             resp.setLog("ERROR: rule evaluation timed out.");
-            try {
-                wsSession.getBasicRemote().sendText("ERROR: rule evaluation timed out.");
-            } catch (IOException e1) {
-                logger.error("Websocket exception",e1);
-            }
             kieSession.halt();
+            WebSocketUtil.sendToWebSocket(wsSession, "ERROR: rule evaluation timed out.");
             futureResult.cancel(true);
             // TODO: should really dispose the session here, because after timeout the session may be unable to
             // fire any more rules (depending on the reason of the timeout). However, this has impacts on the viz, so
@@ -97,11 +80,8 @@ public class DrlFireServiceImpl implements DrlFireService {
         } catch (Exception e2) {
             logger.warn("Other error during rule evaluation",e2);
             resp.setLog("ERROR: rule evaluation error " + e2.getMessage());
-            try {
-                wsSession.getBasicRemote().sendText("ERROR: rule evaluation error " + e2.getMessage());
-            } catch (IOException e1) {
-                logger.error("Websocket exception",e1);
-            }
+            WebSocketUtil.sendToWebSocket(wsSession, "ERROR: rule evaluation error " + e2.getMessage());
+
         } finally {
             service.shutdown();
         }

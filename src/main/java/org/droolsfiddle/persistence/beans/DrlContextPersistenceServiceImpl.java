@@ -1,6 +1,7 @@
 package org.droolsfiddle.persistence.beans;
 
 import org.droolsfiddle.beans.DrlContext;
+import org.droolsfiddle.persistence.beans.model.ContextPersistenceDTO;
 import org.droolsfiddle.persistence.redis.DrlRepository;
 import org.droolsfiddle.persistence.rest.DrlContextPersistenceService;
 import org.jboss.resteasy.logging.Logger;

@@ -1,11 +1,14 @@
 package org.droolsfiddle.beans;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.deser.std.StringArrayDeserializer;
 import org.droolsfiddle.persistence.beans.KieBaseWrapper;
 import org.droolsfiddle.rest.*;
-import org.droolsfiddle.rest.Package;
+import org.droolsfiddle.rest.model.*;
+import org.droolsfiddle.rest.model.PackageDTO;
 import org.droolsfiddle.websocket.CustomDroolsEvent;
+import org.droolsfiddle.websocket.WebSocketUtil;
 import org.jboss.resteasy.logging.Logger;
 import org.jboss.resteasy.util.Base64;
 import org.kie.api.KieBase;
@@ -42,23 +45,19 @@ public class DrlCompilerServiceImpl implements DrlCompilerService {
     private ObjectMapper mapper = new ObjectMapper();
 
 
-    public Message postDrlCompile(final Message iMessage) {
+    public Request postDrlCompile(final Request iRequest) throws JsonProcessingException {
         logger.debug("Init validation drl: DrlParser");
         Session wsSession = (Session) request.getSession().getAttribute(Session.class.getName());
 
-        Message resp = new Message();
+        Request resp = new Request();
         resp.setSuccess(false);
 
         String drl;
         try {
-            drl = new String(Base64.decode(iMessage.getData()),
+            drl = new String(Base64.decode(iRequest.getData()),
                     Charset.forName("UTF-8"));
         } catch (IOException e) {
-            try {
-                wsSession.getBasicRemote().sendText("error while decoding input drl: "+e.getMessage());
-            } catch (IOException e2) {
-                logger.error("Websocket error",e2);
-            }
+            WebSocketUtil.sendToWebSocket(wsSession, "error while decoding input drl: "+e.getMessage());
             resp.setLog("error while decoding input drl: "+e.getMessage());
             return resp;
         }
@@ -79,11 +78,8 @@ public class DrlCompilerServiceImpl implements DrlCompilerService {
                 logger.debug(info.toString());
                 aLog.append(info.toString() + "\n");
             }
-            try {
-                wsSession.getBasicRemote().sendText(mapper.writeValueAsString(aLog));
-            } catch (IOException e) {
-                logger.error("Websocket error",e);
-            }
+
+            WebSocketUtil.sendToWebSocket(wsSession, mapper.writeValueAsString(aLog));
             resp.setLog(aLog.toString());
             return resp;
         }
@@ -113,29 +109,23 @@ public class DrlCompilerServiceImpl implements DrlCompilerService {
         }
         resp.setJsonSchema(root);
 
-        List<Package> packs = new ArrayList<Package>();
+        List<PackageDTO> packs = new ArrayList<PackageDTO>();
         for (KiePackage pack : kbs.getKiePackages()) {
-            //Package aPack = new Package();
-            //aPack.setName(pack.getName());
-            //List<Fact> facts = new ArrayList<Fact>();
             for (Rule rule : pack.getRules()) {
-                org.droolsfiddle.rest.Rule aRule = new org.droolsfiddle.rest.Rule();
-                aRule.setName(rule.getName());
-                CustomDroolsEvent aEvent = new CustomDroolsEvent("insert-rule").map(aRule);
-                try {
-                    wsSession.getBasicRemote().sendText(mapper.writeValueAsString(aEvent));
-                } catch (IOException e) {
-                    logger.error("Websocket error",e);
-                }
+                RuleDTO aRuleDTO = new RuleDTO();
+                aRuleDTO.setName(rule.getName());
+                CustomDroolsEvent aEvent = new CustomDroolsEvent("insert-rule").map(aRuleDTO);
+                WebSocketUtil.sendToWebSocket(wsSession, mapper.writeValueAsString(aEvent));
+
             }
 
             for (FactType declare : pack.getFactTypes()) {
-                Fact aFact = new Fact();
-                List<Attribute> attributes = new ArrayList<Attribute>();
-                aFact.setName(declare.getName().replaceAll(pack.getName() + ".", ""));
+                FactDTO aFactDTO = new FactDTO();
+                List<AttributeDTO> attributes = new ArrayList<AttributeDTO>();
+                aFactDTO.setName(declare.getName().replaceAll(pack.getName() + ".", ""));
 
                 for (FactField field : declare.getFields()) {
-                    Attribute attr = new Attribute();
+                    AttributeDTO attr = new AttributeDTO();
                     attr.setId(field.getIndex());
                     attr.setName(field.getName());
                     attr.setType(field.getType().getCanonicalName());
@@ -144,22 +134,12 @@ public class DrlCompilerServiceImpl implements DrlCompilerService {
                     }
                     attributes.add(attr);
                 }
-                aFact.setAttributes(attributes);
-                //if(!declare.getFactClass().isEnum()) {
-                //    facts.add(aFact);
-                //}
-                CustomDroolsEvent aEvent = new CustomDroolsEvent("insert-fact-type").map(aFact);
-                try {
-                    wsSession.getBasicRemote().sendText(mapper.writeValueAsString(aEvent));
-                } catch (IOException e) {
-                    logger.error("Websocket error",e);
-                }
+                aFactDTO.setAttributes(attributes);
+                CustomDroolsEvent aEvent = new CustomDroolsEvent("insert-fact-type").map(aFactDTO);
+                WebSocketUtil.sendToWebSocket(wsSession, mapper.writeValueAsString(aEvent));
 
             }
-            //aPack.setFacts(facts);
-            //packs.add(aPack);
         }
-        //iMessage.setPackages(packs);
 
         resp.setLog(aLog.toString());
         resp.setSuccess(true);

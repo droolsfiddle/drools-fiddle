@@ -2,10 +2,10 @@ package org.droolsfiddle.it;
 
 import org.apache.http.HttpStatus;
 import org.drools.compiler.compiler.DroolsParserException;
-import org.droolsfiddle.rest.*;
+import org.droolsfiddle.rest.DrlParserService;
+import org.droolsfiddle.rest.model.Request;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.extension.rest.client.ArquillianResteasyResource;
-import org.jboss.arquillian.extension.rest.client.Header;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.junit.InSequence;
 import org.jboss.resteasy.util.Base64;
@@ -80,12 +80,12 @@ public class CompileInsertFireIT {
 
         // Given
 
-        final Message request = new Message();
+        final Request request = new Request();
         request.setData(Base64.encodeBytes(DRL.getBytes(Charset.forName("UTF-8"))));
 
         // When
 
-        final Message response = service.postDrlParser(request);
+        final Request response = service.postDrlParser(request);
 
         // Then
 
@@ -106,11 +106,11 @@ public class CompileInsertFireIT {
      */
     @Test
     @InSequence(2)
-    public void postDrlCompilerTest(@ArquillianResteasyResource("rest/message/drlCompile") WebTarget compilerService) { // DrlCompilerService
+    public void postDrlCompilerTest(@ArquillianResteasyResource("rest/drools/drlCompile") WebTarget compilerService) { // DrlCompilerService
 
         // Given
 
-        final Message request = new Message();
+        final Request request = new Request();
         request.setData(Base64.encodeBytes(DRL.getBytes(Charset.forName("UTF-8"))));
 
         compilerService.register(new CookieRequestFilter());
@@ -126,7 +126,7 @@ public class CompileInsertFireIT {
         // Then
 
         assertEquals(HttpStatus.SC_OK, response.getStatus());
-        final Message respMsg = response.readEntity(Message.class);
+        final Request respMsg = response.readEntity(Request.class);
         System.out.println(respMsg);
     }
 
@@ -136,7 +136,7 @@ public class CompileInsertFireIT {
 
         // Given
 
-        final Message request = new Message();
+        final Request request = new Request();
         request.setData(Base64.encodeBytes(FACT.getBytes(Charset.forName("UTF-8"))));
 
         factService.register(new CookieRequestFilter());
@@ -151,16 +151,16 @@ public class CompileInsertFireIT {
         // Then
 
         assertEquals(HttpStatus.SC_OK, response.getStatus());
-        final Message respMsg = response.readEntity(Message.class);
+        final Request respMsg = response.readEntity(Request.class);
         System.out.println(respMsg);
     }
 
     @Test
     @InSequence(4)
-    public void postDrlFireTest(@ArquillianResteasyResource("rest/message/drlFire") WebTarget fireService) { // DrlFireService
+    public void postDrlFireTest(@ArquillianResteasyResource("rest/drools/drlFire") WebTarget fireService) { // DrlFireService
 
         // Given
-        final Message request = new Message();
+        final Request request = new Request();
 
         fireService.register(new CookieRequestFilter());
         fireService.register(new CookieResponseFilter());
@@ -174,7 +174,7 @@ public class CompileInsertFireIT {
         // Then
 
         assertEquals(HttpStatus.SC_OK, response.getStatus());
-        final Message respMsg = response.readEntity(Message.class);
+        final Request respMsg = response.readEntity(Request.class);
         assertEquals("INFO: fired 1 rules.",respMsg.getLog());
         System.out.println(respMsg);
     }

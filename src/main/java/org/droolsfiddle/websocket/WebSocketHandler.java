@@ -19,8 +19,7 @@ public class WebSocketHandler {
 
   @OnMessage
   public String echo(String name) {
-    logger.debug("Say hello to '" + name + "'");
-    return ("Hello " + name + " from websocket endpoint");
+    return ("Echo " + name + " from websocket endpoint");
   }
 
   @OnOpen

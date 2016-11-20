@@ -1,11 +1,11 @@
-package org.droolsfiddle.rest;
+package org.droolsfiddle.rest.model;
 
 import java.util.Arrays;
 
 /**
  * Created by jvipret on 08/06/2016.
  */
-public class Attribute {
+public class AttributeDTO {
 
   private int id;
   private String name;
@@ -47,7 +47,7 @@ public class Attribute {
 
   @Override
   public String toString() {
-    return "Attribute{" +
+    return "AttributeDTO{" +
             "id=" + id +
             ", name='" + name + '\'' +
             ", type='" + type + '\'' +

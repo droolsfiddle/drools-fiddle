@@ -16,7 +16,4 @@ public class JsonSchemaLeafNode extends JsonSchemaBaseNode {
         this.type = type;
     }
 
-
-
-
 }

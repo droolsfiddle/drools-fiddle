@@ -1,6 +1,6 @@
 package org.droolsfiddle.persistence.rest;
 
-import org.droolsfiddle.persistence.beans.ContextPersistenceDTO;
+import org.droolsfiddle.persistence.beans.model.ContextPersistenceDTO;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;

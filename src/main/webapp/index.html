@@ -95,7 +95,7 @@
                             <a data-toggle="tab" data-target="#drl">Drools Rules</a>
                         </li>
                         <li>
-                            <a data-toggle="tab" data-target="#facts">Drools Facts</a>
+                            <a data-toggle="tab" data-target="#factDTOs">Drools Facts</a>
                         </li>
                     </ul>
                 </div>
@@ -120,7 +120,7 @@ then
 end
                             </div>
                         </div>
-                        <div id="facts" class="tab-pane fade">
+                        <div id="factDTOs" class="tab-pane fade">
                             <json-editor schema="mySchema" startval="myStartVal" on-change="onChange($editorValue)" buttons-controller="SyncButtonsController">
                                 <button type="submit" class="btn btn-success" ng-click="onSubmit($event)" ng-disabled="!isValid">
                                     <span class="glyphicon glyphicon-check"></span> Submit

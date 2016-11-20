@@ -2,6 +2,7 @@ package org.droolsfiddle.websocket.audit;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.droolsfiddle.websocket.CustomDroolsEvent;
+import org.droolsfiddle.websocket.WebSocketUtil;
 import org.kie.api.event.rule.*;
 
 import javax.websocket.Session;
@@ -24,56 +25,29 @@ public class CustomDebugAgendaEventListener extends DebugAgendaEventListener {
 
   public void matchCancelled(MatchCancelledEvent event) {
     super.matchCancelled(event);
-//    try {
-//      wsSession.getBasicRemote().sendText(event.toString());
-//    } catch (IOException e) {
-//      e.printStackTrace();
-//    }
   }
 
   public void matchCreated(MatchCreatedEvent event) {
     super.matchCreated(event);
-//    try {
-//      CustomDroolsEvent aEvent = new CustomDroolsEvent("fire").map(event);
-//      wsSession.getBasicRemote().sendText(mapper.writeValueAsString(aEvent));
-//    } catch (IOException e) {
-//      e.printStackTrace();
-//    }
   }
 
   public void afterMatchFired(AfterMatchFiredEvent event) {
     super.afterMatchFired(event);
-//    try {
-//    CustomDroolsEvent aEvent = new CustomDroolsEvent("fire").map(event);
-//    wsSession.getBasicRemote().sendText(mapper.writeValueAsString(aEvent));
-//    } catch (IOException e) {
-//      e.printStackTrace();
-//    }
   }
 
   public void agendaGroupPopped(AgendaGroupPoppedEvent event) {
     super.agendaGroupPopped(event);
-//    try {
-//      wsSession.getBasicRemote().sendText(event.toString());
-//    } catch (IOException e) {
-//      e.printStackTrace();
-//    }
   }
 
   public void agendaGroupPushed(AgendaGroupPushedEvent event) {
     super.agendaGroupPushed(event);
-//    try {
-//      wsSession.getBasicRemote().sendText(event.toString());
-//    } catch (IOException e) {
-//      e.printStackTrace();
-//    }
   }
 
   public void beforeMatchFired(BeforeMatchFiredEvent event) {
     super.beforeMatchFired(event);
     try{
       CustomDroolsEvent aEvent = new CustomDroolsEvent("fire").map(event);
-      wsSession.getBasicRemote().sendText(mapper.writeValueAsString(aEvent));
+      WebSocketUtil.sendToWebSocket(wsSession, mapper.writeValueAsString(aEvent));
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -81,37 +55,17 @@ public class CustomDebugAgendaEventListener extends DebugAgendaEventListener {
 
   public void beforeRuleFlowGroupActivated(RuleFlowGroupActivatedEvent event) {
     super.beforeRuleFlowGroupActivated(event);
-//    try {
-//      wsSession.getBasicRemote().sendText(event.toString());
-//    } catch (IOException e) {
-//      e.printStackTrace();
-//    }
   }
 
   public void afterRuleFlowGroupActivated(RuleFlowGroupActivatedEvent event) {
     super.afterRuleFlowGroupActivated(event);
-//    try {
-//      wsSession.getBasicRemote().sendText(event.toString());
-//    } catch (IOException e) {
-//      e.printStackTrace();
-//    }
   }
 
   public void beforeRuleFlowGroupDeactivated(RuleFlowGroupDeactivatedEvent event) {
     super.beforeRuleFlowGroupDeactivated(event);
-//    try {
-//      wsSession.getBasicRemote().sendText(event.toString());
-//    } catch (IOException e) {
-//      e.printStackTrace();
-//    }
   }
 
   public void afterRuleFlowGroupDeactivated(RuleFlowGroupDeactivatedEvent event) {
     super.afterRuleFlowGroupDeactivated(event);
-//    try {
-//      wsSession.getBasicRemote().sendText(event.toString());
-//    } catch (IOException e) {
-//      e.printStackTrace();
-//    }
   }
 }

@@ -1,5 +1,7 @@
 package org.droolsfiddle.rest;
 
+import org.droolsfiddle.rest.model.Request;
+
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 
@@ -13,5 +15,5 @@ public interface FactInstanceService {
 
     @POST
     @Path("/insert/{type}")
-    Message postInsertFact(@PathParam("type")String iType, Message iMessage);
+    Request postInsertFact(@PathParam("type")String iType, Request iRequest);
 }

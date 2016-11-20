@@ -1,20 +1,17 @@
-package org.droolsfiddle.rest;
+package org.droolsfiddle.rest.model;
 
-import java.lang.*;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import org.droolsfiddle.rest.JsonSchemaNode;
 
 /**
  * Created by jvipret on 08/06/2016.
  */
-public class Message {
+public class Request {
 
   private int id;
   private String data;
   private String log;
   private boolean success;
-  // private List<Package> packages;
+  // private List<PackageDTO> packages;
   private JsonSchemaNode jsonSchema;
   // private Map<String,Object> jsonValue = new HashMap<>();
 
@@ -43,11 +40,11 @@ public class Message {
     this.log = log;
   }
 
-  // public List<Package> getPackages() {
+  // public List<PackageDTO> getPackages() {
   //  return packages;
   //}
 
-  // public void setPackages(List<Package> packages) {
+  // public void setPackages(List<PackageDTO> packages) {
   //  this.packages = packages;
   // }
 
@@ -78,7 +75,7 @@ public class Message {
 
   @Override
   public String toString() {
-    return "Message{" +
+    return "Request{" +
             "id=" + id +
             ", data='" + data + '\'' +
             ", log='" + log + '\'' +

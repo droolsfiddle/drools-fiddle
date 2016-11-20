@@ -2,6 +2,7 @@ package org.droolsfiddle.websocket.audit;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.droolsfiddle.websocket.CustomDroolsEvent;
+import org.droolsfiddle.websocket.WebSocketUtil;
 import org.kie.api.event.rule.DebugRuleRuntimeEventListener;
 import org.kie.api.event.rule.ObjectDeletedEvent;
 import org.kie.api.event.rule.ObjectInsertedEvent;
@@ -28,7 +29,7 @@ public class CustomDebugRuleRuntimeEventListener extends DebugRuleRuntimeEventLi
     super.objectInserted(event);
     try {
       CustomDroolsEvent aEvent = new CustomDroolsEvent("insert-fact").map(event);
-      wsSession.getBasicRemote().sendText(mapper.writeValueAsString(aEvent));
+      WebSocketUtil.sendToWebSocket(wsSession, mapper.writeValueAsString(aEvent));
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -39,7 +40,7 @@ public class CustomDebugRuleRuntimeEventListener extends DebugRuleRuntimeEventLi
     super.objectDeleted(event);
     try {
       CustomDroolsEvent aEvent = new CustomDroolsEvent("delete-fact").map(event);
-      wsSession.getBasicRemote().sendText(mapper.writeValueAsString(aEvent));
+      WebSocketUtil.sendToWebSocket(wsSession, mapper.writeValueAsString(aEvent));
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -49,7 +50,7 @@ public class CustomDebugRuleRuntimeEventListener extends DebugRuleRuntimeEventLi
   super.objectUpdated(event);
   try {
     CustomDroolsEvent aEvent = new CustomDroolsEvent("update-fact").map(event);
-    wsSession.getBasicRemote().sendText(mapper.writeValueAsString(aEvent));
+    WebSocketUtil.sendToWebSocket(wsSession, mapper.writeValueAsString(aEvent));
   } catch (IOException e) {
     e.printStackTrace();
   }  }
