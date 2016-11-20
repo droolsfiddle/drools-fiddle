@@ -366,6 +366,9 @@
                                         <ports>
                                             <port>8080</port>
                                         </ports>
+                                        <env>
+                                            <SECMGR>true</SECMGR>
+                                        </env>
                                     </build>
 
                                     <run>

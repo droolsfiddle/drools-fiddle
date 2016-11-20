@@ -24,6 +24,10 @@
     </context-param>
 
     <listener>
+        <listener-class>org.droolsfiddle.listener.StartupListener</listener-class>
+    </listener>
+
+    <listener>
         <listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
     </listener>
 
