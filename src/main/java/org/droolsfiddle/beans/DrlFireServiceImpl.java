@@ -72,7 +72,7 @@ public class DrlFireServiceImpl implements DrlFireService {
         });
 
         try{
-            int numberOfFiredRules = futureResult.get(10, TimeUnit.SECONDS);
+            int numberOfFiredRules = futureResult.get(500, TimeUnit.MILLISECONDS);
             resp.setLog("INFO: fired " + numberOfFiredRules + " rules.");
             try {
                 wsSession.getBasicRemote().sendText("INFO: fired " + numberOfFiredRules + " rules.");
@@ -81,14 +81,19 @@ public class DrlFireServiceImpl implements DrlFireService {
             }
             resp.setSuccess(true);
         } catch(TimeoutException e){
-            logger.warn("No response after 10 seconds",e);
+            logger.warn("No response after 500 milliseconds",e);
             resp.setLog("ERROR: rule evaluation timed out.");
             try {
                 wsSession.getBasicRemote().sendText("ERROR: rule evaluation timed out.");
             } catch (IOException e1) {
                 logger.error("Websocket exception",e1);
             }
+            kieSession.halt();
             futureResult.cancel(true);
+            // TODO: should really dispose the session here, because after timeout the session may be unable to
+            // fire any more rules (depending on the reason of the timeout). However, this has impacts on the viz, so
+            // need to wait for the end of UI refactoring.
+            // kieSession.dispose();
         } catch (Exception e2) {
             logger.warn("Other error during rule evaluation",e2);
             resp.setLog("ERROR: rule evaluation error " + e2.getMessage());
