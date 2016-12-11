@@ -30,6 +30,8 @@ helloAjaxApp.controller("myController", ['$scope',
 
     $scope.editor = ace.edit("editor");
 
+    initAce($scope.editor);
+
     $scope.mySchema = {"type":"object", "title":"Facts"};
 
     $scope.myStartVal = undefined;

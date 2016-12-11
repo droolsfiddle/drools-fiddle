@@ -18,7 +18,8 @@
     <link href="vis.min.css" rel="stylesheet" type="text/css"/>
     <link rel="stylesheet" href="http://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
     <link href="panel-with-tab.css" rel="stylesheet">
-    <script src="ace.js" type="text/javascript" charset="utf-8"></script>
+    <script src="ace/ace.js" type="text/javascript" charset="utf-8"></script>
+    <script src="ace/script.js" type="text/javascript"></script>
     <script src="form.js"></script>
     <script src="websocket.js"></script>
     <script src="example.js"></script>
@@ -113,12 +114,11 @@ end
 
 
 rule "Rule"
-when
-    f : Fact(value == 42)
-then
-    modify( f ) {setValue( 41 )}
-end
-                            </div>
+    when
+        f : Fact(value == 42)
+    then
+        modify( f ) {setValue( 41 )}
+    end</div>
                         </div>
                         <div id="facts" class="tab-pane fade">
                             <json-editor schema="mySchema" startval="myStartVal" on-change="onChange($editorValue)" buttons-controller="SyncButtonsController">

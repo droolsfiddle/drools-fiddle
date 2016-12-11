@@ -15,7 +15,7 @@ window.onload = function () {
 
     websocket.onopen = function() {
         console.log('Open');
-        displayMessage('Connection is now open. Type a name and click Say Hello to send a message.');
+        displayMessage('Connection is now open.');
     };
     websocket.onmessage = function(event) {
         // log the event
@@ -34,7 +34,7 @@ window.onload = function () {
     };
     websocket.onclose = function() {
         console.log('Closed');
-        displayMessage('The connection was closed or timed out. Please click the Open Connection button to reconnect.');
+        displayMessage('The connection was closed or timed out.');
         document.getElementById('sayHello').disabled = true;
     };
 
@@ -58,7 +58,7 @@ window.onload = function () {
             var content = document.getElementById('name').value;
             websocket.send(content);
         } else {
-            displayMessage('WebSocket connection is not established. Please click the Open Connection button.', 'error');
+            displayMessage('WebSocket connection is not established.', 'error');
         }
     }
 
