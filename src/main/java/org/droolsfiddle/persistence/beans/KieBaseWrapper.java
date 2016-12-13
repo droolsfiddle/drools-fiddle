@@ -26,7 +26,7 @@ public class KieBaseWrapper implements Serializable {
 
     private static final long serialVersionUID = 7526471155622776147L;
 
-    private KieBase kieBase;
+    private transient KieBase kieBase;
 
     private String drl;
 
