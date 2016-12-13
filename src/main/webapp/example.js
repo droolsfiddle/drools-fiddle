@@ -123,10 +123,10 @@
         edges.add({id:edgesId, from: dataA.type, to: newId, dashes:true});
         if(dataA.from.length > 0) {
             edgesId = dataA.from[0] + "-" + newId;
-            edges.add({id:edgesId, from: dataA.from[0], to: newId, arrows:'to'});
+            edges.add({id:edgesId, from: dataA.from[0], to: newId, arrows:'to', label:indexEdge++});
         } else {
             edgesId = "0-" + newId;
-            edges.add({id:edgesId, from: 0, to: newId, arrows:'to'});
+            edges.add({id:edgesId, from: 0, to: newId, arrows:'to', label:indexEdge++});
         }
     }
 
@@ -139,7 +139,7 @@
         nodes.update(node);
         if(dataA.from.length > 0) {
             var edgesId = dataA.from[0] + "-" + dataA.id;
-            edges.add({id:edgesId, from: dataA.from[0], to: dataA.id, arrows:'to'});
+            edges.add({id:edgesId, from: dataA.from[0], to: dataA.id, arrows:'to', label:indexEdge++});
         }
     }
 
@@ -151,7 +151,7 @@
         nodes.update(node);
         if(dataA.from.length > 0) {
             var edgesId = dataA.from[0] + "-" + dataA.id;
-            edges.add({id:edgesId, from: dataA.from[0], to: dataA.id, arrows:'to'});
+            edges.add({id:edgesId, from: dataA.from[0], to: dataA.id, arrows:'to', label:indexEdge++});
         }
     }
 
@@ -175,7 +175,7 @@
         var edgesId;
         for (i = 0; i < dataA.from.length; i++) {
             edgesId = dataA.from[i] + "-" + dataA.object;
-            edges.add({id:edgesId, from: dataA.from[i], to: dataA.object, arrows:'to', color: 'purple'});
+            edges.add({id:edgesId, from: dataA.from[i], to: dataA.object, arrows:'to', color: 'purple', label:indexEdge++});
         }
     }
 
@@ -186,6 +186,7 @@
         } else {
             edges.remove("0-" + dataA.id);
         }
+        indexEdge--;
         nodes.remove(dataA.id);
     }
 
@@ -206,6 +207,7 @@
         for (i = 0; i < dataA.from.length; i++) {
             edgesId = dataA.from[i] + "-" + dataA.object;
             edges.remove(edgesId);
+            indexEdge--;
         }
     }
 
@@ -213,6 +215,7 @@
         nodes.update(dataP);
         if(dataA.from.length > 0) {
             edges.remove(dataA.from[0] + "-" + dataA.id);
+            indexEdge--;
         }
     }
 
@@ -220,6 +223,7 @@
         nodes.update(dataP);
         if(dataA.from.length > 0) {
             edges.remove(dataA.from[0] + "-" + dataA.id);
+            indexEdge--;
         }
     }
 
@@ -232,6 +236,7 @@
 
         queue = [];
         index = queue.length - 1;
+        indexEdge = 1;
         $("#counter").text((index + 1) + " / " + queue.length);
 
         // create a network
@@ -289,6 +294,7 @@
 
         $("[name='checkbox-live']").bootstrapSwitch();
         var index;
+        var indexEdge;
         $("[name='checkbox-live']").on('switchChange.bootstrapSwitch', function(event, state) {
             if (state) {
                     $('.stepbystep').addClass("disabled");
