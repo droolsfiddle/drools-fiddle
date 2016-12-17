@@ -16,7 +16,6 @@
 package org.droolsfiddle.persistence.beans;
 
 import org.kie.api.KieBase;
-import org.kie.api.runtime.KieSession;
 
 import java.io.Serializable;
 
@@ -50,14 +49,5 @@ public class KieBaseWrapper implements Serializable {
 
     public void setDrl(String drl) {
         this.drl = drl;
-    }
-
-    public void dispose() {
-        if (kieBase != null) {
-            for (KieSession ks : kieBase.getKieSessions()) {
-                ks.halt();
-                ks.dispose();
-            }
-        }
     }
 }

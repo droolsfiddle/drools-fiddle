@@ -22,9 +22,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PreDestroy;
 import javax.websocket.Session;
-import java.io.IOException;
 
 /**
  * Created by gurfm on 15/06/16.
@@ -32,11 +30,6 @@ import java.io.IOException;
 @Component
 @Scope(value="session", proxyMode= ScopedProxyMode.TARGET_CLASS)
 public class DrlContext {
-
-    private KieBaseWrapper kieBase;
-
-    private Session webSocketSession;
-
 
     public boolean hasKieBase() {
         return kieBase != null;
@@ -54,13 +47,10 @@ public class DrlContext {
 
     public void setWebSocketSession(Session webSocketSession) { this.webSocketSession = webSocketSession; }
 
-    @PreDestroy
-    public void dispose() {
-        kieBase.dispose();
-        try {
-            webSocketSession.close();
-        } catch (IOException e) {}
-    }
+
+    private KieBaseWrapper kieBase;
+
+    private Session webSocketSession;
 
 
 
