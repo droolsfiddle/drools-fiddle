@@ -7,7 +7,19 @@ function IsJsonString(str) {
     return true;
 }
 
-window.onload = function () {
+function displayMessage(data) {
+    console.log(data);
+    var message = document.getElementById('log');
+    message.value = data + "\n" + message.value;
+}
+
+function createWebSocket(path) {
+    var protocolPrefix = (window.location.protocol === 'https:') ? 'wss:' : 'ws:';
+    var port = window.location.port ? ":"+window.location.port : "";
+    return new WebSocket(protocolPrefix + '//' + window.location.hostname + port + window.location.pathname + path);
+}
+
+$(function() {
 
     var websocket = null;
 
@@ -18,6 +30,10 @@ window.onload = function () {
         displayMessage('Connection is now open.');
     };
     websocket.onmessage = function(event) {
+        if (event.data == 'pong') {
+            console.log('keep-alive: Pong!');
+            return;
+        }
         // log the event
         displayMessage(event.data, 'success');
         if (IsJsonString(event.data)) {
@@ -38,34 +54,9 @@ window.onload = function () {
         document.getElementById('sayHello').disabled = true;
     };
 
-    function createWebSocket(path) {
-        var protocolPrefix = (window.location.protocol === 'https:') ? 'wss:' : 'ws:';
-		var port = window.location.port ? ":"+window.location.port : "";
-        return new WebSocket(protocolPrefix + '//' + window.location.hostname + port + window.location.pathname + path);
-    }
+    window.setInterval(function(){
+        websocket.send('ping');
+    }, 10000);
 
-    function disconnect() {
-        if (websocket !== null) {
-            websocket.close();
-            websocket = null;
-        }
-        message.value = 'WebSocket closed.';
-        // log the event
-    }
-
-    function sendMessage() {
-        if (websocket !== null) {
-            var content = document.getElementById('name').value;
-            websocket.send(content);
-        } else {
-            displayMessage('WebSocket connection is not established.', 'error');
-        }
-    }
-
-    function displayMessage(data) {
-        console.log(data);
-        var message = document.getElementById('log');
-        message.value = data + "\n" + message.value;
-    }
-}
+});
 
