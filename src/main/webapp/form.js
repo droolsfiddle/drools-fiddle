@@ -37,8 +37,8 @@ helloAjaxApp.controller("myController", ['$scope',
     $scope.myStartVal = undefined;
 
     $scope.onChange = function (data) {
-        console.log('Form changed!');
-        console.dir(data);
+        //console.log('Form changed!');
+        //console.dir(data);
     };
 
 	$scope.compileDrl = function(){
@@ -57,7 +57,7 @@ helloAjaxApp.controller("myController", ['$scope',
 		var res = $http.post(window.location.pathname+'rest/drools/drlCompile', dataObj);
 
 		res.success(function(data, status, headers, config) {
-            console.log(data);
+            //console.log(data);
             if (data.success) {
                 $scope.myStartVal = undefined;
                 $scope.mySchema = data.jsonSchema;

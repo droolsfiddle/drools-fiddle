@@ -33,8 +33,11 @@ public class WebSocketHandler {
 
 
   @OnMessage
-  public String echo(String name) {
-    return ("Echo " + name + " from websocket endpoint");
+  public String ping(Session session, String message) {
+      if (message.equalsIgnoreCase("ping")) {
+          return ("pong");
+      }
+      return null;
   }
 
   @OnOpen
