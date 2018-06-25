@@ -339,7 +339,7 @@
                                     <run>
                                         <cmd>redis-server --appendonly yes</cmd>
                                         <wait>
-                                            <log>The server is now ready to accept connections</log>
+                                            <log>Ready to accept connections</log>
                                             <time>20000</time>
                                         </wait>
                                         <log>
