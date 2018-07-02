@@ -1,2 +1,0 @@
-ace.define("ace/snippets/drlfile",["require","exports","module"],function(e,t,n){
-  t.snippetText='# function\nsnippet func\n	function ${1:Type} ${2:Name}(${3:Params}){ \n		${4://body}\n	}\n# Rule\nsnippet rule\n	rule "${1:rule_name}" \n		${2://Attributes}\n	  when \n		${3://Condition}\n	  then \n		${4://Action}\n	end\n# declare\nsnippet decl\n	declare ${1:Type_Name} \n		${2://body}\n	end\n',t.scope="drlfile"});
