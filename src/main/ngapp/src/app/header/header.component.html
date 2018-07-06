@@ -1,0 +1,52 @@
+<!--  This component is the Header, it displays the navbar on the top.
+ The app uses here the Bootstrap 3.3.7 framework -->
+
+<nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" routerLink=""><span><img src="assets/img/drlfdl_30x30.png"/></span> Drools Fiddle</a> <!-- Drools Fiddle header (title and logo)  -->
+    </div>
+    <div class="navbar-form navbar-left" >
+      <div class="btn-group inline">
+        <button class="btn btn-primary" (click)="compileDrl()" data-toggle="tab" data-target="#facts"><span class="glyphicon glyphicon-cog" aria-hidden="true"></span> Build</button>
+        <button id="firebtn" class="btn btn-primary" (click)="fireDrl()" [disabled] ="!fireDisable"><span class="glyphicon glyphicon-play" aria-hidden="true"></span> Fire</button>
+      </div>
+      <div class="form-group inline">
+        <ngx-toggle
+          onColor="{{model.onColor}}"
+          onText="{{model.onText}}"
+          offColor="{{model.offColor}}"
+          offText="{{model.offText}}"
+          [disabled]="model.disabled"
+          [size]="model.size"
+          [(value)]="model.value"
+        >
+        </ngx-toggle>
+      </div>
+      <div class="btn-group inline">
+        <button id="previousbegin" type="button" class="btn btn-primary stepbystep" [disabled] = "model.value">
+          <span class="glyphicon glyphicon-step-backward" aria-hidden="true"></span>
+        </button>
+        <button id="previous" type="button" class="btn btn-primary stepbystep" [disabled] = "model.value" >
+          <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+        </button>
+        <button id="next" type="button" class="btn btn-primary stepbystep" [disabled] = "model.value" >
+          <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+        </button>
+        <button id="nextend" type="button" class="btn btn-primary stepbystep" [disabled] = "model.value" >
+          <span class="glyphicon glyphicon-step-forward" aria-hidden="true"></span>
+        </button>
+        <button  type="button" class="btn btn-primary">
+          <b>step</b> <span id="counter" class="badge">0/0</span>
+        </button>
+      </div>
+    </div>
+    <div class="navbar-form navbar-right" >
+      <div class="btn-group inline">
+        <button (click)="saveDrl()" class="btn btn-primary"><span class="glyphicon glyphicon-floppy-save" aria-hidden="true"></span> Save</button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+

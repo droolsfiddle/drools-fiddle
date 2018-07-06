@@ -184,7 +184,7 @@
             <version>${jackson.version}</version>
         </dependency>
         <!-- websocket -->
-        <dependency>
+         <dependency>
             <groupId>org.jboss.spec.javax.websocket</groupId>
             <artifactId>jboss-websocket-api_1.0_spec</artifactId>
             <version>${version.org.jboss.spec.javax.websocket}</version>
@@ -231,7 +231,7 @@
 					<phase>generate-sources</phase>
 					<configuration>
 						<workingDirectory>${project.basedir}/src/main/ngapp</workingDirectory>
-						<executable>npm</executable>
+						<executable>npm.cmd</executable>
 						<arguments>
 							<argument>install</argument>
 						</arguments>
@@ -245,10 +245,10 @@
 					<phase>generate-sources</phase>
 					<configuration>
 						<workingDirectory>${project.basedir}/src/main/ngapp</workingDirectory>
-						<executable>ng</executable>
+						<executable>ng.cmd</executable>
 						<arguments>
 							<argument>build</argument>
-							<argument>--base-href=/drools</argument>
+							<argument>--base-href=/ng/home/</argument>
 						</arguments>
 					</configuration>
 					<goals>
@@ -372,7 +372,7 @@
                     <plugin>
                         <groupId>io.fabric8</groupId>
                         <artifactId>docker-maven-plugin</artifactId>
-                        <version>0.15.12</version>
+                        <version>0.26.0</version>
                         <configuration>
                             <images>
                                 <!-- Redis Image is used 'as-is' and is linked into the service image -->
@@ -417,7 +417,7 @@
 
                                     <run>
                                         <ports>
-                                            <port>80:8080</port>
+                                            <port>3010:8080</port>
                                         </ports>
                                         <links>
                                             <link>redis:redis</link>
