@@ -2,5 +2,5 @@
 *.iml
 target/
 src/main/ngapp/node_modules/
-!src/main/ngapp/node_modules/ng2-vis
+!src/main/ngapp/node_modules/ng2-vis/*
 src/main/webapp/ng/*
