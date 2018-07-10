@@ -65,9 +65,17 @@ export class EventsService {
         this.emitVisNetworkDataSubject();
     }
 
-    public addEdge(): void {
-        this.visNetworkData.edges.add({from: '2', to: '3'});
+    public addNode(node: any){
+        this.visNetworkData.nodes.add(node);
         this.visNetworkService.fit(this.visNetwork);
+        this.emitVisNetworkDataSubject();
+        console.log("Hello",node);
+    }
+
+    public addEdge(edge: any): void {
+        this.visNetworkData.edges.add(edge);
+        this.visNetworkService.fit(this.visNetwork);
+        this.emitVisNetworkDataSubject();
     }
 
     public networkInitialized(): void {
@@ -85,9 +93,23 @@ export class EventsService {
 
     public reset(){
 
-        this.destroy();
-        this.networkInitialized();
-        this.init();
+        const nodes = new VisNodes([
+            {id: 1, label : 'User', group : 'users', title : '42'},
+            {id: 2, label: 'Rule', group: 'rule',title : '42'},
+            {id: 3,  label: 'Fact Type', group: 'factType', title : '42'},
+            {id: 4,  label: 'Fact Instance', group: 'factInstance'}, ]);
+
+
+        const edges = new VisEdges([
+            { from: '1', to: '3', dashes: 'true' },
+            { from: '1', to: '2', arrows: 'to' },
+            { from: '2', to: '4', group: 'test' },
+            { from: '2', to: '5' }]);
+
+        this.visNetworkData = {
+            nodes,
+            edges,
+        };
 
         console.log(this.visNetworkData);
         this.visNetworkService.fit(this.visNetwork);

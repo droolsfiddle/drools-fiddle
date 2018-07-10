@@ -10,10 +10,11 @@ import {ExampleNetworkData} from "../models/network-data.model";
 })
 export class StepFunctionsService {
 
-    public queue = [];
+    public queue = [{'action' : 'insert-fact-type', 'before' : {}, 'after' : {"action":"insert-fact","type":"Fact","id":"142654829","object":{"value":42},"from":[]}}];
+
 
     private step = 0;
-    private totalStep = 0;
+    private totalStep = 1;
     private edgeStep = 1;
 
 
@@ -27,7 +28,7 @@ export class StepFunctionsService {
     public visNetworkDataSubscription: Subscription;
     public visNetworkData: ExampleNetworkData;
 
-
+    /*
     actionHandle = {
         "insert-fact": this.addFactInstance,
         "insert-fact-type": this.addFactType,
@@ -53,7 +54,12 @@ export class StepFunctionsService {
         "update-fact": this.nextUFIR,
         "delete-fact": this.nextRFIR,
         "fire": this.nextFR
-    };
+    };*/
+
+
+
+
+
     
   constructor(private drlService: DRLService, private eventsService: EventsService) {
       this.hasCompiledSubscription = this.drlService.hasCompiledSubject.subscribe(
@@ -97,6 +103,121 @@ export class StepFunctionsService {
       this.step++;
       this.emitStepSubject();
 
+    }
+
+    public stepDown() {
+        this.step--;
+        this.emitStepSubject();
+
+    }
+
+    public nodeAdd(node){
+        this.eventsService.addNode(node);
+    }
+
+
+    public edgeAdd(edge: any){
+        this.eventsService.addEdge(edge);
+    }
+
+    /* _____________________________________ HANDLE SWITCH ___________________*/
+    actionHandle(action, data) {
+        switch (action) {
+            case "insert-fact": {
+                this.addFactInstance(data);
+                break;
+            }
+            case "insert-fact-type": {
+                this.addFactType(data);
+                break;
+            }
+            case "insert-rule": {
+                this.addRule(data);
+                break;
+            }
+            case "update-fact": {
+                this.updateFactInstance(data);
+                break;
+            }
+            case "delete-fact": {
+                this.removeFactInstance(data);
+                break;
+            }
+            case "fire": {
+                this.fire(data);
+                break;
+            }
+            default: {
+                console.log('Invalid DATA');
+                break;
+            }
+        }
+    }
+
+    nextHandle(action, data1, data2) {
+        switch (action) {
+            case "insert-fact": {
+                this.nextFI( data1, data2);
+                break;
+            }
+            case "insert-fact-type": {
+                this.nextFT( data1, data2);
+                break;
+            }
+            case "insert-rule": {
+                this.nextR( data1, data2);
+                break;
+            }
+            case "update-fact": {
+                this.nextUFI( data1, data2);
+                break;
+            }
+            case "delete-fact": {
+                this.nextRFI( data1, data2);
+                break;
+            }
+            case "fire": {
+                this.nextF( data1, data2);
+                break;
+            }
+            default: {
+                console.log('Invalid DATA');
+                break;
+            }
+        }
+    }
+
+    previousHandle(action, data1, data2) {
+        switch (action) {
+            case "insert-fact": {
+                this.nextFIR( data1, data2);
+                break;
+            }
+            case "insert-fact-type": {
+                this.nextFTR( data1, data2);
+                break;
+            }
+            case "insert-rule": {
+                this.nextRR( data1, data2);
+                break;
+            }
+            case "update-fact": {
+                this.nextUFIR( data1, data2);
+                break;
+            }
+            case "delete-fact": {
+                this.nextRFIR( data1, data2);
+                break;
+            }
+            case "fire": {
+                this.nextFR( data1, data2);
+                break;
+            }
+            default: {
+                console.log('Invalid DATA');
+                break;
+            }
+        }
     }
     /* ------------------------ EVENTS  S ------------------- */
 
@@ -161,37 +282,36 @@ export class StepFunctionsService {
 
      public previousBegin() {
         while (this.step >= 0) {
-            this.previousHandle[this.queue[this.step].action](this.queue[this.step]['before'], this.queue[this.step]['after']);
-            this.step = this.step - 1;
+            this.previousHandle(this.queue[this.step].action ,this.queue[this.step]['before'], this.queue[this.step]['after']);
+            this.stepDown();
             this.totalStep = this.queue.length;
-            this.emitStepSubject();
             this.emitTotalStepSubject();
         }
     }
 
      public previous() {
         if (this.step >= 0) {
-            this.previousHandle[this.queue[this.step].action](this.queue[this.step]['before'], this.queue[this.step]['after']);
-            this.step = this.step - 1;
+            this.previousHandle(this.queue[this.step].action ,this.queue[this.step]['before'], this.queue[this.step]['after']);
+            this.stepDown();
             this.totalStep = this.queue.length;
-            this.emitStepSubject();
             this.emitTotalStepSubject();
         }
     }
 
      public next() {
-        if (this.step <  this.queue.length - 1) {
-            this.step = this.step + 1;
-            this.nextHandle[this.queue[this.step].action](this.queue[this.step]['before'], this.queue[this.step]['after'])
-            ((this.step + 1) + " / " +  this.queue.length);
+         console.log(this.queue[0]);
+        if (this.step <  this.totalStep) {
+            this.nextHandle(this.queue[this.step].action, this.queue[this.step]['before'], this.queue[this.step]['after']);
+            this.stepUp();
+            console.log("Alo?");
+            }
+
         }
-    }
 
      public nextEnd() {
         while (this.step <  this.queue.length - 1) {
             this.step = this.step + 1;
-            this.nextHandle[this.queue[this.step].action](this.queue[this.step]['before'], this.queue[this.step]['after'])
-            ((this.step + 1) + " / " +  this.queue.length);
+            this.nextHandle(this.queue[this.step].action, this.queue[this.step]['before'], this.queue[this.step]['after']);
         }
     }
 
@@ -200,15 +320,15 @@ export class StepFunctionsService {
      public nextFI(dataP, dataA) {
         const newId = dataA.id;
         const dataJson = JSON.stringify(dataA.object, null, 2);
-        this.visNetworkData.nodes.add({id:newId, title:dataJson, group : "factInstance"});
+        this.nodeAdd({id:newId, title:dataJson, group : "factInstance"});
         const edgesId = dataA.type + "-" + newId;
-        this.visNetworkData.edges.add({id:edgesId, from: dataA.type, to: newId, dashes:true});
+        this.edgeAdd({id:edgesId, from: dataA.type, to: newId, dashes:true});
         if(dataA.from.length > 0) {
             const edgesId = dataA.from[0] + "-" + newId;
-            this.visNetworkData.edges.add({id:edgesId, from: dataA.from[0], to: newId, arrows:'to', label: this.edgeStep++});
+            this.edgeAdd({id:edgesId, from: dataA.from[0], to: newId, arrows:'to', label: this.edgeStep++});
         } else {
             const edgesId = "0" + newId;
-            this.visNetworkData.edges.add({id:edgesId, from: 0, to: newId, arrows:'to', label:this.edgeStep++});
+            this.edgeAdd({id:edgesId, from: 0, to: newId, arrows:'to', label:this.edgeStep++});
         }
     }
 
@@ -221,7 +341,7 @@ export class StepFunctionsService {
          //this.visNetworkData.nodes.update(node);
         if(dataA.from.length > 0) {
             const edgesId = dataA.from[0] + "-" + dataA.id;
-            this.visNetworkData.edges.add({id:edgesId, from: dataA.from[0], to: dataA.id, arrows:'to', label:this.edgeStep++});
+            this.edgeAdd({id:edgesId, from: dataA.from[0], to: dataA.id, arrows:'to', label:this.edgeStep++});
         }
     }
 
@@ -234,20 +354,23 @@ export class StepFunctionsService {
         //this.visNetworkData.nodes.update(node);
         if(dataA.from.length > 0) {
             const edgesId = dataA.from[0] + "-" + dataA.id;
-            this.visNetworkData.edges.add({id:edgesId, from: dataA.from[0], to: dataA.id, arrows:'to', label:this.edgeStep++});
+            this.edgeAdd({id:edgesId, from: dataA.from[0], to: dataA.id, arrows:'to', label:this.edgeStep++});
         }
     }
 
      public nextFT(dataP, dataA) {
         //const newId = dataA.id;
         //const newId = dataA.object.name;
+         console.log("HEYFIRST");
         const dataJson = JSON.stringify(dataA.object.attributes, null, 2);
-        this.visNetworkData.nodes.add({id:dataA.object.name, label:dataA.object.name, title:dataJson, group : "factType"});
+         this.nodeAdd({id:dataA.object.name, label:dataA.object.name, title:dataJson, group : "factType"});
+         console.log("HEY");
+         this.nodeAdd({ id: 18000, label: 'Rule ' + 18000, group: 'rule' });
     }
 
      public nextR(dataP, dataA) {
         const dataJson = JSON.stringify(dataA.object, null, 2);
-        this.visNetworkData.nodes.add({id:dataA.object.name, label:dataA.object.name, title:dataJson, group : "rule"});
+        this.nodeAdd({id:dataA.object.name, label:dataA.object.name, title:dataJson, group : "rule"});
     }
 
      public nextF(dataP, dataA) {
@@ -258,7 +381,7 @@ export class StepFunctionsService {
          this.visNetworkData.nodes.update([{id: dataA.object , group : 'fact'  }]);
         for (let i = 0; i < dataA.from.length; i++) {
             const edgesId = dataA.from[i] + "-" + dataA.object;
-            this.visNetworkData.edges.add({id:edgesId, from: dataA.from[i], to: dataA.object, arrows:'to', color: 'purple', label:this.edgeStep++});
+            this.edgeAdd({id:edgesId, from: dataA.from[i], to: dataA.object, arrows:'to', color: 'purple', label:this.edgeStep++});
         }
     }
 
