@@ -24,20 +24,20 @@
         </ngx-toggle>
       </div>
       <div class="btn-group inline">
-        <button id="previousbegin" type="button" class="btn btn-primary stepbystep" [disabled] = "model.value">
+        <button (click)="previousBegin()" type="button" class="btn btn-primary stepbystep" [disabled] = "model.value">
           <span class="glyphicon glyphicon-step-backward" aria-hidden="true"></span>
         </button>
-        <button id="previous" type="button" class="btn btn-primary stepbystep" [disabled] = "model.value" >
+        <button (click)="previous()" type="button" class="btn btn-primary stepbystep" [disabled] = "model.value" >
           <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
         </button>
-        <button id="next" type="button" class="btn btn-primary stepbystep" [disabled] = "model.value" >
+        <button (click)="next()" type="button" class="btn btn-primary stepbystep" [disabled] = "model.value" >
           <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
         </button>
-        <button id="nextend" type="button" class="btn btn-primary stepbystep" [disabled] = "model.value" >
+        <button (click)="nextEnd()" type="button" class="btn btn-primary stepbystep" [disabled] = "model.value" >
           <span class="glyphicon glyphicon-step-forward" aria-hidden="true"></span>
         </button>
         <button  type="button" class="btn btn-primary">
-          <b>step</b> <span id="counter" class="badge">0/0</span>
+          <b>step</b> <span id="counter" class="badge">{{step}} / {{totalStep}}</span>
         </button>
       </div>
     </div>

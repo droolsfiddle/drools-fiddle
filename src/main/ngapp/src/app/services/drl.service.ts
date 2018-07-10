@@ -110,7 +110,7 @@ export class DRLService {
                   this.eventService.tabsArray[1] = 'in active';
                   this.eventService.emitTabsSubject(); */
                   this.hasCompiled = true;
-                  this.emitHasCompiledSubject();
+                  /* this.emitHasCompiledSubject(); */
                   this.jsonResp =  res;
                   console.log(res);
               },

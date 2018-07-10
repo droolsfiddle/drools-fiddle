@@ -2,6 +2,7 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {DRLService} from '../services/drl.service';
 import {EventsService} from '../services/events.service';
 import {Subscription} from 'rxjs';
+import {StepFunctionsService} from "../services/step-functions.service";
 
 /*  This component is the Header, it displays the navbar on the top.
  The app uses here the Bootstrap 3.3.7 framework */
@@ -12,21 +13,19 @@ import {Subscription} from 'rxjs';
   styleUrls: ['./header.component.scss']
 })
 export class HeaderComponent implements OnInit, OnDestroy {
-  model: any = {
-    onColor: 'success',
-    offColor: 'danger',
-    onText: 'Live',
-    offText: 'Off',
-    disabled: false,
-    size: '',
-    value: true
-  };
+    public model = this.eventService.modelLiveButton;
     fireDisableSubscription: Subscription;
   fireDisable = true;
 
+  stepSubscription: Subscription;
+  step = 0;
+
+  totalStepSubscription: Subscription;
+  totalStep = 0;
+
   /* dataTarget: string; */
 
-  constructor(private drlService: DRLService, private eventService: EventsService) { }
+  constructor(private drlService: DRLService, private eventService: EventsService, private stepFunctionService: StepFunctionsService) { }
 
   ngOnInit() {
       this.fireDisableSubscription = this.drlService.hasCompiledSubject.subscribe(
@@ -35,11 +34,25 @@ export class HeaderComponent implements OnInit, OnDestroy {
           }
       );
       this.drlService.emitHasCompiledSubject();
+
+      this.stepSubscription = this.stepFunctionService.stepSubject.subscribe(
+          (step: number) => {
+              this.step = step;
+          }
+      );
+      this.stepFunctionService.emitStepSubject();
+
+      this.totalStepSubscription = this.stepFunctionService.totalStepSubject.subscribe(
+          (totalStep: number) => {
+              this.totalStep = totalStep;
+          }
+      );
+      this.stepFunctionService.emitTotalStepSubject();
   }
 
   compileDrl() {
       this.drlService.compile();
-      console.log(this.fireDisable);
+      this.stepFunctionService.totalReset();
       /* $('.nav-tabs > .active').next('li').find('a').trigger('click'); (Ou prev) */
       /* this.dataTarget = this.drlService.target;
       this.eventService.emitTabsSubject();
@@ -56,6 +69,25 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
   ngOnDestroy() {
         this.fireDisableSubscription.unsubscribe();
+        this.totalStepSubscription.unsubscribe();
+        this.stepSubscription.unsubscribe();
+    }
+
+    next() {
+      this.stepFunctionService.next();
+    }
+
+    nextEnd() {
+      this.stepFunctionService.nextEnd();
+    }
+
+    previousBegin() {
+      this.stepFunctionService.previousBegin();
+    }
+
+    previous(){
+      this.stepFunctionService.previous();
+
     }
 
 }

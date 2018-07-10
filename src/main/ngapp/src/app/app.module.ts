@@ -23,6 +23,7 @@ import {NgxToggleModule} from 'ngx-toggle';
 import {PopoverModule} from 'ngx-popover';
 import {AceEditorModule} from 'ng2-ace-editor';
 import {AngularFontAwesomeModule} from 'angular-font-awesome';
+import {StepFunctionsService} from "./services/step-functions.service";
 
 
 const appRoutes: Routes = [
@@ -57,7 +58,7 @@ const appRoutes: Routes = [
     PopoverModule, // This is the module that allows to pop the information legend in the visualisation part.
     AngularFontAwesomeModule
   ],
-  providers: [DRLService, EventsService, FactsService, Location, {provide: LocationStrategy, useClass: PathLocationStrategy}],
+  providers: [DRLService, EventsService, FactsService, Location, {provide: LocationStrategy, useClass: PathLocationStrategy}, StepFunctionsService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
