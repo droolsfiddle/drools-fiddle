@@ -65,7 +65,7 @@ public class DrlCompilerServiceImpl implements DrlCompilerService {
         Session wsSession = (Session) request.getSession().getAttribute(Session.class.getName());
 
         Request resp = new Request();
-        /*
+        
         resp.setSuccess(false);
         // String to test :"Ci8vCi8vIGNvcHkgcGFzdGUgeW91ciBkcmwKLy8KCmRlY2xhcmUgRmFjdAogICAgdmFsdWUgOiBpbnQKZW5kCgoKcnVsZSAiUnVsZSIKICAgIHdoZW4KICAgICAgICBmIDogRmFjdCh2YWx1ZSA9PSA0MikKICAgIHRoZW4KICAgICAgICBtb2RpZnkoIGYgKSB7c2V0VmFsdWUoIDQxICl9CiAgICBlbmQ="
         String drl;
@@ -111,7 +111,21 @@ public class DrlCompilerServiceImpl implements DrlCompilerService {
             rootTypes.addAll(pack.getFactTypes());
         }
 
-        JsonSchemaNode root = new JsonSchemaNode();
+        JsonSchemaNodeNew root = new JsonSchemaNodeNew();
+        JsonSchemaItemsNode node = new JsonSchemaItemsNode();
+        node.setType("array");
+        for (FactType type : rootTypes) {
+            if (type.getFactClass().isEnum()) // skip enums
+                continue;
+
+            node.getItems().add(
+                    factType2JsonSchemaNode(type.getSimpleName(),type,kbs));
+        }
+        root.getSchema().put("Facts",
+                    node);
+        
+
+        /*
         root.setType("object");
         root.setTitle("Facts");
         for (FactType type : rootTypes) {
@@ -122,7 +136,8 @@ public class DrlCompilerServiceImpl implements DrlCompilerService {
                     factType2JsonSchemaNode(type.getSimpleName(),type,kbs));
 
         }
-        resp.setJsonSchema(root);
+        */
+        resp.setJsonSchemaNew(root);
 
         List<PackageDTO> packs = new ArrayList<PackageDTO>();
         for (KiePackage pack : kbs.getKiePackages()) {
@@ -161,7 +176,7 @@ public class DrlCompilerServiceImpl implements DrlCompilerService {
 
         logger.debug("End DRL compile service: "+resp.toString()); 
         
-        */
+        
         resp.setSuccess(true);
         return resp; 
     }

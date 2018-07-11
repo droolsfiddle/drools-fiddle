@@ -56,8 +56,8 @@
               "node_modules/jquery/dist/jquery.min.js",
               "node_modules/bootstrap/dist/js/bootstrap.js",
               "node_modules/ace-builds/src-min/ace.js",
-              "node_modules/ace-builds/src-min/theme-dracula.js",
-              "node_modules/ace-builds/src-min/mode-java.js"
+              "node_modules/ace-builds/src-min/theme-tomorrow_night.js",
+              "node_modules/ace-builds/src-min/mode-drools.js"
 
             ]
           },

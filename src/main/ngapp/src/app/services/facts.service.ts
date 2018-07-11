@@ -6,7 +6,8 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class FactsService {
-  
+
+    /*
     myFormData = {
         'schema': {
             'Facts': {
@@ -15,22 +16,27 @@ export class FactsService {
                     'type': 'object',
                     'title': 'Fact',
                     'properties': {
-                        'value': {
-                            'type': 'integer',
+                        'Hey': {
+                            'type': 'object',
                             'title': 'Value',
-                            'required': true
+                            'properties':{
+                                'Try': {
+                                    'type': 'integer',
+                                    'title': 'Test',
+                                }
+                            }
                         },
-                        /*
+
                         'value2': {
                             'type': 'string',
                             'title': 'Test',
-                        } */
+                        }
                     }
                 }
             }
         }
-    }
-
+    };*/
+     myFormData = {"schema":{"Facts":{"type":"array","items":[{"title":"Fact","type":"object","properties":{"value":{"title":"value","type":"integer","properties":{}}}}]}}}
     /*
     myFormData = {
         'schema': {
