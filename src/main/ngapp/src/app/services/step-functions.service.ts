@@ -10,12 +10,11 @@ import {ExampleNetworkData} from "../models/network-data.model";
 })
 export class StepFunctionsService {
 
-    public queue = [{'action' : 'insert-fact-type', 'before' : {}, 'after' : {"action":"insert-fact","type":"Fact","id":"142654829","object":{"value":42},"from":[]}}];
+    public queue =   [{"action":"insert-rule","before":{},"after":{"action":"insert-rule","type":null,"id":null,"object":{"name":"Rule"},"from":[]}},{"action":"insert-fact-type","before":{},"after":{"action":"insert-fact-type","type":null,"id":"3e9sj.8o8g6k","object":{"id":0,"name":"Fact","attributes":[{"id":0,"name":"value","type":"int","enumValues":null}]},"from":[]}},{"action":"insert-fact","before":{},"after":{"action":"insert-fact","type":"Fact","id":"1151983785","object":{"value":42},"from":[]}},{"action":"fire","before":{},"after":{"action":"fire","type":null,"id":null,"object":"Rule","from":["1151983785"]}}];
 
-
-    private step = 0;
-    private totalStep = 1;
-    private edgeStep = 1;
+    private step = 3;
+    private totalStep = 4;
+    private edgeStep = 2;
 
 
     stepSubject = new Subject<number>(); // We use a Subject to subscribe to it in real time
@@ -119,6 +118,24 @@ export class StepFunctionsService {
     public edgeAdd(edge: any){
         this.eventsService.addEdge(edge);
     }
+
+    public removeEdge(edgeId: any){
+      this.eventsService.removeEdge(edgeId);
+    }
+
+    public  removeNode(nodeId: any){
+      this.eventsService.removeNode(nodeId);
+    }
+
+    public updateEdge(edge: any){
+        this.eventsService.updateEdge(edge);
+    }
+
+    public  updateNode(node: any){
+        this.eventsService.updateNode(node);
+    }
+
+
 
     /* _____________________________________ HANDLE SWITCH ___________________*/
     actionHandle(action, data) {
@@ -291,6 +308,8 @@ export class StepFunctionsService {
 
      public previous() {
         if (this.step >= 0) {
+            console.log(this.queue);
+            console.log(this.queue[this.step]);
             this.previousHandle(this.queue[this.step].action ,this.queue[this.step]['before'], this.queue[this.step]['after']);
             this.stepDown();
             this.totalStep = this.queue.length;
@@ -300,17 +319,18 @@ export class StepFunctionsService {
 
      public next() {
          console.log(this.queue[0]);
-        if (this.step <  this.totalStep) {
-            this.nextHandle(this.queue[this.step].action, this.queue[this.step]['before'], this.queue[this.step]['after']);
+        if (this.step <  this.totalStep - 1) {
             this.stepUp();
-            console.log("Alo?");
+            this.nextHandle(this.queue[this.step].action, this.queue[this.step]['before'], this.queue[this.step]['after']);
+
+            console.log("Alo?",this.queue[this.step].action);
             }
 
         }
 
      public nextEnd() {
-        while (this.step <  this.queue.length - 1) {
-            this.step = this.step + 1;
+        while (this.step <  this.totalStep - 1) {
+            this.stepUp();
             this.nextHandle(this.queue[this.step].action, this.queue[this.step]['before'], this.queue[this.step]['after']);
         }
     }
@@ -325,36 +345,40 @@ export class StepFunctionsService {
         this.edgeAdd({id:edgesId, from: dataA.type, to: newId, dashes:true});
         if(dataA.from.length > 0) {
             const edgesId = dataA.from[0] + "-" + newId;
-            this.edgeAdd({id:edgesId, from: dataA.from[0], to: newId, arrows:'to', label: this.edgeStep++});
+            this.edgeStep++;
+            this.edgeAdd({id:edgesId, from: dataA.from[0], to: newId, arrows:'to', label: this.edgeStep});
         } else {
-            const edgesId = "0" + newId;
-            this.edgeAdd({id:edgesId, from: 0, to: newId, arrows:'to', label:this.edgeStep++});
+            const edgesId = "0-" + String(newId);
+            this.edgeStep++;
+            this.edgeAdd({id:edgesId, from: 0, to: newId, arrows:'to', label:this.edgeStep});
         }
     }
 
      public nextUFI(dataP, dataA) {
         //const node = this.visNetworkData.nodes.get(dataA.id);
          const dataJson = JSON.stringify(dataA.object, null, 2);
-         this.visNetworkData.nodes.update([{id: dataA.id, group : 'factInstance', title : dataJson}]);
+         this.updateNode([{id: dataA.id, group : 'factInstance', title : dataJson}]);
         //node.borderWidth = 3;
         //node.color = {background:'#51c1db', border:'#de5152'};
-         //this.visNetworkData.nodes.update(node);
+         //this.updateNode(node);
         if(dataA.from.length > 0) {
             const edgesId = dataA.from[0] + "-" + dataA.id;
-            this.edgeAdd({id:edgesId, from: dataA.from[0], to: dataA.id, arrows:'to', label:this.edgeStep++});
+            this.edgeStep++;
+            this.edgeAdd({id:edgesId, from: dataA.from[0], to: dataA.id, arrows:'to', label:this.edgeStep});
         }
     }
 
      public nextRFI(dataP, dataA) {
         //const node = this.visNetworkData.nodes.get(dataA.id);
         const dataJson = "The fact instance has been deleted";
-        this.visNetworkData.nodes.update([{id: dataA.id,/* group : 'factInstanceDeleted' */ title : dataJson}]);
+        this.updateNode([{id: dataA.id,/* group : 'factInstanceDeleted' */ title : dataJson}]);
          //node.color = {background:'black', border:'black'};
         //node.title = dataJson;
-        //this.visNetworkData.nodes.update(node);
+        //this.updateNode(node);
         if(dataA.from.length > 0) {
             const edgesId = dataA.from[0] + "-" + dataA.id;
-            this.edgeAdd({id:edgesId, from: dataA.from[0], to: dataA.id, arrows:'to', label:this.edgeStep++});
+            this.edgeStep++;
+            this.edgeAdd({id:edgesId, from: dataA.from[0], to: dataA.id, arrows:'to', label:this.edgeStep});
         }
     }
 
@@ -364,72 +388,77 @@ export class StepFunctionsService {
          console.log("HEYFIRST");
         const dataJson = JSON.stringify(dataA.object.attributes, null, 2);
          this.nodeAdd({id:dataA.object.name, label:dataA.object.name, title:dataJson, group : "factType"});
-         console.log("HEY");
-         this.nodeAdd({ id: 18000, label: 'Rule ' + 18000, group: 'rule' });
     }
 
      public nextR(dataP, dataA) {
         const dataJson = JSON.stringify(dataA.object, null, 2);
-        this.nodeAdd({id:dataA.object.name, label:dataA.object.name, title:dataJson, group : "rule"});
+        this.updateNode({id:dataA.object.name, label:dataA.object.name, title:dataJson, group : "rule"});
     }
 
      public nextF(dataP, dataA) {
         //const node = this.visNetworkData.nodes.get(dataA.object);
         //node.borderWidth = 3;
         //node.color = {background:'#f3ac5d', border:'#de5152'};
-        //this.visNetworkData.nodes.update(node);
-         this.visNetworkData.nodes.update([{id: dataA.object , group : 'fact'  }]);
+        //this.updateNode(node);
+         this.updateNode([{id: dataA.object , group : 'rule'  }]);
         for (let i = 0; i < dataA.from.length; i++) {
             const edgesId = dataA.from[i] + "-" + dataA.object;
-            this.edgeAdd({id:edgesId, from: dataA.from[i], to: dataA.object, arrows:'to', color: 'purple', label:this.edgeStep++});
+            this.edgeStep++;
+            this.edgeAdd({id:edgesId, from: dataA.from[i], to: dataA.object, arrows:'to', color: 'purple', label:this.edgeStep});
         }
     }
 
      public nextFIR(dataP, dataA) {
-        this.visNetworkData.edges.remove(dataA.type + "-" + dataA.id);
+        this.removeEdge(dataA.type + "-" + dataA.id);
         if(dataA.from.length > 0) {
-            this.visNetworkData.edges.remove(dataA.from[0] + "-" + dataA.id);
+            this.removeEdge(dataA.from[0] + "-" + dataA.id);
         } else {
-            this.visNetworkData.edges.remove("0-" + dataA.id);
+            this.removeEdge("0-" + dataA.id);
         }
         this.edgeStep--;
-        this.visNetworkData.nodes.remove(dataA.id);
+        console.log(this.edgeStep);
+        this.removeNode(dataA.id);
     }
 
      public nextFTR(dataP, dataA) {
-        this.visNetworkData.nodes.remove(dataA.object.name);
+        this.removeNode(dataA.object.name);
     }
 
      public nextRR(dataP, dataA) {
-        this.visNetworkData.nodes.remove(dataA.object.name);
+        this.removeNode(dataA.object.name);
     }
 
      public nextFR(dataP, dataA) {
         /*  const node = this.visNetworkData.nodes.get(dataA.object);
         node.borderWidth = 1;
         node.color = {background:'#f3ac5d', border:'#f3ac5d'};
-        this.visNetworkData.nodes.update(node); */
-         this.visNetworkData.nodes.update([{id: dataA.object , group : 'rule'  }]);
+        this.updateNode(node); */
+
+         this.updateNode([{id: dataA.object , group : 'rule'  }]);
         for (let i = 0; i < dataA.from.length; i++) {
             const edgesId = dataA.from[i] + "-" + dataA.object;
-            this.visNetworkData.edges.remove(edgesId);
+            console.log('Hey', edgesId);
+            this.removeEdge(edgesId);
             this.edgeStep--;
+            console.log(this.edgeStep);
         }
     }
 
      public nextUFIR(dataP, dataA) {
-        this.visNetworkData.nodes.update(dataP);
+        this.updateNode(dataP);
         if(dataA.from.length > 0) {
-            this.visNetworkData.edges.remove(dataA.from[0] + "-" + dataA.id);
+            this.removeEdge(dataA.from[0] + "-" + dataA.id);
             this.edgeStep--;
+            console.log(this.edgeStep);
         }
     }
 
      public nextRFIR(dataP, dataA) {
-        this.visNetworkData.nodes.update(dataP);
+        this.updateNode(dataP);
         if(dataA.from.length > 0) {
-            this.visNetworkData.edges.remove(dataA.from[0] + "-" + dataA.id);
+            this.removeEdge(dataA.from[0] + "-" + dataA.id);
             this.edgeStep--;
+            console.log(this.edgeStep);
         }
     }
 
