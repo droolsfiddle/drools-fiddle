@@ -6,6 +6,7 @@ And this app uses the Bootstrap3FrameworkModule included in JsonSchemaFormModule
 <json-schema-form
 
         framework="'bootstrap-3'"
-        [form] = "myFormData" >
+        [form] = "myFormData"
+        (onSubmit)="onSubmitEvent($event)" >
+
 </json-schema-form>
-{{test}}

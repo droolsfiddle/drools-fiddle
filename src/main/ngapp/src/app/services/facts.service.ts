@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import {Subject} from "rxjs/index";
 
 /* This Service will manage the facts */
 
@@ -36,43 +37,18 @@ export class FactsService {
             }
         }
     };*/
-     myFormData = {"schema":{"Facts":{"type":"array","items":[{"title":"Fact","type":"object","properties":{"value":{"title":"value","type":"integer","properties":{}}}}]}}}
-    /*
-    myFormData = {
-        'schema': {
-            "title":"Facts",
-            "type":"object",
-            "properties":{
-                "Fact":{
-                    "title":"Fact",
-                    "type":"object",
-                    "properties":{
-                        "value":{
-                            "title":"value",
-                            "type":"integer",
-                        }
+     myFormData = {"schema":{"Facts":{"type":"array","items":[{}/*{"title":"Fact","type":"object","properties":{"value":{"title":"value","type":"integer","properties":{}}}}*/]}}};
 
-                    }
+    myFormDataSubject = new Subject<object>(); // We use a Subject to set the variable DrlCode Private
 
-                },
-                "Fact2":{
-                    "title":"Fact2",
-                    "type":"object",
-                    "properties":{
-                        "value":{
-                            "title":"value",
-                            "type":"integer",
-                        }
 
-                    }
+  constructor() {
 
-                }
+  }
 
-            }
+    emitMyFormDataSubject() {
+        this.myFormDataSubject.next(this.myFormData);
+    }
 
-        }
 
-    } */
-
-  constructor() { }
 }

@@ -10,11 +10,11 @@ import {ExampleNetworkData} from "../models/network-data.model";
 })
 export class StepFunctionsService {
 
-    public queue =   [{"action":"insert-rule","before":{},"after":{"action":"insert-rule","type":null,"id":null,"object":{"name":"Rule"},"from":[]}},{"action":"insert-fact-type","before":{},"after":{"action":"insert-fact-type","type":null,"id":"3e9sj.8o8g6k","object":{"id":0,"name":"Fact","attributes":[{"id":0,"name":"value","type":"int","enumValues":null}]},"from":[]}},{"action":"insert-fact","before":{},"after":{"action":"insert-fact","type":"Fact","id":"1151983785","object":{"value":42},"from":[]}},{"action":"fire","before":{},"after":{"action":"fire","type":null,"id":null,"object":"Rule","from":["1151983785"]}}];
+    public queue =   [];
 
-    private step = 3;
-    private totalStep = 4;
-    private edgeStep = 2;
+    private step = -1;
+    private totalStep = 0;
+    private edgeStep = 0;
 
 
     stepSubject = new Subject<number>(); // We use a Subject to subscribe to it in real time
@@ -87,8 +87,11 @@ export class StepFunctionsService {
     public totalReset() {
       this.eventsService.reset();
       this.queue = [];
-      this.step = this.queue.length;
-      this.edgeStep = 1;
+      this.step = -1;
+      this.totalStep = this.queue.length;
+      this.edgeStep = 0;
+        this.emitStepSubject();
+        this.emitTotalStepSubject();
     }
 
     public stepTotalUp() {
@@ -241,7 +244,9 @@ export class StepFunctionsService {
     public addFactInstance(data) {
         const event = {'action' : 'insert-fact', 'before' : {}, 'after' : data};
         this.queue.push(event);
-        if (!this.eventsService.modelLiveButton['value']) {
+        this.totalStep = this.queue.length;
+        this.emitTotalStepSubject();
+        if (this.eventsService.modelLiveButton['value']) {
             this.nextFI({}, data);
             this.stepUp();
         }
@@ -252,7 +257,9 @@ export class StepFunctionsService {
         const node = this.visNetworkData.nodes.get(data.id);
         const event = {'action' : 'update-fact', 'before' : node, 'after' : data};
          this.queue.push(event);
-        if (!this.eventsService.modelLiveButton['value']) {
+        this.totalStep = this.queue.length;
+        this.emitTotalStepSubject();
+        if (this.eventsService.modelLiveButton['value']) {
             this.nextUFI(node, data);
             this.stepUp();
         }
@@ -263,7 +270,9 @@ export class StepFunctionsService {
         const node = this.visNetworkData.nodes.get(data.id);
         const event = {'action' : 'delete-fact', 'before' : node, 'after' : data};
          this.queue.push(event);
-        if (!this.eventsService.modelLiveButton['value']) {
+         this.totalStep = this.queue.length;
+         this.emitTotalStepSubject();
+        if (this.eventsService.modelLiveButton['value']) {
             this.nextRFI(node, data);
             this.stepUp();
         }
@@ -273,7 +282,9 @@ export class StepFunctionsService {
         data.id = (Math.random() * 1e7).toString(32);
         const event = {'action' : 'insert-fact-type', 'before' : {}, 'after' : data};
          this.queue.push(event);
-        if (!this.eventsService.modelLiveButton['value']) {
+         this.totalStep = this.queue.length;
+         this.emitTotalStepSubject();
+        if (this.eventsService.modelLiveButton['value']) {
             this.nextFT({}, data);
             this.stepUp();
         }
@@ -282,7 +293,9 @@ export class StepFunctionsService {
      public addRule(data) {
         const event = {'action' : 'insert-rule', 'before' : {}, 'after' : data};
          this.queue.push(event);
-        if (!this.eventsService.modelLiveButton['value']) {
+         this.totalStep = this.queue.length;
+         this.emitTotalStepSubject();
+        if (this.eventsService.modelLiveButton['value']) {
             this.nextR({}, data);
             this.stepUp();
         }
@@ -291,7 +304,9 @@ export class StepFunctionsService {
      public fire(data) {
         const event = {'action' : 'fire', 'before' : {}, 'after' : data};
          this.queue.push(event);
-        if (!this.eventsService.modelLiveButton['value']) {
+         this.totalStep = this.queue.length;
+         this.emitTotalStepSubject();
+        if (this.eventsService.modelLiveButton['value']) {
             this.nextF({}, data);
             this.stepUp();
         }

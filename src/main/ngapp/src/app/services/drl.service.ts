@@ -3,6 +3,7 @@ import {Subject} from 'rxjs';
 import {EventsService} from './events.service';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {Router} from '@angular/router';
+import {FactsService} from "./facts.service";
 
 /* import  { Location } from '@angular/common'; */
 
@@ -40,7 +41,7 @@ export class DRLService {
     '        modify( f ) {setValue( 41 )}\n' +
     '    end';
 
-  constructor( private httpClient: HttpClient, private eventService: EventsService, private router: Router) { // We use HttpClient for the post method
+  constructor( private httpClient: HttpClient, private factsService: FactsService, private router: Router) { // We use HttpClient for the post method
   }
 
   emitDrlCodeSubject() {
@@ -112,6 +113,8 @@ export class DRLService {
                   this.hasCompiled = true;
                   this.emitHasCompiledSubject();
                   this.jsonResp =  res;
+                  this.factsService.myFormData = res['jsonSchemaNew'] ;
+                  this.factsService.emitMyFormDataSubject();
                   console.log(res);
               },
               (error) => {
@@ -129,6 +132,31 @@ export class DRLService {
 
     console.log("Ca marche", this.jsonResp);
     return null;
+  }
+
+  submit(event){
+      for(let key in event){
+          console.log(key);
+          console.log(event[key]);
+          event[key].forEach((item, index) =>{
+              console.log(item);
+              let msg = {"data": btoa(JSON.stringify(item))};
+              this.httpClient
+                  .post('/rest/facts/insert/'+"defaultpkg." + this.factsService.myFormData.schema.Facts.items[index]['title'], msg)
+                  .subscribe(
+                      (res) => {
+                          console.log(event);
+                      },
+                      (error) => {
+                          console.log('Erreur ! : ' + error);
+                      }
+                  );
+          })
+          /*for (let val in event[key]){
+              console.log(val);
+          } */
+
+      }
   }
 
   fire() {
