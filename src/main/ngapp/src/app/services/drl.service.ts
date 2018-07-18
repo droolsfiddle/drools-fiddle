@@ -2,8 +2,9 @@ import { Injectable } from '@angular/core';
 import {Subject} from 'rxjs';
 import {EventsService} from './events.service';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
-import {Router} from '@angular/router';
+import {Router, RouterEvent} from '@angular/router';
 import {FactsService} from "./facts.service";
+import { filter } from 'rxjs/operators';
 
 /* import  { Location } from '@angular/common'; */
 
@@ -42,6 +43,14 @@ export class DRLService {
     '    end';
 
   constructor( private httpClient: HttpClient, private factsService: FactsService, private router: Router) { // We use HttpClient for the post method
+
+      this.router.events.pipe(filter(event => event instanceof RouterEvent)).subscribe((event) => {
+          console.log(event);
+          if(event['url']) {
+              console.log(event['url']);
+              this.loadSave(event['url']);
+          }
+      });
   }
 
   emitDrlCodeSubject() {
@@ -52,44 +61,6 @@ export class DRLService {
         this.hasCompiledSubject.next(this.hasCompiled);
     }
 
-  /* postText() {
-      this.dataObj = { data: btoa(String(this.DrlCode)) };
-      console.log(this.dataObj);
-      this.httpClient
-      .post('/rest/drools/drlCompile', this.dataObj)
-      .subscribe(
-          (res) => {
-              /* this.target = 'facts';
-              this.eventService.tabsArray[0] = '';
-              this.eventService.tabsArray[1] = 'in active';
-              this.eventService.emitTabsSubject();
-              this.hasCompiled = true;
-              this.emitHasCompiledSubject();
-              this.jsonResp =  res;
-          console.log(res);
-        },
-        (error) => {
-              /* this.target = 'drl';
-            this.eventService.tabsArray[0] = 'in active';
-            this.eventService.tabsArray[1] = '';
-            this.eventService.emitTabsSubject();
-            this.hasCompiled = false;
-            this.emitHasCompiledSubject();
-          console.log('Erreur ! : ' + error);
-        }
-      );   /*this.dataObj = {data: "Ci8vCi8vIGNvcHkgcGFzdGUgeW91ciBkcmwKLy8KCmRlY2xhcmUgRmFjdAogICAgdmFsdWUgOiBpbnQKZW5kCgoKcnVsZSAiUnVsZSIKICAgIHdoZW4KICAgICAgICBmIDogRmFjdCh2YWx1ZSA9PSA0MikKICAgIHRoZW4KICAgICAgICBtb2RpZnkoIGYgKSB7c2V0VmFsdWUoIDQxICl9CiAgICBlbmQ="};
-      console.log(this.dataObj);
-      this.httpClient
-          .post('/rest/drools/drlCompile', this.dataObj)
-          .subscribe(
-              (res) => {
-                  console.log(res);
-              },
-              (error) => {
-                  console.log('Erreur ! : ' + JSON.stringify(error));
-              }
-          );
-  } */
 
   changeDrlCode(code) {  // Update DrlCode When the user past his DRL code.
     this.DrlCode = code;
@@ -188,12 +159,29 @@ export class DRLService {
               (res) => {
                   /* this.router.navigate([res['data']['contextId']]); */
                   console.log(res);
+                  this.router.navigate(['/'+res['contextId']]);
+              },
+              (error) => {
+                  console.log('Erreur ! : ' + error);
+                  this.router.navigate(['/'+'1Gxonr5L']);
+              }
+          );
+
+    return null;
+  }
+
+  loadSave(url : String) {
+      this.httpClient
+          .get('/rest/context' + url)
+          .subscribe(
+              (res) => {
+                  /* this.router.navigate([res['data']['contextId']]); */
+                  console.log(res);
+                  this.changeDrlCode(res['drl']);
               },
               (error) => {
                   console.log('Erreur ! : ' + error);
               }
           );
-
-    return null;
   }
 }

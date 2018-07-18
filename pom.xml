@@ -248,7 +248,7 @@
 						<executable>ng.cmd</executable>
 						<arguments>
 							<argument>build</argument>
-							<argument>--base-href=/ng/home/</argument>
+							<argument>--base-href=/ng/home/#/</argument>
 						</arguments>
 					</configuration>
 					<goals>

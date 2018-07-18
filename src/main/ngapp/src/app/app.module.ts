@@ -25,11 +25,15 @@ import {AceEditorModule} from 'ng2-ace-editor';
 import {AngularFontAwesomeModule} from 'angular-font-awesome';
 import {StepFunctionsService} from "./services/step-functions.service";
 import {SocketService} from "./services/socket.service";
-
+import {HashLocationStrategy} from '@angular/common';
+import {LoggerModule, NgxLoggerLevel} from "ngx-logger";
+import {FormsModule} from "@angular/forms";
+import { MessageComponent } from './models/message/message.component';
 
 
 const appRoutes: Routes = [
   { path: '', component: HomeComponent},
+    { path: ':id', component: HomeComponent},
   { path: '**', redirectTo: ''}
 ];
 
@@ -44,12 +48,13 @@ const appRoutes: Routes = [
     RulesComponent,
     FactsComponent,
     HomeComponent,
-    UserComponent
+    UserComponent,
+    MessageComponent
 
   ],
   imports: [
     BrowserModule,
-    RouterModule.forRoot(appRoutes), // The router module helps you to control the path of your page.
+    RouterModule.forRoot(appRoutes, {useHash: true}), // The router module helps you to control the path of your page.
     AceEditorModule, // This is the module for Ace, the text editor in the Rules part.
     NgJsonEditorModule, // This is a library for Json
     Bootstrap3FrameworkModule, // Those two lines set the module for json-schema-form
@@ -58,9 +63,11 @@ const appRoutes: Routes = [
     VisModule, // This is the module for Vis, Vis allows us to vew the network connections in the Visualisation part.
     NgxToggleModule, // This is the module that allows us to do the live button in the header
     PopoverModule, // This is the module that allows to pop the information legend in the visualisation part.
-    AngularFontAwesomeModule
+    AngularFontAwesomeModule,
+      LoggerModule.forRoot({/* serverLoggingUrl: '/api/logs',*/ level: NgxLoggerLevel.TRACE}),
+      FormsModule
   ],
-  providers: [DRLService, EventsService, FactsService, Location, {provide: LocationStrategy, useClass: PathLocationStrategy}, StepFunctionsService, SocketService],
+  providers: [DRLService, EventsService, FactsService, Location, {provide: LocationStrategy, useClass: HashLocationStrategy}, StepFunctionsService, SocketService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
