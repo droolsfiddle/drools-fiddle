@@ -22,16 +22,14 @@
 
     </h3>
   </div>
-  <div class="panel-body row">
-    <div id="myNetwork" class="row"
+  <div class="panel-body row ">
+    <div id="myNetwork"
          [visNetwork]="visNetwork"
          [visNetworkData]="visNetworkData"
          [visNetworkOptions]="visNetworkOptions"
          (initialized)="networkInitialized()">
 
     </div>
-    <button type="button" class="btn btn-default" (click)="addRule()">Add node</button>
-    <button type="button" class="btn btn-default" (click)="addEdge()">Add edge</button>
-    <pre id="eventSpan" class="row"></pre>
+    <pre id="eventSpan"></pre>
   </div>
 </div>

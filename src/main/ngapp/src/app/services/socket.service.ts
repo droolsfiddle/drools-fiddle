@@ -1,5 +1,6 @@
 import {StepFunctionsService} from "./step-functions.service";
 import {Injectable} from "@angular/core";
+import {LogsService} from "./logs.service";
 
 function IsJsonString(str) {
     try {
@@ -12,62 +13,7 @@ function IsJsonString(str) {
 
 
 
-function displayMessage(data) {
-    console.log(data);
-    /* const message = document.getElementById('log');
-    message.value = data + "\n" + message.value; */ // LOGS
-}
 
-
-/*
-(function bar(){
-
-
-    websocket = createWebSocket('websocket/log');
-
-
-    websocket.onopen = function () {
-        console.log('Opened');
-        displayMessage('Connection is now open.');
-        this.send('Test');
-    };
-
-    websocket.onmessage = function (event) {
-        if (event['data'] == 'pong') {
-            console.log('keep-alive: Pong!');
-            return "pong";
-        }
-        // log the event
-        console.log("event", event);
-        displayMessage(event['data']);
-        if (IsJsonString(event['data'])) {
-            const jsonObject = JSON.parse(event['data']);
-            console.log("jsonObject", jsonObject);
-            console.log(event['data']);
-            if (jsonObject['action'] != null) {
-                actionHandle(jsonObject['action'], jsonObject);
-                console.log("heeeello",jsonObject['action']);
-            }
-        }
-    };
-
-    websocket.onerror = function (event) {
-        // log the event
-        displayMessage('Error! ' + event.data);
-    };
-
-    websocket.onclose = function () {
-        console.log('Closed');
-        displayMessage('The connection was closed or timed out.');
-    };
-
-    window.setInterval(function () {
-        websocket.send('ping');
-        console.log('Sent');
-    }, 10000);
-    return "Success";
-
-}()); */
 
 
 
@@ -80,14 +26,14 @@ export class SocketService {
      port = window.location.port ? ":"+window.location.port : "";
 
 
-  constructor(private  stepFunctionService: StepFunctionsService) {
+  constructor(private  stepFunctionService: StepFunctionsService, private logService: LogsService ) {
       let _this = this;
 
       let websocket = new WebSocket(this.protocolPrefix + '//' + window.location.hostname + this.port + "/" + 'websocket/log');
 
       websocket.onopen = function () {
           console.log('Opened');
-          displayMessage('Connection is now open.');
+          _this.displayMessage('Connection is now open.');
           this.send('Test');
       };
       websocket.onmessage = function (event) {
@@ -97,9 +43,9 @@ export class SocketService {
           }
           // log the event
           console.log("event", event);
-          displayMessage(event['data']);
           if (IsJsonString(event['data'])) {
               const jsonObject = JSON.parse(event['data']);
+              _this.displayMessage(jsonObject);
               console.log("jsonObject", jsonObject);
               console.log(event['data']);
               if (jsonObject['action'] != null) {
@@ -107,16 +53,19 @@ export class SocketService {
                   console.log("heeeello",jsonObject['action']);
               }
           }
+          else{
+              _this.displayMessage(event['data']);
+          }
       };
 
       websocket.onerror = function (event) {
           // log the event
-          displayMessage('Error! ' + event['data']);
+          _this.displayMessage('Error! ' + event['data']);
       };
 
       websocket.onclose = function () {
           console.log('Closed');
-          displayMessage('The connection was closed or timed out.');
+          _this.displayMessage('The connection was closed or timed out.');
       };
 
       window.setInterval(function () {
@@ -124,5 +73,12 @@ export class SocketService {
           console.log('Sent');
       }, 10000);
   }
+
+     displayMessage(data) {
+         console.log(data);
+         this.logService.addMessage(data);
+         /* const message = document.getElementById('log');
+         message.value = data + "\n" + message.value; */ // LOG
+     }
 
 }

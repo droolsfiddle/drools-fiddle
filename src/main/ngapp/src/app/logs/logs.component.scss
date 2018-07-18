@@ -1,0 +1,7 @@
+pre.textarea {
+  border: 1px inset #ccc;
+  background-color: white;
+  font: small courier, monospace black;
+  min-height: 200px; /* or whatever measurements you want */
+  overflow: auto; /* in most browsers, this will results in a scrollbar when there's more content than can fit in the dimensions defined above */
+}

@@ -28,7 +28,6 @@ import {SocketService} from "./services/socket.service";
 import {HashLocationStrategy} from '@angular/common';
 import {LoggerModule, NgxLoggerLevel} from "ngx-logger";
 import {FormsModule} from "@angular/forms";
-import { MessageComponent } from './models/message/message.component';
 
 
 const appRoutes: Routes = [
@@ -48,8 +47,7 @@ const appRoutes: Routes = [
     RulesComponent,
     FactsComponent,
     HomeComponent,
-    UserComponent,
-    MessageComponent
+    UserComponent
 
   ],
   imports: [

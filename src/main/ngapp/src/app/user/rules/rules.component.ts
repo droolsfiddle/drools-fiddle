@@ -14,7 +14,7 @@ export class RulesComponent implements OnInit, OnDestroy {
 
   textDRL: string;
   DrlCodeSubscription: Subscription;
-  options: any = {maxLines: 1000, printMargin: false};
+  options: any = {animatedScroll: true, maxLines: 1000, printMargin: false};
   @ViewChild(AceComponent) componentRef?: AceComponent;
   @ViewChild(AceDirective) directiveRef?: AceDirective;
 
