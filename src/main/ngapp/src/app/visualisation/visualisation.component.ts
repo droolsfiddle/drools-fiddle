@@ -23,6 +23,9 @@ export class VisualisationComponent implements OnInit, OnDestroy {
   public visNetworkData: ExampleNetworkData;
   public visNetworkOptions: VisNetworkOptions;
 
+    public visualisationMessage: string= '' ;
+    visualisationMessageSubscription: Subscription;
+
 
   public constructor(private eventsService: EventsService) { }
 
@@ -41,6 +44,13 @@ export class VisualisationComponent implements OnInit, OnDestroy {
 
       this.visNetworkOptions = this.eventsService.visNetworkOptions
 
+      this.visualisationMessageSubscription = this.eventsService.visualisationMessageSubject.subscribe(
+          (visualisationMessage: string) => {
+              this.visualisationMessage = visualisationMessage;
+          }
+      );
+      this.eventsService.emitVisualisationMessageSubject();
+
   }
 
   public networkInitialized (){
@@ -55,5 +65,6 @@ export class VisualisationComponent implements OnInit, OnDestroy {
   public ngOnDestroy(): void {
       this.eventsService.destroy();
       this.visNetworkDataSubscription.unsubscribe();
+      this.visualisationMessageSubscription.unsubscribe();
   }
 }

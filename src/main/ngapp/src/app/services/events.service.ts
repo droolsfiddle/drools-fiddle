@@ -3,6 +3,7 @@ import {Subject} from 'rxjs';
 import {VisEdges, VisNetworkOptions, VisNetworkService, VisNodes} from "ng2-vis";
 import {ExampleNetworkData} from "../models/network-data.model";
 import {Subscription} from "rxjs/internal/Subscription";
+import {Message} from "../models/message.model";
 
 /* This Service will manage the events */
 
@@ -28,6 +29,9 @@ export class EventsService {
     private visNetworkData: ExampleNetworkData;
     public visNetworkOptions: VisNetworkOptions;
 
+    public visualisationMessage: string= '' ;
+    visualisationMessageSubject = new Subject<string>(); // We use a Subject to set the variable DrlCode Private
+
 
 
     visNetworkDataSubject = new Subject<ExampleNetworkData>();
@@ -46,6 +50,10 @@ export class EventsService {
     public constructor(private visNetworkService: VisNetworkService) {
 
     }
+    emitVisualisationMessageSubject() {
+        this.visualisationMessageSubject.next(this.visualisationMessage);
+    }
+
 
 
 
@@ -110,7 +118,20 @@ export class EventsService {
         this.visNetworkService.click
             .subscribe((eventData: any[]) => {
                 if (eventData[0] === this.visNetwork) {
-                    console.log(eventData[1].nodes);
+                    console.log(eventData);
+                    if (this.visNetworkData.nodes.get(eventData[1].nodes)[0]) {
+                        let label = this.visNetworkData.nodes.get(eventData[1].nodes)[0]['label'];
+                        let title = this.visNetworkData.nodes.get(eventData[1].nodes)[0]['title'];
+                        this.visualisationMessage = label + ' :\n' + title;
+                        this.emitVisualisationMessageSubject();
+                    }
+                    else if (this.visNetworkData.edges.get(eventData[1].edges)[0]){
+                        let label = this.visNetworkData.edges.get(eventData[1].edges)[0]['label'];
+                        let from = this.visNetworkData.nodes.get(this.visNetworkData.edges.get(eventData[1].edges)[0]['from'])['label'];
+                        let to = this.visNetworkData.nodes.get(this.visNetworkData.edges.get(eventData[1].edges)[0]['to'])['label'];
+                        this.visualisationMessage = 'Edge :' + label + '\n' + "from " + from + " to " + to;
+                        this.emitVisualisationMessageSubject();
+                    }
                 }
             });
     }

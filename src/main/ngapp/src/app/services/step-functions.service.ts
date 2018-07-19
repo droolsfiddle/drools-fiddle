@@ -15,6 +15,7 @@ export class StepFunctionsService {
     private step = -1;
     private totalStep = 0;
     private edgeStep = 0;
+    private factInstanceStep = 1;
 
 
     stepSubject = new Subject<number>(); // We use a Subject to subscribe to it in real time
@@ -90,6 +91,7 @@ export class StepFunctionsService {
       this.step = -1;
       this.totalStep = this.queue.length;
       this.edgeStep = 0;
+      this.factInstanceStep = 1;
         this.emitStepSubject();
         this.emitTotalStepSubject();
     }
@@ -354,10 +356,12 @@ export class StepFunctionsService {
 
      public nextFI(dataP, dataA) {
         const newId = dataA.id;
+        console.log(dataA)
         const dataJson = JSON.stringify(dataA.object, null, 2);
-        this.nodeAdd({id:newId, title:dataJson, group : "factInstance"});
+        this.nodeAdd({id:newId, label:"FI-"+this.factInstanceStep, title:dataJson, group : "factInstance"});
+        this.factInstanceStep++;
         const edgesId = dataA.type + "-" + newId;
-        this.edgeAdd({id:edgesId, from: dataA.type, to: newId, dashes:true});
+        this.edgeAdd({id:edgesId,label: '', from: dataA.type, to: newId, dashes:true});
         if(dataA.from.length > 0) {
             const edgesId = dataA.from[0] + "-" + newId;
             this.edgeStep++;
@@ -371,6 +375,7 @@ export class StepFunctionsService {
 
      public nextUFI(dataP, dataA) {
         //const node = this.visNetworkData.nodes.get(dataA.id);
+         console.log(dataA)
          const dataJson = JSON.stringify(dataA.object, null, 2);
          this.updateNode([{id: dataA.id, group : 'factInstance', title : dataJson}]);
         //node.borderWidth = 3;
