@@ -12,7 +12,9 @@ export class LogsService {
     public messages: Message[]= [] ;
     messagesSubject = new Subject<object>(); // We use a Subject to set the variable DrlCode Private
 
-    public message: Message = new Message(new Date().toLocaleTimeString(), "Hello", "black");
+    public message: Message = new Message(-1, new Date().toLocaleTimeString(),"test", {}, "black");
+
+    private idMesssage: number = 0;
 
 
   constructor() { }
@@ -25,16 +27,18 @@ export class LogsService {
         this.stringOfMessagesSubject.next(this.stringOfMessages);
     }
 
-  addMessage(messageSent:string, color:string) {
-      let  message: Message = new Message(new Date().toLocaleTimeString(), "Hello", "black");
+
+
+  addMessage(type:string, messageSent:object, color:string) {
+      let  message: Message = new Message(-1,new Date().toLocaleTimeString(),type, {}, "black");
+      message.id = this.messages.length;
     message.date = new Date().toLocaleTimeString();
-    message.message =  JSON.stringify(messageSent, null, 4);
+    message.message = messageSent;
     message.color =color;
+    message.type = type;
     this.messages.unshift(message);
     console.log(this.messages);
-    this.stringOfMessages = message.date + ':' + message.message + '\n---------------------------------\n' + this.stringOfMessages;
       this.emitMessagesSubject();
-      this.emitStringOfMessagesSubject();
   }
 
 }

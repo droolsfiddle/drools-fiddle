@@ -1,5 +1,5 @@
 export class Message {
-    constructor(public date: String, public message: String, public color: string){
+    constructor(public id: number,public date: String,public type: string, public message: object, public color: string){
 
     }
 }

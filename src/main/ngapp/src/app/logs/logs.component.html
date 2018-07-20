@@ -1,30 +1,42 @@
 <!-- This component displays the log screen  -->
 
-<div id="bottom-left" class="row">
-  <div class="panel panel-default">
-    <div class="panel-heading"><h3 class="panel-title">Logs</h3></div>
-    <div class="panel-body">
-      <!-- <textarea rows="8" id="log" class="form-control"  name="log" [(ngModel)]="message"></textarea> -->
 
-        <!-- <textarea rows="8" id="log" class="form-control"  name="log" readonly  >{{messages}}</textarea> -->
+<div id="bottom-left" class="row">
+
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">
+      Logs
+    </h3>
+  </div>
+  <div class="panel-body"> <!-- [attr.class]="'tab-pane fade ' + activeArray[0]" -->
+    <pre class="textarea form-control" >
+      <app-messages *ngFor="let message of messages"
+            [messageDate] = "message.date"
+            [messageMessage] = "message.message"
+            [messageColor] = "message.color"
+            [messageId]="message.id"
+            [messageType]="message.type">
+      </app-messages>
+    </pre>
+  </div>
+</div>
+
+  <!--
+  <ul class="nav nav-tabs" id="theTabs">
+    <li class ="active">
+      <a data-toggle="tab" data-target="#allLogs">All Logs</a>
+    </li>
+    <li >
+      <a data-toggle="tab" data-target="#info">Info</a>
+    </li>
+  </ul>
+  <div id="info" class="tab-pane fade ">
         <pre class="textarea form-control" >
           <app-messages *ngFor="let test of messages"
                         [messageDate] = "test.date"
                         [messageMessage] = "test.message"
                         [messageColor] = "test.color">
-
           </app-messages>
-
         </pre>
-
-
-    </div>
-  </div>
-</div>
-
-
-<!-- style="overflow: scroll;" #scrollMe [scrollTop]="scrollMe.scrollHeight" -->
-
-<!-- <span [style]="message.color" >
-               {{message.date}} : {{message.message}}
-             </span> -->
+  </div> -->

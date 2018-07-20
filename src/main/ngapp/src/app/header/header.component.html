@@ -14,25 +14,6 @@
     </div>
 
     <div class="navbar-form navbar-left" >
-      <div class="btn-group inline">
-        <button (click)="previousBegin()" type="button" class="btn btn-primary " [disabled] = "model.value">
-          <span class="glyphicon glyphicon-step-backward" aria-hidden="true"></span>
-        </button>
-        <button (click)="previous()" type="button" class="btn btn-primary " [disabled] = "model.value" >
-          <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
-        </button>
-        <button (click)="next()" type="button" class="btn btn-primary" [disabled] = "model.value" >
-          <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
-        </button>
-        <button (click)="nextEnd()" type="button" class="btn btn-primary" [disabled] = "model.value" >
-          <span class="glyphicon glyphicon-step-forward" aria-hidden="true"></span>
-        </button>
-        <button  type="button" class="btn btn-primary ">
-          <b>step </b> <span id="counter" class="badge">{{step+1}} / {{totalStep}}</span>
-        </button>
-      </div>
-    </div>
-    <div class="nav navbar-nav navbar-left" >
       <ngx-toggle
               onColor="{{model.onColor}}"
               onText="{{model.onText}}"
@@ -41,11 +22,32 @@
               [disabled]="model.disabled"
               [size]="model.size"
               [(value)]="model.value"
-              class="btn-group  navbar-btn"
+              class="btn-group  "
       >
       </ngx-toggle>
 
     </div>
+
+    <div class="nav navbar-nav navbar-left" >
+      <div class="btn-group inline">
+        <button (click)="previousBegin()" type="button" class="btn btn-primary navbar-btn" [disabled] = "model.value">
+          <span class="glyphicon glyphicon-step-backward" aria-hidden="true"></span>
+        </button>
+        <button (click)="previous()" type="button" class="btn btn-primary navbar-btn" [disabled] = "model.value" >
+          <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+        </button>
+        <button (click)="next()" type="button" class="btn btn-primary navbar-btn" [disabled] = "model.value" >
+          <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+        </button>
+        <button (click)="nextEnd()" type="button" class="btn btn-primary navbar-btn" [disabled] = "model.value" >
+          <span class="glyphicon glyphicon-step-forward" aria-hidden="true"></span>
+        </button>
+        <button  type="button" class="btn btn-primary navbar-btn">
+          <b>step </b> <span id="counter" class="badge">{{step+1}} / {{totalStep}}</span>
+        </button>
+      </div>
+    </div>
+
 
 
 

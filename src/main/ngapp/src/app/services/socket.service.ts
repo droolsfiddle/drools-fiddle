@@ -33,8 +33,8 @@ export class SocketService {
 
       websocket.onopen = function () {
           console.log('Opened');
-          let message = 'Connection is now open.';
-          _this.displayMessage(message, "green");
+          let message = {message:'Connection is now open.'};
+          _this.displayMessage(message, "green", 'Server-log');
           this.send('Test');
       };
       websocket.onmessage = function (event) {
@@ -46,29 +46,33 @@ export class SocketService {
           console.log("event", event);
           if (IsJsonString(event['data'])) {
               const jsonObject = JSON.parse(event['data']);
-              _this.displayMessage(jsonObject, "white");
+
               console.log("jsonObject", jsonObject);
               console.log(event['data']);
               if (jsonObject['action'] != null) {
                   _this.stepFunctionService.actionHandle(jsonObject['action'], jsonObject);
+                  _this.displayMessage(jsonObject, "white", jsonObject['action']);
                   console.log("heeeello",jsonObject['action']);
+              }
+              else{
+                  _this.displayMessage(jsonObject, "red", 'Error');
               }
           }
           else{
-              _this.displayMessage(event['data'], "white");
+              _this.displayMessage(event['data'], "white", 'Other');
           }
       };
 
       websocket.onerror = function (event) {
           // log the event
           let message = 'Error! ' + event['data'];
-          _this.displayMessage(message, "red");
+          _this.displayMessage(message, "red", "Error");
       };
 
       websocket.onclose = function () {
           console.log('Closed');
-          let message = 'The connection was closed or timed out.';
-          _this.displayMessage(message, "orange");
+          let message = {message:'The connection was closed or timed out.'};
+          _this.displayMessage(message, "orange", "Server-log");
       };
 
       window.setInterval(function () {
@@ -77,9 +81,9 @@ export class SocketService {
       }, 10000);
   }
 
-     displayMessage(data, color: string) {
+     displayMessage(data, color: string, type:string) {
          console.log(data);
-         this.logService.addMessage(data, color);
+         this.logService.addMessage(type, data, color);
          /* const message = document.getElementById('log');
          message.value = data + "\n" + message.value; */ // LOG
      }
