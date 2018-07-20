@@ -7,7 +7,16 @@
       <!-- <textarea rows="8" id="log" class="form-control"  name="log" [(ngModel)]="message"></textarea> -->
 
         <!-- <textarea rows="8" id="log" class="form-control"  name="log" readonly  >{{messages}}</textarea> -->
-        <pre class="textarea form-control" >{{messages}}</pre>
+        <pre class="textarea form-control" >
+          <app-messages *ngFor="let test of messages"
+                        [messageDate] = "test.date"
+                        [messageMessage] = "test.message"
+                        [messageColor] = "test.color">
+
+          </app-messages>
+
+        </pre>
+
 
     </div>
   </div>
@@ -15,3 +24,7 @@
 
 
 <!-- style="overflow: scroll;" #scrollMe [scrollTop]="scrollMe.scrollHeight" -->
+
+<!-- <span [style]="message.color" >
+               {{message.date}} : {{message.message}}
+             </span> -->

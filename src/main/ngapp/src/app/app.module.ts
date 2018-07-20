@@ -1,10 +1,10 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import {NgModule} from '@angular/core';
 
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './header/header.component';
 import { VisualisationComponent } from './visualisation/visualisation.component';
-import { LogsComponent } from './logs/logs.component';
+import {LogsComponent} from './logs/logs.component';
 import { RulesComponent } from './user/rules/rules.component';
 import { FactsComponent } from './user/facts/facts.component';
 import {DRLService} from './services/drl.service';
@@ -28,6 +28,7 @@ import {SocketService} from "./services/socket.service";
 import {HashLocationStrategy} from '@angular/common';
 import {LoggerModule, NgxLoggerLevel} from "ngx-logger";
 import {FormsModule} from "@angular/forms";
+import { MessagesComponent } from './logs/messages/messages.component';
 
 
 const appRoutes: Routes = [
@@ -47,7 +48,8 @@ const appRoutes: Routes = [
     RulesComponent,
     FactsComponent,
     HomeComponent,
-    UserComponent
+    UserComponent,
+    MessagesComponent
 
   ],
   imports: [
@@ -63,9 +65,18 @@ const appRoutes: Routes = [
     PopoverModule, // This is the module that allows to pop the information legend in the visualisation part.
     AngularFontAwesomeModule,
       LoggerModule.forRoot({/* serverLoggingUrl: '/api/logs',*/ level: NgxLoggerLevel.TRACE}),
-      FormsModule
+      FormsModule,
   ],
-  providers: [DRLService, EventsService, FactsService, Location, {provide: LocationStrategy, useClass: HashLocationStrategy}, StepFunctionsService, SocketService],
+  providers: [
+      DRLService,
+      EventsService,
+      FactsService,
+      Location,
+      {provide: LocationStrategy,
+          useClass: HashLocationStrategy},
+      StepFunctionsService,
+      SocketService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
