@@ -36,6 +36,7 @@
     "ng2-popover": "0.0.14",
     "ng2-vis": "0.0.6",
     "ngx-ace-wrapper": "^6.1.1",
+    "ngx-clipboard": "^11.1.1",
     "ngx-logger": "^3.0.5",
     "ngx-popover": "0.0.16",
     "ngx-toggle": "^1.0.2",

@@ -27,6 +27,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
   totalStepSubscription: Subscription;
   totalStep = 0;
 
+
+
   /* dataTarget: string; */
 
 
@@ -72,7 +74,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   saveDrl() {
-    this.drlService.save();
+    this.drlService.saveAndCompile();
   }
   ngOnDestroy() {
         this.fireDisableSubscription.unsubscribe();

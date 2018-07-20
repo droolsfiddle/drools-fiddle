@@ -29,6 +29,8 @@ import {HashLocationStrategy} from '@angular/common';
 import {LoggerModule, NgxLoggerLevel} from "ngx-logger";
 import {FormsModule} from "@angular/forms";
 import { MessagesComponent } from './logs/messages/messages.component';
+import {ClipboardModule} from "ngx-clipboard";
+import { CopyButtonComponent } from './header/copy-button/copy-button.component';
 
 
 const appRoutes: Routes = [
@@ -49,7 +51,8 @@ const appRoutes: Routes = [
     FactsComponent,
     HomeComponent,
     UserComponent,
-    MessagesComponent
+    MessagesComponent,
+    CopyButtonComponent,
 
   ],
   imports: [
@@ -66,6 +69,7 @@ const appRoutes: Routes = [
     AngularFontAwesomeModule,
       LoggerModule.forRoot({/* serverLoggingUrl: '/api/logs',*/ level: NgxLoggerLevel.TRACE}),
       FormsModule,
+      ClipboardModule
   ],
   providers: [
       DRLService,

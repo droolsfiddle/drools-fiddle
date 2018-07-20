@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import {Subject} from 'rxjs';
 import {EventsService} from './events.service';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
-import {Router, RouterEvent} from '@angular/router';
+import {ResolveStart, Router, RouterEvent} from '@angular/router';
 import {FactsService} from "./facts.service";
 import { filter } from 'rxjs/operators';
 
@@ -44,7 +44,7 @@ export class DRLService {
 
   constructor( private httpClient: HttpClient, private factsService: FactsService, private router: Router) { // We use HttpClient for the post method
 
-      this.router.events.pipe(filter(event => event instanceof RouterEvent)).subscribe((event) => {
+      this.router.events.pipe(filter(event => event instanceof RouterEvent)).pipe(filter(event => event instanceof ResolveStart)).subscribe((event) => {
           console.log(event);
           if(event['url']) {
               console.log(event['url']);
@@ -65,7 +65,6 @@ export class DRLService {
   changeDrlCode(code) {  // Update DrlCode When the user past his DRL code.
     this.DrlCode = code;
     this.emitDrlCodeSubject();
-    console.log("new code", code, this.DrlCode);
 
   }
 
@@ -95,14 +94,9 @@ export class DRLService {
                 this.eventService.emitTabsSubject(); */
                   this.hasCompiled = false;
                   this.emitHasCompiledSubject();
-                  console.log('Erreur ! : ' + error);
+                  console.log('Erreur ! : Compile failed ' + error);
               }
           );
-
-    /* this.eventService.updateScheme(); */
-
-    console.log("Ca marche", this.jsonResp);
-    return null;
   }
 
   submit(event){
@@ -142,7 +136,7 @@ export class DRLService {
                   console.log(res);
               },
               (error) => {
-                  console.log('Erreur ! : ' + error);
+                  console.log('Erreur ! : Fire failed ' + error);
               }
           );
 
@@ -150,24 +144,54 @@ export class DRLService {
   }
 
   save() {
-      this.dataObj = {
-          data : '',
-      };
-      this.httpClient
-          .post('/rest/context', this.dataObj)
-          .subscribe(
-              (res) => {
-                  /* this.router.navigate([res['data']['contextId']]); */
-                  console.log(res);
-                  this.router.navigate(['/'+res['contextId']]);
-              },
-              (error) => {
-                  console.log('Erreur ! : ' + error);
-                  this.router.navigate(['/'+'1Gxonr5L']);
-              }
-          );
 
-    return null;
+          this.dataObj = {
+              data: '',
+          };
+          this.httpClient
+              .post('/rest/context', this.dataObj)
+              .subscribe(
+                  (res) => {
+                      /* this.router.navigate([res['data']['contextId']]); */
+                      console.log(res);
+                      this.router.navigate(['/' + res['contextId']]);
+                  },
+                  (error) => {
+                      console.log('Erreur ! : save failed' + error);
+                  }
+              );
+  }
+
+  saveAndCompile(){
+      this.dataObj = { data: btoa(String(this.DrlCode)) };
+      console.log(this.dataObj);
+          this.httpClient
+              .post('/rest/drools/drlCompile', this.dataObj)
+              .subscribe(
+                  (res) => {
+                      /* this.target = 'facts';
+                      this.eventService.tabsArray[0] = '';
+                      this.eventService.tabsArray[1] = 'in active';
+                      this.eventService.emitTabsSubject(); */
+                      this.hasCompiled = true;
+                      this.emitHasCompiledSubject();
+                      this.jsonResp =  res;
+                      this.factsService.myFormData = res['jsonSchemaNew'] ;
+                      this.factsService.emitMyFormDataSubject();
+                      this.save()
+                      console.log(res);
+                  },
+                  (error) => {
+                      /* this.target = 'drl';
+                    this.eventService.tabsArray[0] = 'in active';
+                    this.eventService.tabsArray[1] = '';
+                    this.eventService.emitTabsSubject(); */
+                      this.hasCompiled = false;
+                      this.emitHasCompiledSubject();
+                      console.log('Erreur ! : Compile failed ' + error);
+                  }
+              );
+
   }
 
   loadSave(url : String) {
@@ -180,7 +204,7 @@ export class DRLService {
                   this.changeDrlCode(res['drl']);
               },
               (error) => {
-                  console.log('Erreur ! : ' + error);
+                  console.log('Erreur ! : failed to load session' + error);
               }
           );
   }
