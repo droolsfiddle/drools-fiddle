@@ -1,5 +1,8 @@
 .idea*
 *.iml
+.classpath
+.project
+.settings
 target/
 src/main/webapp/ng/
 

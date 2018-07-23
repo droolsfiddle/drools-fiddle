@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {EventsService} from '../../services/events.service';
-import {Subscription} from 'rxjs';
+import {Location} from "@angular/common";
 
 /* This component displays what we call the user part of the app
 it is the part that includes the Rules and the facts. */
@@ -13,11 +13,11 @@ it is the part that includes the Rules and the facts. */
 export class UserComponent implements OnInit {
   /* tabsSubscription: Subscription;
   activeArray: any[]; */
+  constructor(private eventsService: EventsService) {
+  }
 
-  constructor(private eventsService: EventsService) { }
 
-
-  ngOnInit() { /*
+  ngOnInit() {/*
     this.tabsSubscription = this.eventsService.tabsSubject.subscribe(
           (tabs: any[]) => {
               this.activeArray = tabs;

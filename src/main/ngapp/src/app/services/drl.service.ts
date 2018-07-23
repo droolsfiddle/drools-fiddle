@@ -24,6 +24,9 @@ export class DRLService {
 
   public hasCompiled = false;
 
+  public UrlText : string;
+  UrlSubject = new Subject<string>();
+
   /* public target = 'drl'; */
 
   private DrlCode: string = '//\n' +  // The default text that will be displayed in Ace Editor
@@ -47,8 +50,10 @@ export class DRLService {
       this.router.events.pipe(filter(event => event instanceof RouterEvent)).pipe(filter(event => event instanceof ResolveStart)).subscribe((event) => {
           console.log(event);
           if(event['url']) {
-              console.log(event['url']);
               this.loadSave(event['url']);
+              this.UrlText = window.location.origin + window.location.pathname + '#' + event['url'];
+              console.log("URL", this.UrlText);
+              this.emitUrlSubject();
           }
       });
   }
@@ -56,6 +61,10 @@ export class DRLService {
   emitDrlCodeSubject() {
     this.DrlCodeSubject.next(this.DrlCode.slice());
   }
+
+  emitUrlSubject() {
+        this.UrlSubject.next(this.UrlText.slice());
+    }
 
     emitHasCompiledSubject() {
         this.hasCompiledSubject.next(this.hasCompiled);

@@ -25,6 +25,7 @@
     "@angular/router": "^6.0.3",
     "@types/jquery": "^3.3.4",
     "ang-jsoneditor": "^1.5.12",
+    "angular-6-datatable": "^0.8.0",
     "angular-font-awesome": "^3.1.2",
     "angular2-json-schema-form": "git+https://github.com/hamzahamidi/angular2-json-schema-form.git#build-angular-6",
     "bootstrap": "^3.3.7",

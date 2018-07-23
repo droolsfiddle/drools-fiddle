@@ -9,8 +9,10 @@
       Logs
     </h3>
   </div>
-  <div class="panel-body"> <!-- [attr.class]="'tab-pane fade ' + activeArray[0]" -->
+  <div class="panel-body"> <!-- [attr.class]="'tab-pane fad ' + activeArray[0]" -->
+    <!--
     <pre class="textarea form-control" >
+
       <app-messages *ngFor="let message of messages"
             [messageDate] = "message.date"
             [messageMessage] = "message.message"
@@ -18,8 +20,43 @@
             [messageId]="message.id"
             [messageType]="message.type">
       </app-messages>
-    </pre>
+    </pre>-->
+    <!-- https://www.npmjs.com/package/angular-6-datatable -->
+    <table class="table table-striped table-responsive" [mfData]="messages" #mf="mfDataTable" [mfRowsOnPage]="5" style="table-layout: fixed">
+      <thead>
+      <tr>
+        <th style="width: 10%">
+          <mfDefaultSorter by="id">Id</mfDefaultSorter>
+        </th>
+        <th style="width: 20%">
+          <mfDefaultSorter by="date">Date</mfDefaultSorter>
+        </th>
+        <th style="width: 20%">
+          <mfDefaultSorter by="type">Type</mfDefaultSorter>
+        </th>
+        <th style="width: 50%;">
+          <mfDefaultSorter by="message">Message</mfDefaultSorter>
+        </th>
+      </tr>
+      </thead>
+      <tbody >
+      <tr *ngFor="let item of mf.data" [class]="item.level" [ngStyle]="{color: getColor(item.level)}">
+        <td>{{item.id}}</td>
+        <td>{{item.date | date: 'HH:mm:ss:SSS'}}</td>
+        <td >{{item.type}}</td>
+        <td>{{item.message}}</td>
+      </tr>
+      </tbody>
+      <tfoot>
+      <tr>
+        <td colspan="4">
+          <mfBootstrapPaginator [rowsOnPageSet]="[5,10,25]"></mfBootstrapPaginator>
+        </td>
+      </tr>
+      </tfoot>
+    </table>
   </div>
+</div>
 </div>
 
   <!--

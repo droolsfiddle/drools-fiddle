@@ -93,9 +93,9 @@ public class DrlCompilerServiceImpl implements DrlCompilerService {
             for (org.kie.api.builder.Message info : kb.getResults().getMessages()) {
                 logger.debug(info.toString());
                 aLog.append(info.toString() + "\n");
+                WebSocketUtil.sendToWebSocket(wsSession, mapper.writeValueAsString(info.toString()));
             }
 
-            WebSocketUtil.sendToWebSocket(wsSession, mapper.writeValueAsString(aLog));
             resp.setLog(aLog.toString());
             return resp;
         }

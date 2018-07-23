@@ -31,6 +31,8 @@ import {FormsModule} from "@angular/forms";
 import { MessagesComponent } from './logs/messages/messages.component';
 import {ClipboardModule} from "ngx-clipboard";
 import { CopyButtonComponent } from './header/copy-button/copy-button.component';
+import {MatInputModule, MatTableModule, MatToolbarModule} from "@angular/material";
+import {DataTableModule} from "angular-6-datatable";
 
 
 const appRoutes: Routes = [
@@ -38,6 +40,7 @@ const appRoutes: Routes = [
     { path: ':id', component: HomeComponent},
   { path: '**', redirectTo: ''}
 ];
+
 
 
 
@@ -69,7 +72,8 @@ const appRoutes: Routes = [
     AngularFontAwesomeModule,
       LoggerModule.forRoot({/* serverLoggingUrl: '/api/logs',*/ level: NgxLoggerLevel.TRACE}),
       FormsModule,
-      ClipboardModule
+      ClipboardModule,
+      DataTableModule
   ],
   providers: [
       DRLService,

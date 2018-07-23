@@ -3,9 +3,9 @@
 <popover-content #SharePopover
                  title = "Copy" >
   <div class="input-group">
-    <input type="text" class="form-control" [(ngModel)]="text1" placeholder="Copy URL">
+    <input #myUrlInput type="text" class="form-control" [(ngModel)]="text" placeholder="Copy URL" >
     <div class="input-group-btn">
-      <button class="btn btn-default" type="button" ngxClipboard [cbContent]="text1" (cbOnSuccess)="isCopied1 = true" [class.btn-success]="isCopied1">copy
+      <button class="btn btn-default" type="button" ngxClipboard [cbContent]="text" (click)="myUrlInput.select()" (cbOnSuccess)="isCopied1 = true" [class.btn-success]="isCopied1">copy
         <i class="glyphicon glyphicon-copy"></i>
       </button>
     </div>
@@ -13,16 +13,16 @@
 </popover-content>
 
 
-<form class="navbar-form navbar-right" >
-      <button type= "button" class="btn btn-primary"
-           [popover]="SharePopover"
-           popoverPlacement="bottom"
-           [popoverOnHover]="false"
-           [popoverCloseOnMouseOutside]="false"
-      > Share
-        <span class="glyphicon glyphicon-menu-down" aria-hidden="true"></span>
-      </button>
-</form>
+<div class="nav navbar-nav navbar-right mr-15" >
+  <button type= "button" class="btn btn-primary navbar-btn"
+       [popover]="SharePopover"
+       popoverPlacement="bottom"
+       [popoverOnHover]="false"
+       [popoverCloseOnMouseOutside]="false"
+  > Share
+    <span class="glyphicon glyphicon-menu-down" aria-hidden="true"></span>
+  </button>
+</div>
 
 
 <!-- <input type="text" class="form-control" [(ngModel)]="text1" placeholder="Copy URL">
