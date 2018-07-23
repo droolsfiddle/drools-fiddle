@@ -5,9 +5,7 @@
 
 <div class="panel panel-default">
   <div class="panel-heading">
-    <h3 class="panel-title">
-      Logs
-    </h3>
+      <b>Logs</b>
   </div>
   <div class="panel-body"> <!-- [attr.class]="'tab-pane fad ' + activeArray[0]" -->
     <!--
@@ -25,16 +23,16 @@
     <table class="table table-striped table-responsive" [mfData]="messages" #mf="mfDataTable" [mfRowsOnPage]="5" style="table-layout: fixed">
       <thead>
       <tr>
-        <th style="width: 10%">
+        <th style="width: 5%">
           <mfDefaultSorter by="id">Id</mfDefaultSorter>
         </th>
-        <th style="width: 20%">
+        <th style="width: 10%">
           <mfDefaultSorter by="date">Date</mfDefaultSorter>
         </th>
-        <th style="width: 20%">
+        <th style="width: 10%">
           <mfDefaultSorter by="type">Type</mfDefaultSorter>
         </th>
-        <th style="width: 50%;">
+        <th style="width: 75%;">
           <mfDefaultSorter by="message">Message</mfDefaultSorter>
         </th>
       </tr>

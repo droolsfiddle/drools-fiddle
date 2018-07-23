@@ -75,6 +75,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   saveDrl() {
     this.drlService.saveAndCompile();
+      this.stepFunctionService.totalReset();
   }
   ngOnDestroy() {
         this.fireDisableSubscription.unsubscribe();
