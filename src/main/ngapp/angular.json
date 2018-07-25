@@ -47,7 +47,6 @@
             ],
             "styles": [
               "node_modules/bootstrap/dist/css/bootstrap.css",
-              "node_modules/jsoneditor/dist/jsoneditor.min.css",
               "node_modules/font-awesome/css/font-awesome.css",
               "node_modules/vis/dist/vis-network.min.css",
               "src/styles.scss"
@@ -57,7 +56,8 @@
               "node_modules/bootstrap/dist/js/bootstrap.js",
               "node_modules/ace-builds/src-min/ace.js",
               "node_modules/ace-builds/src-min/theme-tomorrow_night.js",
-              "node_modules/ace-builds/src-min/mode-drools.js"
+              "node_modules/ace-builds/src-min/mode-drools.js",
+              "node_modules/json-editor/dist/jsoneditor.js"
 
 
             ]

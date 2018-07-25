@@ -3,10 +3,25 @@ You can check how to install it here : https://www.npmjs.com/package/angular2-js
 And this app uses the Bootstrap3FrameworkModule included in JsonSchemaFormModule -->
 
 <!-- The value of form has to be a Json variable -->
-<json-schema-form
+<!-- <json-schema-form
 
         framework="'bootstrap-3'"
         [form] = "myFormData"
         (onSubmit)="onSubmitEvent($event)" >
 
-</json-schema-form>
+</json-schema-form> -->
+
+
+<app-json-viewer [options]="jsonEditorOptions" [mode]="'tree'" [schema]="jsonSchema" [data]="">
+
+</app-json-viewer>
+
+
+
+<!-- <json-editor [schema]="myFormData"  buttons-controller="SyncButtonsController">
+    <button type="submit" class="btn btn-success" (click)="onSubmitEvent($event)" >
+        <span class="glyphicon glyphicon-check"></span> Submit
+    </button>
+</json-editor> -->
+<!-- on-change="onChange($editorValue)"
+disabled="!isValid"-->

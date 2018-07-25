@@ -92,7 +92,7 @@ export class DRLService {
                   this.hasCompiled = true;
                   this.emitHasCompiledSubject();
                   this.jsonResp =  res;
-                  this.factsService.myFormData = res['jsonSchemaNew'] ;
+                  this.factsService.myFormData = res['jsonSchema'] ;
                   this.factsService.emitMyFormDataSubject();
                   console.log(res);
               },
@@ -109,7 +109,7 @@ export class DRLService {
   }
 
   submit(event){
-      for(let key in event){
+      /* for(let key in event){
           console.log(key);
           console.log(event[key]);
           event[key].forEach((item, index) =>{
@@ -125,12 +125,25 @@ export class DRLService {
                           console.log('Erreur ! : ' + error);
                       }
                   );
-          })
-          /*for (let val in event[key]){
-              console.log(val);
-          } */
-
+          }) */
+      for (let key in event) {
+          console.log(key);
+          console.log(event[key]);
+          let msg = {
+              "data": btoa(JSON.stringify(event[key]))
+          }
+          this.httpClient
+              .post('/rest/facts/insert/' + key, msg)
+              .subscribe(
+                  (res) => {
+                      console.log(event);
+                  },
+                  (error) => {
+                      console.log('Erreur ! : ' + error);
+                  }
+              );
       }
+
   }
 
   fire() {

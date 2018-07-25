@@ -9,3 +9,4 @@ src/main/webapp/ng/
 src/main/ngapp/node_modules/*
 !src/main/ngapp/node_modules/ng2-vis
 
+

@@ -13,7 +13,6 @@ import {FactsService} from './services/facts.service';
 import { RouterModule, Routes} from '@angular/router';
 import { HomeComponent } from './home/home.component';
 import { UserComponent } from './user/user/user.component';
-import {NgJsonEditorModule} from 'ang-jsoneditor';
 import {Bootstrap3FrameworkModule, JsonSchemaFormModule} from 'angular2-json-schema-form';
 import {HttpClientModule} from '@angular/common/http';
 import {Location, LocationStrategy, PathLocationStrategy} from '@angular/common';
@@ -31,8 +30,8 @@ import {FormsModule} from "@angular/forms";
 import { MessagesComponent } from './logs/messages/messages.component';
 import {ClipboardModule} from "ngx-clipboard";
 import { CopyButtonComponent } from './header/copy-button/copy-button.component';
-import {MatInputModule, MatTableModule, MatToolbarModule} from "@angular/material";
 import {DataTableModule} from "angular-6-datatable";
+import {JSONViewerComponent} from "./user/facts/json-schema/json-schema.component";
 
 
 const appRoutes: Routes = [
@@ -56,13 +55,13 @@ const appRoutes: Routes = [
     UserComponent,
     MessagesComponent,
     CopyButtonComponent,
+      JSONViewerComponent
 
   ],
   imports: [
     BrowserModule,
     RouterModule.forRoot(appRoutes, {useHash: true}), // The router module helps you to control the path of your page.
     AceEditorModule, // This is the module for Ace, the text editor in the Rules part.
-    NgJsonEditorModule, // This is a library for Json
     Bootstrap3FrameworkModule, // Those two lines set the module for json-schema-form
     JsonSchemaFormModule.forRoot(Bootstrap3FrameworkModule), // it helps us to create the form in the Facts part.
     HttpClientModule, // This is the module that allows us an interaction with the backend, we can get and post thanks to this.

@@ -111,7 +111,8 @@ public class DrlCompilerServiceImpl implements DrlCompilerService {
             rootTypes.addAll(pack.getFactTypes());
         }
 
-        JsonSchemaNodeNew root = new JsonSchemaNodeNew();
+        JsonSchemaNode root = new JsonSchemaNode();
+        /*
         JsonSchemaItemsNode node = new JsonSchemaItemsNode();
         node.setType("array");
         for (FactType type : rootTypes) {
@@ -123,9 +124,9 @@ public class DrlCompilerServiceImpl implements DrlCompilerService {
         }
         root.getSchema().put("Facts",
                     node);
-        
+        */
 
-        /*
+
         root.setType("object");
         root.setTitle("Facts");
         for (FactType type : rootTypes) {
@@ -136,8 +137,8 @@ public class DrlCompilerServiceImpl implements DrlCompilerService {
                     factType2JsonSchemaNode(type.getSimpleName(),type,kbs));
 
         }
-        */
-        resp.setJsonSchemaNew(root);
+
+        resp.setJsonSchema(root);
 
         List<PackageDTO> packs = new ArrayList<PackageDTO>();
         for (KiePackage pack : kbs.getKiePackages()) {
