@@ -62,7 +62,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
   compileDrl() {
       this.drlService.compile();
       this.stepFunctionService.totalReset();
-      /* $('.nav-tabs > .active').next('li').find('a').trigger('click'); (Ou prev) */
       /* this.dataTarget = this.drlService.target;
       this.eventService.emitTabsSubject();
        console.log(this.dataTarget); */

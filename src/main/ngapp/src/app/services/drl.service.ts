@@ -94,6 +94,7 @@ export class DRLService {
                   this.jsonResp =  res;
                   this.factsService.myFormData = res['jsonSchema'] ;
                   this.factsService.emitMyFormDataSubject();
+                  $('.nav-tabs > .active').next('li').find('a').trigger('click');
                   console.log(res);
               },
               (error) => {
@@ -191,23 +192,15 @@ export class DRLService {
               .post('/rest/drools/drlCompile', this.dataObj)
               .subscribe(
                   (res) => {
-                      /* this.target = 'facts';
-                      this.eventService.tabsArray[0] = '';
-                      this.eventService.tabsArray[1] = 'in active';
-                      this.eventService.emitTabsSubject(); */
                       this.hasCompiled = true;
                       this.emitHasCompiledSubject();
                       this.jsonResp =  res;
-                      this.factsService.myFormData = res['jsonSchemaNew'] ;
+                      this.factsService.myFormData = res['jsonSchema'] ;
                       this.factsService.emitMyFormDataSubject();
                       this.save()
                       console.log(res);
                   },
                   (error) => {
-                      /* this.target = 'drl';
-                    this.eventService.tabsArray[0] = 'in active';
-                    this.eventService.tabsArray[1] = '';
-                    this.eventService.emitTabsSubject(); */
                       this.hasCompiled = false;
                       this.emitHasCompiledSubject();
                       console.log('Erreur ! : Compile failed ' + error);
