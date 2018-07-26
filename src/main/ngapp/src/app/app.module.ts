@@ -27,7 +27,6 @@ import {SocketService} from "./services/socket.service";
 import {HashLocationStrategy} from '@angular/common';
 import {LoggerModule, NgxLoggerLevel} from "ngx-logger";
 import {FormsModule} from "@angular/forms";
-import { MessagesComponent } from './logs/messages/messages.component';
 import {ClipboardModule} from "ngx-clipboard";
 import { CopyButtonComponent } from './header/copy-button/copy-button.component';
 import {DataTableModule} from "angular-6-datatable";
@@ -53,7 +52,6 @@ const appRoutes: Routes = [
     FactsComponent,
     HomeComponent,
     UserComponent,
-    MessagesComponent,
     CopyButtonComponent,
       JSONViewerComponent
 

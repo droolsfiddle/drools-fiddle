@@ -25,7 +25,7 @@ export class JSONViewerComponent implements OnInit, OnChanges, AfterViewInit {
     templateDivRef: any;
     editorRef: any;
 
-    constructor(private drlService: DRLService, private factService : FactsService) {
+    constructor(private drlService: DRLService) {
     }
 
     ngOnChanges(changes: SimpleChanges) {

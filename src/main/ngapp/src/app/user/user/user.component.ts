@@ -14,7 +14,7 @@ export class UserComponent implements OnInit {
   /* tabsSubscription: Subscription;
   activeArray: any[]; */
 
-  constructor(private eventsService: EventsService) {
+  constructor() {
   }
 
 
