@@ -29,6 +29,7 @@ In order to build and deploy this project you will need to fullfill those prereq
     * Maven version > 3.1.1
     * Java 8
 *  [Docker](https://www.docker.com) daemon
+*  [NodeJS](https://nodejs.org/en/)
 
 ### Build
 

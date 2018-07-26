@@ -16,7 +16,6 @@
         <version.junit>4.12</version.junit>
         <version.org.jboss.spec.javax.websocket>1.0.0.Final</version.org.jboss.spec.javax.websocket>
     </properties>
-
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -231,7 +230,7 @@
 					<phase>generate-sources</phase>
 					<configuration>
 						<workingDirectory>${project.basedir}/src/main/ngapp</workingDirectory>
-						<executable>npm.cmd</executable>
+						<executable>npm${extension}</executable>
 						<arguments>
 							<argument>install</argument>
 						</arguments>
@@ -245,7 +244,7 @@
 					<phase>generate-sources</phase>
 					<configuration>
 						<workingDirectory>${project.basedir}/src/main/ngapp</workingDirectory>
-						<executable>ng.cmd</executable>
+						<executable>ng${extension}</executable>
 						<arguments>
 							<argument>build</argument>
 							<argument>--base-href=/ng/home/#/</argument>
@@ -457,6 +456,28 @@
                     </plugin>
                 </plugins>
             </build>
+        </profile>
+        <profile>
+            <id>Windows</id>
+            <activation>
+                <os>
+                    <family>Windows</family>
+                </os>
+            </activation>
+            <properties>
+                <extension>.cmd</extension>
+            </properties>
+        </profile>
+        <profile>
+            <id>unix</id>
+            <activation>
+                <os>
+                    <family>unix</family>
+                </os>
+            </activation>
+            <properties>
+                <extension> </extension>
+            </properties>
         </profile>
     </profiles>
 
