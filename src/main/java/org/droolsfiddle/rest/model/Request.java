@@ -16,6 +16,7 @@
 package org.droolsfiddle.rest.model;
 
 import org.droolsfiddle.rest.JsonSchemaNode;
+import org.droolsfiddle.rest.JsonSchemaNodeNew;
 
 /**
  * Created by jvipret on 08/06/2016.
@@ -28,6 +29,7 @@ public class Request {
   private boolean success;
   // private List<PackageDTO> packages;
   private JsonSchemaNode jsonSchema;
+  private JsonSchemaNodeNew jsonSchemaNew;
   // private Map<String,Object> jsonValue = new HashMap<>();
 
 
@@ -69,6 +71,14 @@ public class Request {
 
   public void setJsonSchema(JsonSchemaNode jsonSchema) {
     this.jsonSchema = jsonSchema;
+  }
+
+  public JsonSchemaNodeNew getJsonSchemaNew() {
+    return jsonSchemaNew;
+  }
+
+  public void setJsonSchemaNew(JsonSchemaNodeNew jsonSchemaNew) {
+    this.jsonSchemaNew = jsonSchemaNew;
   }
 
   // public Map<String, Object> getJsonValue() {

@@ -59,7 +59,9 @@ public class DrlCompilerServiceImpl implements DrlCompilerService {
 
 
     public Request postDrlCompile(final Request iRequest) throws JsonProcessingException {
-        logger.debug("Init validation drl: DrlParser");
+
+        
+    	logger.debug("Init validation drl: DrlParser");
         Session wsSession = (Session) request.getSession().getAttribute(Session.class.getName());
 
         Request resp = new Request();
@@ -90,9 +92,10 @@ public class DrlCompilerServiceImpl implements DrlCompilerService {
             for (org.kie.api.builder.Message info : kb.getResults().getMessages()) {
                 logger.debug(info.toString());
                 aLog.append(info.toString() + "\n");
+                WebSocketUtil.sendToWebSocket(wsSession, mapper.writeValueAsString(info.toString()));
             }
 
-            WebSocketUtil.sendToWebSocket(wsSession, mapper.writeValueAsString(aLog));
+            
             resp.setLog(aLog.toString());
             return resp;
         }

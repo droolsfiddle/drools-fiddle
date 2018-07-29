@@ -1,0 +1,27 @@
+<!-- This component displays what we call the user part of the app
+it is the part that includes the Rules and the facts. -->
+
+
+<div class="panel with-nav-tabs panel-default">
+  <div class="panel-heading">
+    <ul class="nav nav-tabs" id="theTabs">
+      <li class ="active">
+        <a data-toggle="tab" data-target="#drl">Drools Rules</a>
+      </li>
+      <li >
+        <a data-toggle="tab" data-target="#facts">Drools Facts</a>
+      </li>
+    </ul>
+  </div>
+  <div class="panel-body" >
+    <div class="tab-content" >
+      <div id="drl" class="tab-pane fade in active"  > <!-- attr.class]="'tab-pane fade ' + activeArray[0]" -->
+          <app-rules > </app-rules>
+      </div>
+      <div id="facts" class="tab-pane fade ">
+        <app-facts></app-facts>
+      </div>
+    </div>
+  </div>
+</div>
+

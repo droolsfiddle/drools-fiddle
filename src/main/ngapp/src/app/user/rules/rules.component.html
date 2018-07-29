@@ -1,0 +1,13 @@
+<!-- This Component Displays the Rules. It uses the ace editor library for Angular 6.
+You can check how to install it here : https://github.com/fxmontigny/ng2-ace-editor -->
+<div style=" height:  405px; width:100%; overflow: auto;">
+     <div ace-editor
+     [(text)]="textDRL"
+[mode]="'drools'"
+[theme]="'tomorrow_night'"
+[options]="options"
+[readOnly]="false"
+[autoUpdateContent]="true"
+[durationBeforeCallback]="1000"
+(textChanged)="onChange($event)" ></div>
+</div>

@@ -1,0 +1,66 @@
+<!--  This component is the Header, it displays the navbar on the top.
+ The app uses here the Bootstrap 3.3.7 framework -->
+
+<nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" routerLink=""><span><img src="assets/img/drlfdl_30x30.png"/></span> Drools Fiddle</a> <!-- Drools Fiddle header (title and logo)  -->
+    </div>
+    <div class=" nav navbar-nav" >
+      <div class="btn-group">
+        <button class="btn btn-primary navbar-btn" (click)="compileDrl()"><span class="glyphicon glyphicon-cog" aria-hidden="true"></span> Build</button>
+        <button id="firebtn" class="btn btn-primary navbar-btn" (click)="fireDrl()" [disabled] ="!fireDisable"><span class="glyphicon glyphicon-play" aria-hidden="true"></span> Fire</button>
+      </div>
+    </div>
+
+    <div class="navbar-form navbar-left" >
+      <ngx-toggle
+              onColor="{{model.onColor}}"
+              onText="{{model.onText}}"
+              offColor="{{model.offColor}}"
+              offText="{{model.offText}}"
+              [disabled]="model.disabled"
+              [size]="model.size"
+              [(value)]="model.value"
+              class="btn-group  "
+      >
+      </ngx-toggle>
+
+    </div>
+
+    <div class="nav navbar-nav navbar-left" >
+      <div class="btn-group inline">
+        <button (click)="previousBegin()" type="button" class="btn btn-primary navbar-btn" [disabled] = "model.value">
+          <span class="glyphicon glyphicon-step-backward" aria-hidden="true"></span>
+        </button>
+        <button (click)="previous()" type="button" class="btn btn-primary navbar-btn" [disabled] = "model.value" >
+          <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+        </button>
+        <button (click)="next()" type="button" class="btn btn-primary navbar-btn" [disabled] = "model.value" >
+          <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+        </button>
+        <button (click)="nextEnd()" type="button" class="btn btn-primary navbar-btn" [disabled] = "model.value" >
+          <span class="glyphicon glyphicon-step-forward" aria-hidden="true"></span>
+        </button>
+        <button  type="button" class="btn btn-primary navbar-btn">
+          <b>step </b> <span id="counter" class="badge">{{step+1}} / {{totalStep}}</span>
+        </button>
+      </div>
+    </div>
+
+
+
+    <div class="nav navbar-nav navbar-right" >
+      <div class="btn-group">
+        <button (click)="saveDrl()" class="btn btn-primary navbar-btn"><span class="glyphicon glyphicon-floppy-save" aria-hidden="true"></span> <span> Build and Save</span></button>
+      </div>
+    </div>
+
+    <app-copy-button></app-copy-button>
+
+
+
+  </div>
+</nav>
+
+
