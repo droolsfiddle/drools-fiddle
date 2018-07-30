@@ -27,6 +27,8 @@ public class ContextPersistenceDTO {
     private String error;
 
     private String drl;
+    
+    private String json; 
 
     public String getContextId() {
         return contextId;
@@ -46,6 +48,14 @@ public class ContextPersistenceDTO {
 
     public void setDrl(String drl) {
         this.drl = drl;
+    }
+    
+    public String getJson() {
+        return json;
+    }
+
+    public void setJson(String json) {
+        this.json = json;
     }
 
     public void setResult(boolean result) {

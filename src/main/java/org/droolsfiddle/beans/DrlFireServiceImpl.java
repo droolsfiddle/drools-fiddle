@@ -17,6 +17,7 @@ package org.droolsfiddle.beans;
 
 import org.droolsfiddle.rest.DrlFireService;
 import org.droolsfiddle.rest.model.Request;
+import org.droolsfiddle.utilities.WSLogger;
 import org.droolsfiddle.websocket.WebSocketUtil;
 import org.jboss.resteasy.logging.Logger;
 import org.kie.api.KieBase;
@@ -68,7 +69,7 @@ public class DrlFireServiceImpl implements DrlFireService {
             logger.debug("Firing new kieSession");
             kieSession = kBase.newKieSession();
         }
-
+        kieSession.setGlobal("LOGGER", new WSLogger(wsSession));
         ExecutorService service = Executors.newFixedThreadPool(1);
 
         Future<Integer> futureResult = service.submit(new Callable<Integer>() {

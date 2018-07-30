@@ -26,6 +26,7 @@ public class Request {
   private int id;
   private String data;
   private String log;
+  private String json; 
   private boolean success;
   // private List<PackageDTO> packages;
   private JsonSchemaNode jsonSchema;
@@ -55,6 +56,14 @@ public class Request {
 
   public void setLog(String log) {
     this.log = log;
+  }
+  
+  public String getJson() {
+    return json;
+  }
+
+  public void setJson(String json) {
+    this.json = json;
   }
 
   // public List<PackageDTO> getPackages() {
@@ -104,6 +113,7 @@ public class Request {
             "id=" + id +
             ", data='" + data + '\'' +
             ", log='" + log + '\'' +
+            ", JSON='" + json + '\'' +
             ", success=" + success +
             ", jsonSchema=" + jsonSchema +
             '}';

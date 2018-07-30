@@ -18,7 +18,7 @@ export class DRLService {
   DrlCodeSubject = new Subject<string>(); // We use a Subject to set the variable DrlCode Private
     hasCompiledSubject = new Subject<boolean>();
 
-  private dataObj = { data: '' };
+  private dataObj = { data: '', json :'' };
 
   private jsonResp: any;
 
@@ -29,21 +29,28 @@ export class DRLService {
 
   /* public target = 'drl'; */
 
-  private DrlCode: string = '//\n' +  // The default text that will be displayed in Ace Editor
-    '// copy paste your drl\n' +
-    '//\n' +
-    '\n' +
-    'declare Fact\n' +
-    '    value : int\n' +
-    'end\n' +
-    '\n' +
-    '\n' +
-    'rule "Rule"\n' +
-    '    when\n' +
-    '        f : Fact(value == 42)\n' +
-    '    then\n' +
-    '        modify( f ) {setValue( 41 )}\n' +
-    '    end' + '\n' +'\n' +'\n'+'\n'+'\n'+'\n'+'\n'+'\n'+'\n'+'\n'+'\n'+'\n'+'\n'+'\n'+'\n'+'\n';
+  private DrlCode: string = '//\n' +
+      '// copy paste your drl\n' +
+      '//\n' +
+      'import org.droolsfiddle.utilities.WSLogger;\n' +
+      '\n' +
+      'global WSLogger LOGGER;\n' +
+      '\n' +
+      'declare Fact\n' +
+      '    value : int\n' +
+      'end\n' +
+      '\n' +
+      '\n' +
+      'rule "Rule"\n' +
+      '    when\n' +
+      '        f : Fact(value == 42)\n' +
+      '    then\n' +
+      '        modify( f ) {setValue( 41 )}\n' +
+      '        LOGGER.debug("helloworld");\n' +
+      '        LOGGER.info("helloworld");\n' +
+      '        LOGGER.warn("helloworld");\n' +
+      '        LOGGER.error("helloworld");\n' +
+      '    end\n' + '\n' +'\n' +'\n'+'\n'+'\n'+'\n'+'\n'+'\n'+'\n'+'\n'+'\n'+'\n'+'\n'+'\n'+'\n'+'\n';
 
     constructor( private httpClient: HttpClient, private factsService: FactsService, private router: Router) { // We use HttpClient for the post method
 
@@ -79,7 +86,7 @@ export class DRLService {
 
   compile() {
 
-      this.dataObj = { data: btoa(String(this.DrlCode)) };
+      this.dataObj = { data: btoa(String(this.DrlCode)), json:btoa(String('lol')) };
       console.log(this.dataObj);
       this.httpClient
           .post('/rest/drools/drlCompile', this.dataObj)
@@ -150,6 +157,7 @@ export class DRLService {
   fire() {
       this.dataObj = {
           data : '',
+          json : ''
       };
 
       this.httpClient
@@ -170,6 +178,7 @@ export class DRLService {
 
           this.dataObj = {
               data: '',
+              json: ''
           };
           this.httpClient
               .post('/rest/context', this.dataObj)
@@ -186,7 +195,7 @@ export class DRLService {
   }
 
   saveAndCompile(){
-      this.dataObj = { data: btoa(String(this.DrlCode)) };
+      this.dataObj = { data: btoa(String(this.DrlCode)) , json: 'Hello' };
       console.log(this.dataObj);
           this.httpClient
               .post('/rest/drools/drlCompile', this.dataObj)
@@ -197,7 +206,7 @@ export class DRLService {
                       this.jsonResp =  res;
                       this.factsService.myFormData = res['jsonSchema'] ;
                       this.factsService.emitMyFormDataSubject();
-                      this.save()
+                      this.save();
                       console.log(res);
                   },
                   (error) => {

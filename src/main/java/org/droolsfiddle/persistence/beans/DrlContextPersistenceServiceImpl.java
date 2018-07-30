@@ -46,7 +46,8 @@ public class DrlContextPersistenceServiceImpl implements DrlContextPersistenceSe
                 dto.setError("No context to be saved");
                 dto.setResult(false);
             } else {
-                dto.setContextId(repository.post(context.getKieBase()));
+                //dto.setContextId(repository.post(context.getKieBase()));
+            	dto.setContextId(repository.post(context.getDroolsFiddleSession()));
                 dto.setResult(true);
             }
         } catch (Exception e) {
@@ -70,7 +71,7 @@ public class DrlContextPersistenceServiceImpl implements DrlContextPersistenceSe
                 dto.setError("No context to be saved");
                 dto.setResult(false);
             } else {
-                repository.put(cid, context.getKieBase());
+                repository.put(cid, context.getDroolsFiddleSession());
                 dto.setResult(true);
             }
         } catch (Exception e) {
@@ -89,8 +90,9 @@ public class DrlContextPersistenceServiceImpl implements DrlContextPersistenceSe
                 dto.setError("No context corresponding to id " + cid);
                 dto.setResult(false);
             } else {
-                context.setKieBase(repository.get(cid));
+                context.setDroolsFiddleSession(repository.get(cid));
                 dto.setDrl(context.getKieBase().getDrl());
+                dto.setJson(context.getJson());
                 dto.setResult(true);
             }
         } catch (Exception e) {

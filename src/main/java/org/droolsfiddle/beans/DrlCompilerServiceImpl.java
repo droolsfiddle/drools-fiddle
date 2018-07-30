@@ -62,11 +62,11 @@ public class DrlCompilerServiceImpl implements DrlCompilerService {
 
         
     	logger.debug("Init validation drl: DrlParser");
-        Session wsSession = (Session) request.getSession().getAttribute(Session.class.getName());
+        Session wsSession = (Session) request.getSession().getAttribute(Session.class.getName()); 
 
         Request resp = new Request();
         resp.setSuccess(false);
-
+        
         String drl;
         try {
             drl = new String(Base64.decode(iRequest.getData()),
@@ -76,6 +76,18 @@ public class DrlCompilerServiceImpl implements DrlCompilerService {
             resp.setLog("error while decoding input drl: "+e.getMessage());
             return resp;
         }
+        
+        
+        String json; 
+        try {
+            json = new String(Base64.decode(iRequest.getJson()),
+                    Charset.forName("UTF-8"));
+        } catch (IOException e) {
+            WebSocketUtil.sendToWebSocket(wsSession, "error while decoding input JSON: "+e.getMessage());
+            resp.setLog("error while decoding input JSON: "+e.getMessage());
+            return resp;
+        } 
+
 
         StringBuilder aLog = new StringBuilder();
 
@@ -105,6 +117,7 @@ public class DrlCompilerServiceImpl implements DrlCompilerService {
 
         KieBase kbs = kContainer.getKieBase();
         drlContext.setKieBase(new KieBaseWrapper(drl,kbs));
+        drlContext.setJson(json);
 
         // packages parsing
         Set<FactType> rootTypes = new HashSet<FactType>();
@@ -161,8 +174,8 @@ public class DrlCompilerServiceImpl implements DrlCompilerService {
         resp.setSuccess(true);
 
         logger.debug("End DRL compile service: "+resp.toString());
-
-        return resp;
+			
+        return resp; 
     }
 
     private JsonSchemaNode factType2JsonSchemaNode(String name, FactType type, KieBase kbs) {

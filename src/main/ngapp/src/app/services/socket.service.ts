@@ -51,7 +51,11 @@ export class SocketService {
               console.log(event['data']);
               if (jsonObject['action'] != null) {
                   _this.stepFunctionService.actionHandle(jsonObject['action'], jsonObject);
-                  _this.displayMessage(jsonObject, "info", jsonObject['action']);
+                  if (jsonObject['level'] != null){
+                      _this.displayMessage(jsonObject, jsonObject['level'], jsonObject['action']);
+                  } else {
+                      _this.displayMessage(jsonObject, "info", jsonObject['action']);
+                  }
                   console.log("heeeello",jsonObject['action']);
               }
               else{
@@ -59,7 +63,7 @@ export class SocketService {
               }
           }
           else{
-              _this.displayMessage(event['data'], "info", 'Other');
+              _this.displayMessage(event['data'], "success", 'Other');
           }
       };
 
