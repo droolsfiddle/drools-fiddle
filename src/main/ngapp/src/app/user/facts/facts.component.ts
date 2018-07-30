@@ -1,8 +1,6 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
-import { JsonSchemaFormComponent, JsonSchemaFormModule } from 'angular2-json-schema-form';
+import {Component, OnInit} from '@angular/core';
 import {FactsService} from '../../services/facts.service';
 import {Subscription} from "rxjs/internal/Subscription";
-import {DRLService} from "../../services/drl.service";
 
 
 
@@ -35,7 +33,7 @@ export class FactsComponent implements OnInit {
     jsonSchemaSubscription :Subscription;
 
 
-  constructor(private factService: FactsService, private drlService: DRLService) {
+  constructor(private factService: FactsService) {
 
 
   }
@@ -48,13 +46,6 @@ export class FactsComponent implements OnInit {
       );
   }
 
-  onSubmitEvent(event) {
-
-    this.event = event;
-    console.log('hello',event);
-    this.drlService.submit(event);
-    console.log(this.jsonSchema);
-  }
 
     ngOnDestroy() {
         this.jsonSchemaSubscription.unsubscribe();

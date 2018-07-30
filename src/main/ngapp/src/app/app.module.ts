@@ -61,7 +61,6 @@ const appRoutes: Routes = [
     RouterModule.forRoot(appRoutes, {useHash: true}), // The router module helps you to control the path of your page.
     AceEditorModule, // This is the module for Ace, the text editor in the Rules part.
     Bootstrap3FrameworkModule, // Those two lines set the module for json-schema-form
-    JsonSchemaFormModule.forRoot(Bootstrap3FrameworkModule), // it helps us to create the form in the Facts part.
     HttpClientModule, // This is the module that allows us an interaction with the backend, we can get and post thanks to this.
     VisModule, // This is the module for Vis, Vis allows us to vew the network connections in the Visualisation part.
     NgxToggleModule, // This is the module that allows us to do the live button in the header

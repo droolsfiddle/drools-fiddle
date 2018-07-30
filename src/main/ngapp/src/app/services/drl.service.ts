@@ -43,9 +43,9 @@ export class DRLService {
     '        f : Fact(value == 42)\n' +
     '    then\n' +
     '        modify( f ) {setValue( 41 )}\n' +
-    '    end';
+    '    end' + '\n' +'\n' +'\n'+'\n'+'\n'+'\n'+'\n'+'\n'+'\n'+'\n'+'\n'+'\n'+'\n'+'\n'+'\n'+'\n';
 
-  constructor( private httpClient: HttpClient, private factsService: FactsService, private router: Router) { // We use HttpClient for the post method
+    constructor( private httpClient: HttpClient, private factsService: FactsService, private router: Router) { // We use HttpClient for the post method
 
       this.router.events.pipe(filter(event => event instanceof RouterEvent)).pipe(filter(event => event instanceof ResolveStart)).subscribe((event) => {
           console.log(event);

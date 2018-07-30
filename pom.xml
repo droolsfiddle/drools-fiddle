@@ -248,6 +248,9 @@
 						<arguments>
 							<argument>build</argument>
 							<argument>--base-href=/ng/home/#/</argument>
+                            <!-- add those arguments if you want fast performances and a short loading time -->
+                            <!-- <argument>--aot</argument>
+                            <argument>--prod</argument> -->
 						</arguments>
 					</configuration>
 					<goals>

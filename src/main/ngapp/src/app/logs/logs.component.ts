@@ -24,8 +24,8 @@ export class LogsComponent implements OnInit, OnDestroy {
     public datatSource;
 
   constructor(private logger: NGXLogger, private logsService: LogsService) {
-      this.logsService.addMessage("Server-Log",{message:"Application Works"}, "success");
-      this.logsService.addMessage("insert-fact",{"id":0,"name":"Command","attributes":[{"id":0,"name":"client","type":"defaultpkg.Custom","enumValues":null},{"id":1,"name":"order","type":"defaultpkg.Orders","enumValues":null}]}, "info");
+      //this.logsService.addMessage("Server-Log",{message:"Application Works"}, "success");
+      //this.logsService.addMessage("insert-fact",{"id":0,"name":"Command","attributes":[{"id":0,"name":"client","type":"defaultpkg.Custom","enumValues":null},{"id":1,"name":"order","type":"defaultpkg.Orders","enumValues":null}]}, "info");
 
     }
 
