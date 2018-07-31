@@ -9,10 +9,12 @@ export class LogsService {
     public stringOfMessages: string = '';
     stringOfMessagesSubject = new Subject<string>(); // We use a Subject to set the variable DrlCode Private
 
-    public messages: Message[]= [] ;
+    private messages: Message[]= [] ;
     messagesSubject = new Subject<object>(); // We use a Subject to set the variable DrlCode Private
 
     public message: Message = new Message(-1, new Date(),"test", {}, "black");
+
+    public messageFields = ['id', 'date', 'type', 'message'];
 
     private idMesssage: number = 0;
 
@@ -40,5 +42,37 @@ export class LogsService {
     console.log(this.messages);
       this.emitMessagesSubject();
   }
+
+    transform(messages: Message[], field: string, value: string) {
+        if (!messages) {
+            return [];
+        }
+        if (!field || !value) {
+            return messages;
+        }
+        return messages.filter(message => this.transformMessage(message, field, value)
+
+
+        );
+    }
+
+    transformMessage(message, field, value){
+        if (typeof(message[field]) === 'string'){
+            return(message[field].toLowerCase().includes(value.toLowerCase()));
+        }
+        else if (typeof(message[field]) === 'object' && message[field].JSON ){
+            return(message[field].JSON.stringify.toLowerCase().includes(value.toLowerCase()));
+        }
+        else {
+            console.log(message[field].toString().toLowerCase());
+            return(message[field].toString().toLowerCase().includes(value.toString().toLowerCase()));
+        }
+    }
+
+    clearLogs(){
+        this.messages = [];
+        //this.addMessage('Log-cleared', {message : 'Log cleared'}, 'success')
+        this.emitMessagesSubject();
+    }
 
 }

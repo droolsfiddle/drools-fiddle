@@ -7,42 +7,89 @@
   <div class="panel-heading">
       <b>Logs</b>
   </div>
-  <div class="panel-body"> <!-- [attr.class]="'tab-pane fad ' + activeArray[0]" -->
+  <div class="panel-body "><!-- [attr.class]="'tab-pane fad ' + activeArray[0]" -->
+    <form>
+      <div class="form-group">
+        <div class="input-group">
+          <div class="input-group-addon"><i class="glyphicon glyphicon-search"></i></div>
+          <select [(ngModel)]="searchField" [ngModelOptions]="{standalone: true}">
+            <option *ngFor="let field of searchFields" [ngValue]="field" (click)="debug(searchField)">{{field}}</option>
+          </select>
+          <input type="text" class="form-control" name="searchString" placeholder="Type to search..." [(ngModel)]="searchString">
+        </div>
+      </div>
+    </form>
+    <div class="col-md-1">
+      <ul class="nav nav-pills nav-stacked">
+        <li><a href="#">Home</a></li>
+        <li>
+          <label class="btn btn-secondary active">
+            <input type="radio" name="options" id="option1" autocomplete="off" checked> Error
+          </label>
+        </li>
+        <li>
+          <label class="btn btn-secondary active">
+            <input type="radio" name="options" id="option2" autocomplete="off" checked> Warn
+          </label>
+        </li>
+        <li>
+          <label class="btn btn-secondary active">
+            <input type="radio" name="options" id="option3" autocomplete="off" checked> Info
+          </label>
+        </li>
+        <li>
+          <label class="btn btn-secondary active">
+            <input type="radio" name="options" id="option4" autocomplete="off" checked> Debug
+          </label>
+        </li>
+      </ul>
+    </div>
+    <div class="col-md-11">
 
-    <!-- https://www.npmjs.com/package/angular-6-datatable -->
-    <table class="table table-striped table-responsive" [mfData]="messages" #mf="mfDataTable" [mfRowsOnPage]="5" style="table-layout: fixed">
-      <thead>
-      <tr>
-        <th style="width: 5%">
-          <mfDefaultSorter by="id">Id</mfDefaultSorter>
-        </th>
-        <th style="width: 10%">
-          <mfDefaultSorter by="date">Date</mfDefaultSorter>
-        </th>
-        <th style="width: 10%">
-          <mfDefaultSorter by="type">Type</mfDefaultSorter>
-        </th>
-        <th style="width: 75%;">
-          <mfDefaultSorter by="message">Message</mfDefaultSorter>
-        </th>
-      </tr>
-      </thead>
-      <tbody >
-      <tr *ngFor="let item of mf.data" [class]="item.level" [ngStyle]="{color: getColor(item.level)}">
-        <td>{{item.id}}</td>
-        <td>{{item.date | date: 'HH:mm:ss:SSS'}}</td>
-        <td >{{item.type}}</td>
-        <td>{{item.message}}</td>
-      </tr>
-      </tbody>
-      <tfoot>
-      <tr>
-        <td colspan="4">
-          <mfBootstrapPaginator [rowsOnPageSet]="[5,10,25]"></mfBootstrapPaginator>
-        </td>
-      </tr>
-      </tfoot>
-    </table>
+      <!-- https://www.npmjs.com/package/angular-6-datatable -->
+      <table class="table table-striped table-responsive col-md-6" [mfData]="transform(messages,searchField, searchString)" #mf="mfDataTable" [mfRowsOnPage]="5" style="table-layout: fixed">
+        <thead>
+        <tr>
+          <th style="width: 5%">
+            <mfDefaultSorter by="id">Id</mfDefaultSorter>
+          </th>
+          <th style="width: 10%">
+            <mfDefaultSorter by="date">Date</mfDefaultSorter>
+          </th>
+          <th style="width: 10%">
+            <mfDefaultSorter by="type">Type</mfDefaultSorter>
+          </th>
+          <th style="width: 75%;">
+            <mfDefaultSorter by="message">Message</mfDefaultSorter>
+          </th>
+        </tr>
+        </thead>
+        <tbody >
+        <tr *ngFor="let item of mf.data" [class]="item.level" [ngStyle]="{color: getColor(item.level)}">
+          <td>{{item.id}}</td>
+          <td>{{item.date | date: 'HH:mm:ss:SSS'}}</td>
+          <td >{{item.type}}</td>
+          <td>{{item.message}}</td>
+        </tr>
+        </tbody>
+        <tfoot>
+        <tr>
+          <td colspan="4">
+            <mfBootstrapPaginator [(rowsOnPageSet)]="x" class="row"></mfBootstrapPaginator>
+            <div class="input-group pull-right">
+                <span class="input-group-addon" > Custom Nb of page : </span>
+                  <input type="text" class="form-control" id="pageNumber"
+                         [(ngModel)]="x[3]" size="2" min="30" [ngModelOptions]="{standalone: true}" type="number" step="10" style="width: 100px">
+            </div>
+            <div class="input-group pull-right pull-left">
+              <button class="btn btn-primary" (click)="onClear()"> clear </button>
+            </div>
+          </td>
+        </tr>
+        </tfoot>
+      </table>
+    </div>
+
   </div>
 </div>
 </div>

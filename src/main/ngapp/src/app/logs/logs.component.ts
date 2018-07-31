@@ -3,7 +3,6 @@ import {NGXLogger} from "ngx-logger";
 import {Message} from "../models/message.model";
 import {Subscription} from "rxjs/index";
 import {LogsService} from "../services/logs.service";
-import {MatTableDataSource} from "@angular/material";
 
 
 /* This component displays the log screen */
@@ -23,8 +22,20 @@ export class LogsComponent implements OnInit, OnDestroy {
 
     public datatSource;
 
+    public searchString: string;
+    public searchField: string = 'type';
+    public searchFields: string[];
+
+    public x = [5,10,25, 30 ];
+
   constructor(private logger: NGXLogger, private logsService: LogsService) {
-      //this.logsService.addMessage("Server-Log",{message:"Application Works"}, "success");
+      this.logsService.addMessage("Server-Log",{message:"Application Works"}, "success");
+      this.logsService.addMessage("Server-Log",{message:"Application Works"}, "success");
+      this.logsService.addMessage("Log",{message:"Application Works"}, "success");
+      this.logsService.addMessage("Server",{message:"Application Works"}, "success");
+      this.logsService.addMessage("Test",{message:"Application Works"}, "success");
+      this.logsService.addMessage("Server-Log",{message:"Application Works"}, "success");
+
       //this.logsService.addMessage("insert-fact",{"id":0,"name":"Command","attributes":[{"id":0,"name":"client","type":"defaultpkg.Custom","enumValues":null},{"id":1,"name":"order","type":"defaultpkg.Orders","enumValues":null}]}, "info");
 
     }
@@ -49,6 +60,18 @@ export class LogsComponent implements OnInit, OnDestroy {
         }
     }
 
+    debug(searchField : string){
+        console.log(searchField);
+    }
+
+    transform(messages: Message[], field: string, value: string) {
+        return(this.logsService.transform(messages, field, value));
+    }
+
+    onClear(){
+        this.logsService.clearLogs();
+    }
+
   ngOnInit() {
 
       this.messagesSubscription = this.logsService.messagesSubject.subscribe(
@@ -57,8 +80,7 @@ export class LogsComponent implements OnInit, OnDestroy {
           }
       );
       this.logsService.emitMessagesSubject();
-      this.datatSource = new MatTableDataSource(this.messages);
-      console.log(this.datatSource);
+      this.searchFields = this.logsService.messageFields;
   }
 
   ngOnDestroy(){
