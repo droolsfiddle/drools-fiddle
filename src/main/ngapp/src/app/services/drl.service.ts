@@ -31,7 +31,8 @@ export class DRLService {
 
   private DrlCode: string = '//\n' +
       '// copy paste your drl\n' +
-      '//\n' +
+      '// Drools version : 6.3.0.Final\n' +
+      '\n' +
       'import org.droolsfiddle.utilities.WSLogger;\n' +
       '\n' +
       'global WSLogger LOGGER;\n' +
@@ -46,10 +47,10 @@ export class DRLService {
       '        f : Fact(value == 42)\n' +
       '    then\n' +
       '        modify( f ) {setValue( 41 )}\n' +
-      '        LOGGER.debug("helloworld");\n' +
-      '        LOGGER.info("helloworld");\n' +
-      '        LOGGER.warn("helloworld");\n' +
-      '        LOGGER.error("helloworld");\n' +
+      '        LOGGER.debug("This is a debug log");\n' +
+      '        LOGGER.info("This is an info log");\n' +
+      '        LOGGER.warn("This is a warn log");\n' +
+      '        LOGGER.error("This is an error log");\n' +
       '    end\n' + '\n' +'\n' +'\n'+'\n'+'\n'+'\n'+'\n'+'\n'+'\n'+'\n'+'\n'+'\n'+'\n'+'\n'+'\n'+'\n';
 
     constructor( private httpClient: HttpClient, private factsService: FactsService, private router: Router) { // We use HttpClient for the post method
@@ -102,7 +103,7 @@ export class DRLService {
                   this.factsService.myFormData = res['jsonSchema'] ;
                   this.factsService.emitMyFormDataSubject();
                   $('.nav-tabs > .active').next('li').find('a').trigger('click');
-                  console.log(res);
+
               },
               (error) => {
                   /* this.target = 'drl';

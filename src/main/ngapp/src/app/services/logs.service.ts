@@ -19,7 +19,7 @@ export class LogsService {
 
 
 
-    public messageFields = ['id', 'date', 'type', 'message'];
+    public messageFields = ['id', 'date', 'message'];
 
     private idMesssage: number = 0;
 
@@ -28,7 +28,7 @@ export class LogsService {
       this.logsMap.set('level', ['success', 'danger', 'debug', 'warning', 'info']);
       this.logsMap.set('id', ['']);
       this.logsMap.set('date', ['']);
-      this.logsMap.set('type', ['', '']);
+      this.logsMap.set('type', []);
       this.logsMap.set('message', ['']);
   }
 
@@ -105,15 +105,30 @@ export class LogsService {
         let resultFinal = true;
         for (let field of Array.from(map.keys())) {
             let result = false;
-            for (let value of this.getLogsMap(field)) {
-                if (typeof(message[field]) === 'string') {
-                    result = result || message[field].toLowerCase().includes(value.toLowerCase());
+            if(field != 'type') {
+                for (let value of this.getLogsMap(field)) {
+                    if (typeof(message[field]) === 'string') {
+                        result = result || message[field].toLowerCase().includes(value.toLowerCase());
+                    }
+                    else if (typeof(message[field]) === 'object' && message[field].JSON) {
+                        result = result || message[field].JSON.stringify.toLowerCase().includes(value.toLowerCase());
+                    }
+                    else {
+                        result = result || message[field].toString().toLowerCase().includes(value.toString().toLowerCase());
+                    }
                 }
-                else if (typeof(message[field]) === 'object' && message[field].JSON) {
-                    result = result || message[field].JSON.stringify.toLowerCase().includes(value.toLowerCase());
-                }
-                else {
-                    result = result || message[field].toString().toLowerCase().includes(value.toString().toLowerCase());
+            }
+            else {
+                for (let value of this.getLogsMap(field)) {
+                    if (typeof(message[field]) === 'string') {
+                        result = result || message[field].toLowerCase() === value.toLowerCase();
+                    }
+                    else if (typeof(message[field]) === 'object' && message[field].JSON) {
+                        result = result || message[field].JSON.stringify.toLowerCase() === value.toLowerCase();
+                    }
+                    else {
+                        result = result || message[field].toString().toLowerCase() === value.toString().toLowerCase();
+                    }
                 }
             }
             resultFinal = resultFinal && result;

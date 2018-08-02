@@ -8,6 +8,7 @@
       <b>Logs</b>
   </div>
   <div class="panel-body "><!-- [attr.class]="'tab-pane fad ' + activeArray[0]" -->
+
     <form>
       <div class="form-group">
         <div class="input-group">
@@ -16,38 +17,50 @@
             <option *ngFor="let field of searchFields" [ngValue]="field" (click)="debug(searchField)">{{field}}</option>
           </select>
           <input type="text" class="form-control" name="searchString" placeholder="Type to search..." [(ngModel)]="getMap(searchField)[0]">
-          <input type="text" class="form-control" name="searchString" placeholder="Type to search..." [(ngModel)]="getMap(searchField)[1]">
+          <app-multiselect > <!-- [messages] = "messages" -->
+
+          </app-multiselect>
         </div>
       </div>
     </form>
+
     <div class="col-md-2">
       <div class="funkyradio">
         <div class="funkyradio-default">
           <input type="checkbox" name="checkbox" id="checkbox1" (change)="changeLevel('debug')" (click)="changeChecked('debug')" [checked]="getLevel('debug')"/>
-          <label for="checkbox1">Debug <button class="btn btn-basic pull-right" (click)="aloneLevel('debug')" >alone</button></label>
+          <label for="checkbox1">Debug</label> <!-- <button class="btn btn-basic pull-right" (click)="aloneLevel('debug')" >Debug</button> -->
         </div>
         <div class="funkyradio-danger">
           <input type="checkbox" name="checkbox" id="checkbox2" #cb (change)="changeLevel('danger')" (click)="changeChecked('danger')" [checked]="getLevel('danger')"/>
-          <label for="checkbox2" >Danger <button class="btn btn-danger pull-right" (click)="aloneLevel('danger')">alone</button></label>
+          <label for="checkbox2" >Danger</label>
         </div>
         <div class="funkyradio-warning">
           <input type="checkbox" name="checkbox" id="checkbox3" (change)="changeLevel('warning')" (click)="changeChecked('warning')" [checked]="getLevel('warning')"/>
-          <label for="checkbox3">Warning <button class="btn btn-warning pull-right" (click)="aloneLevel('warning')">alone</button></label>
+          <label for="checkbox3">Warning</label>
         </div>
         <div class="funkyradio-info">
           <input type="checkbox" name="checkbox" id="checkbox4" (change)="changeLevel('info')" (click)="changeChecked('info')" [checked]="getLevel('info')"/>
-          <label for="checkbox4">Info <button class="btn btn-info pull-right" (click)="aloneLevel('info')">alone</button></label>
+          <label for="checkbox4">Info</label>
         </div>
         <div class="funkyradio-success">
           <input type="checkbox" name="checkbox" id="checkbox5" (change)="changeLevel('success')" (click)="changeChecked('success')" [checked]="getLevel('success')"/>
-          <label for="checkbox5">Success <button class="btn btn-success pull-right" (click)="aloneLevel('success')">alone</button></label>
+          <label for="checkbox5">Success</label>
         </div>
       </div>
+      <div class="btn-group btn-group-justified">
+        <a class="btn btn-primary" (click)="selectAll()" >
+          All
+        </a>
+        <a class="btn btn-primary" (click)="selectNone()">
+          None
+        </a>
+      </div>
+
     </div>
     <div class="col-md-10">
 
       <!-- https://www.npmjs.com/package/angular-6-datatable -->
-      <table class="table table-striped table-responsive col-md-6" [mfData]="transform(messages)" #mf="mfDataTable" [mfRowsOnPage]="5" style="table-layout: fixed">
+      <table class="table table-responsive col-md-6" [mfData]="transform(messages)" #mf="mfDataTable" [mfRowsOnPage]="5" style="table-layout: fixed">
         <thead>
         <tr>
           <th style="width: 5%">

@@ -32,6 +32,7 @@
     "font-awesome": "^4.7.0",
     "jquery": "^3.3.1",
     "json-editor": "^0.7.28",
+    "ng-multiselect-dropdown": "^0.2.0",
     "ng2-ace-editor": "^0.3.8",
     "ng2-popover": "0.0.14",
     "ng2-vis": "0.0.6",

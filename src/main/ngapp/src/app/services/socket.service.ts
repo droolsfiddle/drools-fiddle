@@ -53,7 +53,8 @@ export class SocketService {
                   _this.stepFunctionService.actionHandle(jsonObject['action'], jsonObject);
                   if (jsonObject['level'] != null){
                       _this.displayMessage(jsonObject, jsonObject['level'], jsonObject['action']);
-                  } else {
+                  }
+                  else {
                       _this.displayMessage(jsonObject, "info", jsonObject['action']);
                   }
                   console.log("heeeello",jsonObject['action']);

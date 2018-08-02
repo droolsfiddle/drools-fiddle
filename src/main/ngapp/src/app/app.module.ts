@@ -13,7 +13,6 @@ import {FactsService} from './services/facts.service';
 import { RouterModule, Routes} from '@angular/router';
 import { HomeComponent } from './home/home.component';
 import { UserComponent } from './user/user/user.component';
-import {Bootstrap3FrameworkModule, JsonSchemaFormModule} from 'angular2-json-schema-form';
 import {HttpClientModule} from '@angular/common/http';
 import {Location, LocationStrategy, PathLocationStrategy} from '@angular/common';
 import {VisModule} from 'ng2-vis';
@@ -31,6 +30,8 @@ import {ClipboardModule} from "ngx-clipboard";
 import { CopyButtonComponent } from './header/copy-button/copy-button.component';
 import {DataTableModule} from "angular-6-datatable";
 import {JSONViewerComponent} from "./user/facts/json-schema/json-schema.component";
+import {NgMultiSelectDropDownModule} from "ng-multiselect-dropdown";
+import { MultiselectComponent } from './logs/multiselect/multiselect.component';
 
 
 const appRoutes: Routes = [
@@ -53,14 +54,14 @@ const appRoutes: Routes = [
     HomeComponent,
     UserComponent,
     CopyButtonComponent,
-      JSONViewerComponent
+      JSONViewerComponent,
+      MultiselectComponent
 
   ],
   imports: [
     BrowserModule,
     RouterModule.forRoot(appRoutes, {useHash: true}), // The router module helps you to control the path of your page.
     AceEditorModule, // This is the module for Ace, the text editor in the Rules part.
-    Bootstrap3FrameworkModule, // Those two lines set the module for json-schema-form
     HttpClientModule, // This is the module that allows us an interaction with the backend, we can get and post thanks to this.
     VisModule, // This is the module for Vis, Vis allows us to vew the network connections in the Visualisation part.
     NgxToggleModule, // This is the module that allows us to do the live button in the header
@@ -69,7 +70,8 @@ const appRoutes: Routes = [
       LoggerModule.forRoot({/* serverLoggingUrl: '/api/logs',*/ level: NgxLoggerLevel.TRACE}),
       FormsModule,
       ClipboardModule,
-      DataTableModule
+      DataTableModule,
+      NgMultiSelectDropDownModule.forRoot()
   ],
   providers: [
       DRLService,

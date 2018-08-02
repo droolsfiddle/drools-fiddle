@@ -19,7 +19,7 @@ export class LogsComponent implements OnInit, OnDestroy {
     messagesSubscription: Subscription;
 
     public searchString: string[] = ['test', 'try'];
-    public searchField: string = 'type';
+    public searchField: string = 'id';
     public searchFields: string[];
 
     public checkedMap = new Map<string, boolean>();
@@ -33,7 +33,7 @@ export class LogsComponent implements OnInit, OnDestroy {
       this.logsService.addMessage("Server-Log",{message:"Application Works"}, "success");
       this.logsService.addMessage("Server-Log",{message:"Application Works"}, "debug");
       this.logsService.addMessage("Log",{message:"Application Works"}, "danger");
-      this.logsService.addMessage("Server",{message:"Application Works"}, "info");
+      this.logsService.addMessage("Server",{message:"Amiel la tchoin"}, "info");
       this.logsService.addMessage("Test",{message:"Application Works"}, "warning");
       this.logsService.addMessage("Server-Log",{message:"Application Works"}, "success");
 
@@ -82,7 +82,7 @@ export class LogsComponent implements OnInit, OnDestroy {
     }
 
 
-    aloneLevel(level: string){
+    /*aloneLevel(level: string){
       console.log(Array.from(this.checkedMap.keys()))
         for (let key of Array.from(this.checkedMap.keys())){
             if (key!=level){
@@ -94,7 +94,22 @@ export class LogsComponent implements OnInit, OnDestroy {
                 this.addMap('level', key);
             }
         }
+    } */
+
+    selectAll(){
+        for (let key of Array.from(this.checkedMap.keys())){
+            this.checkedMap.set(key,true);
+            this.addMap('level', key);
+            }
+        }
+
+    selectNone(){
+        for (let key of Array.from(this.checkedMap.keys())){
+            this.checkedMap.set(key,false);
+            this.popMap('level', key);
+        }
     }
+
 
 
     getColor(level : string){
