@@ -55,14 +55,6 @@ public class DrlContext {
         this.kieBase = kieContainer;
     }
     
-    public DroolsFiddleSession getDroolsFiddleSession() {
-        return droolsFiddleSession;
-    }
-
-    public void setDroolsFiddleSession(DroolsFiddleSession droolsFiddleSession) {
-        this.droolsFiddleSession = droolsFiddleSession;
-    }
-    
     public String getJson() {
         return json;
     }

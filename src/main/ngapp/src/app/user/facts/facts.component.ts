@@ -19,9 +19,6 @@ export class FactsComponent implements OnInit {
 
     event: any = {};
 
-  myFormData: object ={"schema":{"Facts":{"type":"array","items":[{}/*{"title":"Fact","type":"object","properties":{"value":{"title":"value","type":"integer","properties":{}}}}*/]}}};
-  myFormDataSubscription: Subscription;
-  test = JSON.stringify(this.myFormData);
 
 
     jsonEditorOptions = {
@@ -29,21 +26,40 @@ export class FactsComponent implements OnInit {
         theme: 'bootstrap3'
     };
 
-    jsonSchema = {"title":"Facts","type":"object","properties":{}};
+    jsonSchema = {};
     jsonSchemaSubscription :Subscription;
 
+    jsonData  = {};
+    jsonDataSubscription : Subscription;
 
   constructor(private factService: FactsService) {
 
 
   }
 
+  test(){
+      this.factService.jsonData = this.jsonData;
+      console.log(this.factService.jsonData);
+      this.factService.emitJsonDataSubject()
+  }
+
+
   ngOnInit() {
       this.jsonSchemaSubscription = this.factService.myFormDataSubject.subscribe(
           (jsonSchema: any ) => {
               this.jsonSchema = jsonSchema;
+              console.log(JSON.stringify(jsonSchema))
           }
       );
+      this.factService.emitMyFormDataSubject();
+
+      this.jsonDataSubscription = this.factService.jsonDataSubject.subscribe(
+          (jsonData: any ) => {
+              this.jsonData = jsonData;
+              console.log('Le JSON A CHANGE', JSON.stringify(jsonData));
+          }
+      );
+      this.factService.emitJsonDataSubject();
   }
 
 

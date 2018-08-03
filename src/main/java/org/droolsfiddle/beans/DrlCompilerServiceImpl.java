@@ -116,8 +116,7 @@ public class DrlCompilerServiceImpl implements DrlCompilerService {
         aLog.append(kContainer.getClassLoader());
 
         KieBase kbs = kContainer.getKieBase();
-        drlContext.setKieBase(new KieBaseWrapper(drl,kbs));
-        drlContext.setJson(json);
+        drlContext.setKieBase(new KieBaseWrapper(drl , kbs , json));
 
         // packages parsing
         Set<FactType> rootTypes = new HashSet<FactType>();

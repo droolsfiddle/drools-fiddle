@@ -1,8 +1,11 @@
 import { Component, OnInit, Input, SimpleChanges, OnChanges, AfterViewInit, ViewChild } from '@angular/core';
 import {DRLService} from "../../../services/drl.service";
 import {FactsService} from "../../../services/facts.service";
+import * as _ from 'lodash';
 
 declare var JSONEditor;
+
+
 
 @Component({
     selector: 'app-json-viewer',
@@ -11,8 +14,12 @@ declare var JSONEditor;
         <button type="submit" class="btn btn-success" (click)="onSubmit()">
             <span class="glyphicon glyphicon-check"></span> Submit
         </button>
+        <button type="submit" class="btn btn-success" (click)="loadJson()">
+            <span class="glyphicon glyphicon-check"></span> Load Json
+        </button>
     `
 })
+
 export class JSONViewerComponent implements OnInit, OnChanges, AfterViewInit {
 
     @ViewChild('jsoneditor') jsonEditor;
@@ -25,18 +32,36 @@ export class JSONViewerComponent implements OnInit, OnChanges, AfterViewInit {
     templateDivRef: any;
     editorRef: any;
 
-    constructor(private drlService: DRLService) {
+    constructor(private drlService: DRLService, private factsService: FactsService) {
+    }
+
+    isEmpty(obj) {
+        for(var prop in obj) {
+            if(obj.hasOwnProperty(prop))
+                return false;
+        }
+
+        return JSON.stringify(obj) === JSON.stringify({});
     }
 
     ngOnChanges(changes: SimpleChanges) {
-        if (!!changes['data'] && changes['data'].currentValue != null) {
-            this.editorRef.set(this.data);
-            console.log('Hello', this.editorRef.getValue());
-        }
-        if (this.editorRef){
+        console.log(changes);
+        if (this.editorRef && changes['schema']){
+
             this.resetJsonEditor();
+            console.log('LE DATA EST LA',);
         }
     }
+
+    loadJson(){
+        if ( (!this.isEmpty(this.data)) ) {    //(!this.isEmpty(this.data)) && (!_.isEqual(this.editorRef.getValue(), this.data))
+            this.editorRef.setValue(
+                this.factsService.jsonData
+            );
+        }
+    }
+
+
 
     ngOnInit() {
     }
@@ -50,15 +75,24 @@ export class JSONViewerComponent implements OnInit, OnChanges, AfterViewInit {
         console.log('Hello', this.editorRef.getValue());
         this.drlService.submit(this.editorRef.getValue());
         console.log("Schema : ", this.schema)
+        console.log('Data : ', this.data, this.editorRef.getValue())
+        this.factsService.jsonData = this.editorRef.getValue();
+        this.factsService.emitJsonDataSubject();
     }
 
     createDefaultObjectViewer() {
         this.editorRef = new JSONEditor(this.templateDivRef, { theme: 'bootstrap3', iconlib: 'bootstrap3', mode: this.mode, schema: this.schema }, {});
+        /*this.editorRef.on("change",  () => {
+            if (!_.isEqual(this.editorRef.getValue(), this.factsService.jsonData)) {
+                this.factsService.jsonData = this.editorRef.getValue();
+                this.factsService.emitJsonDataSubject();
+            }
+        }); */
     }
 
     resetJsonEditor() {
         this.editorRef.destroy();
-        this.editorRef = new JSONEditor(this.templateDivRef, { theme: 'bootstrap3', iconlib: 'bootstrap3', mode: this.mode, schema: this.schema }, {});
+        this.createDefaultObjectViewer();
     }
 
 }

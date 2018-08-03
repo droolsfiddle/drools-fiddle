@@ -33,7 +33,7 @@ export class LogsComponent implements OnInit, OnDestroy {
       this.logsService.addMessage("Server-Log",{message:"Application Works"}, "success");
       this.logsService.addMessage("Server-Log",{message:"Application Works"}, "debug");
       this.logsService.addMessage("Log",{message:"Application Works"}, "danger");
-      this.logsService.addMessage("Server",{message:"Amiel la tchoin"}, "info");
+      this.logsService.addMessage("Server",{message:"Test"}, "info");
       this.logsService.addMessage("Test",{message:"Application Works"}, "warning");
       this.logsService.addMessage("Server-Log",{message:"Application Works"}, "success");
 

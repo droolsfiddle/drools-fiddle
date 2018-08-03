@@ -30,10 +30,13 @@ public class KieBaseWrapper implements Serializable {
     private transient KieBase kieBase;
 
     private String drl;
+    
+    private String json;
 
-    public KieBaseWrapper(String drl, KieBase kieBase) {
+    public KieBaseWrapper(String drl, KieBase kieBase, String json) {
         this.drl = drl;
         this.kieBase = kieBase;
+        this.json = json;
     }
 
     public KieBase getKieBase() {
@@ -50,6 +53,14 @@ public class KieBaseWrapper implements Serializable {
 
     public void setDrl(String drl) {
         this.drl = drl;
+    }
+    
+    public String getJson() {
+        return json;
+    }
+
+    public void setJson(String json) {
+        this.json = json;
     }
 
     public void dispose() {

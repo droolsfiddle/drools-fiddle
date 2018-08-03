@@ -52,7 +52,7 @@ public class WSLogger {
 		log(message, "info", "User-log-info");
 	}
 	public void debug(String message) throws JsonProcessingException {
-		log(message, "secondary", "User-log-debug");
+		log(message, "debug", "User-log-debug");
 	}
 	public void warn(String message) throws JsonProcessingException {
 		log(message, "warning", "User-log-warn");

@@ -87,8 +87,8 @@ export class DRLService {
 
   compile() {
 
-      this.dataObj = { data: btoa(String(this.DrlCode)), json:btoa(String('lol')) };
-      console.log(this.dataObj);
+      this.dataObj = { data: btoa(String(this.DrlCode)), json: btoa(String(JSON.stringify(this.factsService.jsonData))) };
+      console.log('Compile : ', this.dataObj);
       this.httpClient
           .post('/rest/drools/drlCompile', this.dataObj)
           .subscribe(
@@ -97,12 +97,14 @@ export class DRLService {
                   this.eventService.tabsArray[0] = '';
                   this.eventService.tabsArray[1] = 'in active';
                   this.eventService.emitTabsSubject(); */
-                  this.hasCompiled = true;
-                  this.emitHasCompiledSubject();
-                  this.jsonResp =  res;
-                  this.factsService.myFormData = res['jsonSchema'] ;
-                  this.factsService.emitMyFormDataSubject();
-                  $('.nav-tabs > .active').next('li').find('a').trigger('click');
+                  if(res['success']) {
+                      this.hasCompiled = true;
+                      this.emitHasCompiledSubject();
+                      this.jsonResp = res;
+                      this.factsService.myFormData = res['jsonSchema'];
+                      this.factsService.emitMyFormDataSubject();
+                      $('.nav-tabs > .active').next('li').find('a').trigger('click');
+                  }
 
               },
               (error) => {
@@ -196,7 +198,7 @@ export class DRLService {
   }
 
   saveAndCompile(){
-      this.dataObj = { data: btoa(String(this.DrlCode)) , json: 'Hello' };
+      this.dataObj = { data: btoa(String(this.DrlCode)) ,  json:btoa(String(JSON.stringify(this.factsService.jsonData))) };
       console.log(this.dataObj);
           this.httpClient
               .post('/rest/drools/drlCompile', this.dataObj)
@@ -227,6 +229,9 @@ export class DRLService {
                   /* this.router.navigate([res['data']['contextId']]); */
                   console.log(res);
                   this.changeDrlCode(res['drl']);
+                  this.compile();
+                  this.factsService.jsonData = JSON.parse(res['json']);
+                  this.factsService.emitJsonDataSubject();
               },
               (error) => {
                   console.log('Erreur ! : failed to load session' + error);

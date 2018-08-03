@@ -10,10 +10,13 @@ declare var JSONEditor;
 })
 export class FactsService {
 
-     /* myFormData = {"schema":{"Facts":{"type":"array","items":[{}{"title":"Fact","type":"object","properties":{"value":{"title":"value","type":"integer","properties":{}}}}]}}} */
+      //myFormData = {"title":"Facts","type":"object","properties":{"defaultpkg.Fact":{"title":"Fact","type":"object","properties":{"value":{"title":"value","type":"integer","properties":{}}}}}};
     myFormData = {"title":"Facts","type":"object","properties":{}};
 
     myFormDataSubject = new Subject<object>(); // We use a Subject to set the variable DrlCode Private
+
+    jsonData = {};
+    jsonDataSubject = new Subject<object>();
 
 
   constructor() {
@@ -22,6 +25,10 @@ export class FactsService {
 
     emitMyFormDataSubject() {
         this.myFormDataSubject.next(this.myFormData);
+    }
+
+    emitJsonDataSubject() {
+        this.jsonDataSubject.next(this.jsonData);
     }
 
 

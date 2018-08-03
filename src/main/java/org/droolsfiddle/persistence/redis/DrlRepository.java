@@ -78,7 +78,7 @@ public class DrlRepository {
         contextIdCounter = new RedisAtomicLong("global:cid", template.getConnectionFactory());
     }
 
-    public String post(DroolsFiddleSession container) {
+    public String post(KieBaseWrapper container) {
 
         String cid = hashids.encode(contextIdCounter.incrementAndGet());
 
@@ -87,8 +87,8 @@ public class DrlRepository {
         return cid;
     }
 
-    public void put(String cid, DroolsFiddleSession droolsFiddleSession) {
-        contexts().put(cid,droolsFiddleSession);
+    public void put(String cid, KieBaseWrapper kieBase) {
+        contexts().put(cid,kieBase);
     }
 
     public boolean has(String cid) {
@@ -96,12 +96,12 @@ public class DrlRepository {
     }
 
 
-    public DroolsFiddleSession get(String cid) {
+    public KieBaseWrapper get(String cid) {
         return contexts().get(cid);
     }
 
-    private DefaultRedisMap<String, DroolsFiddleSession> contexts() {
-        return new DefaultRedisMap<String, DroolsFiddleSession>("contexts", template);
+    private DefaultRedisMap<String, KieBaseWrapper> contexts() {
+        return new DefaultRedisMap<String, KieBaseWrapper>("contexts", template);
     }
 
 }

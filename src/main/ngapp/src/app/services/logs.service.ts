@@ -80,7 +80,6 @@ export class LogsService {
     message.level = level;
     message.type = type;
     this.messages.unshift(message);
-    console.log(this.messages);
       this.emitMessagesSubject();
   }
 

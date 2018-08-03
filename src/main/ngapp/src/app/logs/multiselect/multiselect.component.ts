@@ -24,12 +24,9 @@ export class MultiselectComponent implements OnInit, OnChanges, OnDestroy {
     constructDropDownList(messages : Message[]){
       let listOfTypes : string[] = [];
       for (let message of messages){
-        console.log(message['type']);
-          console.log(!(listOfTypes.indexOf(message['type']) > -1));
         if(!(listOfTypes.indexOf(message['type']) > -1)) {
             listOfTypes.push(message['type']);
         }
-        console.log(listOfTypes)
       }
       this.dropdownList = [];
       listOfTypes.forEach((item, index) => {
@@ -51,7 +48,6 @@ export class MultiselectComponent implements OnInit, OnChanges, OnDestroy {
             }
         );
         this.logsService.emitMessagesSubject();
-      console.log(this.messages);
       this.constructDropDownList(this.messages);
         /* this.dropdownList = [
             { item_id: 1, item_text: 'Mumbai' },
@@ -82,7 +78,6 @@ export class MultiselectComponent implements OnInit, OnChanges, OnDestroy {
 
         } */
         this.constructDropDownList(changes.messages.currentValue);
-        console.log('hey that changed');
     }
     selectAll(items: any ){
         for (let key of items){
@@ -106,7 +101,6 @@ export class MultiselectComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     onItemSelect (item:any) {
-        console.log(item);
         this.addMap('type', item['item_text']);
     }
     onItemDeselect (item:any){
@@ -115,13 +109,11 @@ export class MultiselectComponent implements OnInit, OnChanges, OnDestroy {
 
 
     onSelectAll (items: any) {
-        console.log(items);
         this.dropdownList = items;
         this.selectAll(items)
     }
 
     onDeselectAll (items: any) {
-        console.log(items);
         this.deselectAll(this.dropdownList);
     }
 }
