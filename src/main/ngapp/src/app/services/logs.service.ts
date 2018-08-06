@@ -1,36 +1,36 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {Message} from "../models/message.model";
 import {Subject} from "rxjs/index";
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root'
 })
 export class LogsService {
     public stringOfMessages: string = '';
     stringOfMessagesSubject = new Subject<string>(); // We use a Subject to set the variable DrlCode Private
-
-    private messages: Message[]= [] ;
     messagesSubject = new Subject<object>(); // We use a Subject to set the variable DrlCode Private
-
-    public message: Message = new Message(-1, new Date(),"test", {}, "black");
-
-    private logsMap = new Map<string , string[]>();
+    public message: Message = new Message(-1, new Date(), "test", {}, "black");
     logsMapSubject = new Subject<Map<string, string[]>>(); // We use a Subject to set the variable DrlCode Private
-
-
-
     public messageFields = ['id', 'date', 'message'];
-
+    private messages: Message[] = [];
+    private logsMap = new Map<string, string[]>();
     private idMesssage: number = 0;
 
 
-  constructor() {
-      this.logsMap.set('level', ['success', 'danger', 'debug', 'warning', 'info']);
-      this.logsMap.set('id', ['']);
-      this.logsMap.set('date', ['']);
-      this.logsMap.set('type', []);
-      this.logsMap.set('message', ['']);
-  }
+    constructor() {
+        this.logsMap.set('level', ['success', 'danger', 'debug', 'warning', 'info']);
+        this.logsMap.set('id', ['']);
+        this.logsMap.set('date', ['']);
+        this.logsMap.set('type', []);
+        this.logsMap.set('message', ['']);
+    }
+
+    static deleteList(value: string, list: string[]) {
+        const index: number = list.indexOf(value);
+        if (index !== -1) {
+            list.splice(index, 1);
+        }
+    }
 
     emitMessagesSubject() {
         this.messagesSubject.next(this.messages);
@@ -44,47 +44,37 @@ export class LogsService {
         this.stringOfMessagesSubject.next(this.stringOfMessages);
     }
 
-    addLogsMap(K : string, V : string){
-      if (this.logsMap.get(K) && !this.logsMap.get(K).includes(V)){
-          this.logsMap.get(K).push(V);
-      }
-      this.emitLogsMapSubject();
-    }
-
-    popLogsMap(K:string, V:string){
-      if (this.logsMap.get(K) && this.logsMap.get(K).includes(V)){
-          LogsService.deleteList(V , this.logsMap.get(K));
-      }
-      this.emitLogsMapSubject();
-    }
-
-    getLogsMap(K:string){
-      return(this.logsMap.get(K));
-    }
-
-
-    static deleteList(value:string, list:string[]){
-        const index: number = list.indexOf(value);
-        if (index !== -1) {
-            list.splice(index, 1);
+    addLogsMap(K: string, V: string) {
+        if (this.logsMap.get(K) && !this.logsMap.get(K).includes(V)) {
+            this.logsMap.get(K).push(V);
         }
+        this.emitLogsMapSubject();
     }
 
+    popLogsMap(K: string, V: string) {
+        if (this.logsMap.get(K) && this.logsMap.get(K).includes(V)) {
+            LogsService.deleteList(V, this.logsMap.get(K));
+        }
+        this.emitLogsMapSubject();
+    }
 
+    getLogsMap(K: string) {
+        return (this.logsMap.get(K));
+    }
 
-  addMessage(type:string, messageSent:object, level:string) {
-      let  message: Message = new Message(-1,new Date(),type, {}, "black");
-      message.id = this.messages.length;
-    message.date = new Date();
-    message.message = JSON.stringify(messageSent);
-    message.level = level;
-    message.type = type;
-    this.messages.unshift(message);
-      this.emitMessagesSubject();
-  }
+    addMessage(type: string, messageSent: object, level: string) {
+        let message: Message = new Message(-1, new Date(), type, {}, "black");
+        message.id = this.messages.length;
+        message.date = new Date();
+        message.message = JSON.stringify(messageSent);
+        message.level = level;
+        message.type = type;
+        this.messages.unshift(message);
+        this.emitMessagesSubject();
+    }
 
-    transform(messages: Message[], map : Map<string , string[]>){
-        let listMessage : Message[] = [];
+    transform(messages: Message[], map: Map<string, string[]>) {
+        let listMessage: Message[] = [];
         if (!messages) {
             return [];
         }
@@ -100,11 +90,11 @@ export class LogsService {
     }
 
 
-    transformMessage(message, map : Map<string , string[]> ){
+    transformMessage(message, map: Map<string, string[]>) {
         let resultFinal = true;
         for (let field of Array.from(map.keys())) {
             let result = false;
-            if(field != 'type') {
+            if (field != 'type') {
                 for (let value of this.getLogsMap(field)) {
                     if (typeof(message[field]) === 'string') {
                         result = result || message[field].toLowerCase().includes(value.toLowerCase());
@@ -135,7 +125,7 @@ export class LogsService {
         return resultFinal;
     }
 
-    clearLogs(){
+    clearLogs() {
         this.messages = [];
         //this.addMessage('Log-cleared', {message : 'Log cleared'}, 'success')
         this.emitMessagesSubject();

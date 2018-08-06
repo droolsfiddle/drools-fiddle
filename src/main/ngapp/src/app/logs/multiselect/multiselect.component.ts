@@ -4,9 +4,9 @@ import {LogsService} from "../../services/logs.service";
 import {Subscription} from "rxjs/index";
 
 @Component({
-  selector: 'app-multiselect',
-  templateUrl: './multiselect.component.html',
-  styleUrls: ['./multiselect.component.scss']
+    selector: 'app-multiselect',
+    templateUrl: './multiselect.component.html',
+    styleUrls: ['./multiselect.component.scss']
 })
 export class MultiselectComponent implements OnInit, OnChanges, OnDestroy {
 
@@ -15,29 +15,26 @@ export class MultiselectComponent implements OnInit, OnChanges, OnDestroy {
     dropdownList = [];
     selectedItems = [];
     dropdownSettings = {};
-
-
-
-    constructor(private logsService: LogsService){}
-
-
-    constructDropDownList(messages : Message[]){
-      let listOfTypes : string[] = [];
-      for (let message of messages){
-        if(!(listOfTypes.indexOf(message['type']) > -1)) {
-            listOfTypes.push(message['type']);
-        }
-      }
-      this.dropdownList = [];
-      listOfTypes.forEach((item, index) => {
-            this.dropdownList.push({item_id: index+1, item_text: item})
-          });
-    }
-
-    public messages: Message[] ;
+    public messages: Message[];
     messagesSubscription: Subscription;
 
-    ngOnInit () {
+    constructor(private logsService: LogsService) {
+    }
+
+    constructDropDownList(messages: Message[]) {
+        let listOfTypes: string[] = [];
+        for (let message of messages) {
+            if (!(listOfTypes.indexOf(message['type']) > -1)) {
+                listOfTypes.push(message['type']);
+            }
+        }
+        this.dropdownList = [];
+        listOfTypes.forEach((item, index) => {
+            this.dropdownList.push({item_id: index + 1, item_text: item})
+        });
+    }
+
+    ngOnInit() {
         this.messagesSubscription = this.logsService.messagesSubject.subscribe(
             (messages: Message[]) => {
                 this.messages = messages;
@@ -48,7 +45,7 @@ export class MultiselectComponent implements OnInit, OnChanges, OnDestroy {
             }
         );
         this.logsService.emitMessagesSubject();
-      this.constructDropDownList(this.messages);
+        this.constructDropDownList(this.messages);
         /* this.dropdownList = [
             { item_id: 1, item_text: 'Mumbai' },
             { item_id: 2, item_text: 'Bangaluru' },
@@ -70,50 +67,54 @@ export class MultiselectComponent implements OnInit, OnChanges, OnDestroy {
 
     }
 
-    ngOnDestroy(){
+    ngOnDestroy() {
         this.messagesSubscription.unsubscribe();
     }
+
     ngOnChanges(changes: SimpleChanges) {
         /*if (!!changes['messages'] && changes['messages'].currentValue != null) {
 
         } */
         this.constructDropDownList(changes.messages.currentValue);
     }
-    selectAll(items: any ){
-        for (let key of items){
+
+    selectAll(items: any) {
+        for (let key of items) {
             this.addMap('type', key['item_text']);
         }
     }
 
-    deselectAll(items: any ){
-        for (let key of items){
+    deselectAll(items: any) {
+        for (let key of items) {
             this.popMap('type', key['item_text']);
         }
 
     }
 
 
-    addMap(K : string, V : string){
+    addMap(K: string, V: string) {
         this.logsService.addLogsMap(K, V);
     }
-    popMap(K:string, V:string){
+
+    popMap(K: string, V: string) {
         this.logsService.popLogsMap(K, V);
     }
 
-    onItemSelect (item:any) {
+    onItemSelect(item: any) {
         this.addMap('type', item['item_text']);
     }
-    onItemDeselect (item:any){
+
+    onItemDeselect(item: any) {
         this.popMap('type', item['item_text']);
     }
 
 
-    onSelectAll (items: any) {
+    onSelectAll(items: any) {
         this.dropdownList = items;
         this.selectAll(items)
     }
 
-    onDeselectAll (items: any) {
+    onDeselectAll(items: any) {
         this.deselectAll(this.dropdownList);
     }
 }

@@ -3,106 +3,116 @@
 
 <div id="bottom-left" class="row">
 
-<div class="panel panel-default">
-  <div class="panel-heading">
-      <b>Logs</b>
-  </div>
-  <div class="panel-body "><!-- [attr.class]="'tab-pane fad ' + activeArray[0]" -->
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <b>Logs</b>
+        </div>
+        <div class="panel-body "><!-- [attr.class]="'tab-pane fad ' + activeArray[0]" -->
 
-    <form>
-      <div class="form-group">
-        <div class="input-group">
-          <div class="input-group-addon"><i class="glyphicon glyphicon-search"></i></div>
-          <select [(ngModel)]="searchField" [ngModelOptions]="{standalone: true}">
-            <option *ngFor="let field of searchFields" [ngValue]="field" (click)="debug(searchField)">{{field}}</option>
-          </select>
-          <input type="text" class="form-control" name="searchString" placeholder="Type to search..." [(ngModel)]="getMap(searchField)[0]">
-          <app-multiselect > <!-- [messages] = "messages" -->
+            <form>
+                <div class="form-group">
+                    <div class="input-group">
+                        <div class="input-group-addon"><i class="glyphicon glyphicon-search"></i></div>
+                        <select [(ngModel)]="searchField" [ngModelOptions]="{standalone: true}">
+                            <option *ngFor="let field of searchFields" [ngValue]="field">
+                                {{field}}
+                            </option>
+                        </select>
+                        <input type="text" class="form-control" name="searchString" placeholder="Type to search..."
+                               [(ngModel)]="getMap(searchField)[0]">
+                        <app-multiselect> <!-- [messages] = "messages" -->
 
-          </app-multiselect>
-        </div>
-      </div>
-    </form>
+                        </app-multiselect>
+                    </div>
+                </div>
+            </form>
 
-    <div class="col-md-2">
-      <div class="funkyradio">
-        <div class="funkyradio-default">
-          <input type="checkbox" name="checkbox" id="checkbox1" (change)="changeLevel('debug')" (click)="changeChecked('debug')" [checked]="getLevel('debug')"/>
-          <label for="checkbox1">Debug</label> <!-- <button class="btn btn-basic pull-right" (click)="aloneLevel('debug')" >Debug</button> -->
-        </div>
-        <div class="funkyradio-danger">
-          <input type="checkbox" name="checkbox" id="checkbox2" #cb (change)="changeLevel('danger')" (click)="changeChecked('danger')" [checked]="getLevel('danger')"/>
-          <label for="checkbox2" >Danger</label>
-        </div>
-        <div class="funkyradio-warning">
-          <input type="checkbox" name="checkbox" id="checkbox3" (change)="changeLevel('warning')" (click)="changeChecked('warning')" [checked]="getLevel('warning')"/>
-          <label for="checkbox3">Warning</label>
-        </div>
-        <div class="funkyradio-info">
-          <input type="checkbox" name="checkbox" id="checkbox4" (change)="changeLevel('info')" (click)="changeChecked('info')" [checked]="getLevel('info')"/>
-          <label for="checkbox4">Info</label>
-        </div>
-        <div class="funkyradio-success">
-          <input type="checkbox" name="checkbox" id="checkbox5" (change)="changeLevel('success')" (click)="changeChecked('success')" [checked]="getLevel('success')"/>
-          <label for="checkbox5">Success</label>
-        </div>
-      </div>
-      <div class="btn-group btn-group-justified">
-        <a class="btn btn-primary" (click)="selectAll()" >
-          All
-        </a>
-        <a class="btn btn-primary" (click)="selectNone()">
-          None
-        </a>
-      </div>
+            <div class="col-md-2">
+                <div class="funkyradio">
+                    <div class="funkyradio-default">
+                        <input type="checkbox" name="checkbox" id="checkbox1" (change)="changeLevel('debug')"
+                               (click)="changeChecked('debug')" [checked]="getLevel('debug')"/>
+                        <label for="checkbox1">Debug</label>
+                    </div>
+                    <div class="funkyradio-danger">
+                        <input type="checkbox" name="checkbox" id="checkbox2" #cb (change)="changeLevel('danger')"
+                               (click)="changeChecked('danger')" [checked]="getLevel('danger')"/>
+                        <label for="checkbox2">Danger</label>
+                    </div>
+                    <div class="funkyradio-warning">
+                        <input type="checkbox" name="checkbox" id="checkbox3" (change)="changeLevel('warning')"
+                               (click)="changeChecked('warning')" [checked]="getLevel('warning')"/>
+                        <label for="checkbox3">Warning</label>
+                    </div>
+                    <div class="funkyradio-info">
+                        <input type="checkbox" name="checkbox" id="checkbox4" (change)="changeLevel('info')"
+                               (click)="changeChecked('info')" [checked]="getLevel('info')"/>
+                        <label for="checkbox4">Info</label>
+                    </div>
+                    <div class="funkyradio-success">
+                        <input type="checkbox" name="checkbox" id="checkbox5" (change)="changeLevel('success')"
+                               (click)="changeChecked('success')" [checked]="getLevel('success')"/>
+                        <label for="checkbox5">Success</label>
+                    </div>
+                </div>
+                <div class="btn-group btn-group-justified">
+                    <a class="btn btn-primary" (click)="selectAll()">
+                        All
+                    </a>
+                    <a class="btn btn-primary" (click)="selectNone()">
+                        None
+                    </a>
+                </div>
 
-    </div>
-    <div class="col-md-10">
-
-      <!-- https://www.npmjs.com/package/angular-6-datatable -->
-      <table class="table table-responsive col-md-6" [mfData]="transform(messages)" #mf="mfDataTable" [mfRowsOnPage]="5" style="table-layout: fixed">
-        <thead>
-        <tr>
-          <th style="width: 5%">
-            <mfDefaultSorter by="id">Id</mfDefaultSorter>
-          </th>
-          <th style="width: 10%">
-            <mfDefaultSorter by="date">Date</mfDefaultSorter>
-          </th>
-          <th style="width: 10%">
-            <mfDefaultSorter by="type">Type</mfDefaultSorter>
-          </th>
-          <th style="width: 75%;">
-            <mfDefaultSorter by="message">Message</mfDefaultSorter>
-          </th>
-        </tr>
-        </thead>
-        <tbody >
-        <tr *ngFor="let item of mf.data" [class]="item.level" [ngStyle]="{color: getColor(item.level)}">
-          <td>{{item.id}}</td>
-          <td>{{item.date | date: 'HH:mm:ss:SSS'}}</td>
-          <td >{{item.type}}</td>
-          <td>{{item.message}}</td>
-        </tr>
-        </tbody>
-        <tfoot>
-        <tr>
-          <td colspan="4">
-            <mfBootstrapPaginator [(rowsOnPageSet)]="x" class="row"></mfBootstrapPaginator>
-            <div class="input-group pull-right">
-                <span class="input-group-addon" > Custom Nb of page : </span>
-                  <input type="text" class="form-control" id="pageNumber"
-                         [(ngModel)]="x[3]" size="2" min="30" [ngModelOptions]="{standalone: true}" type="number" step="10" style="width: 100px">
             </div>
-            <div class="input-group pull-right pull-left">
-              <button class="btn btn-primary" (click)="onClear()"> clear </button>
-            </div>
-          </td>
-        </tr>
-        </tfoot>
-      </table>
-    </div>
+            <div class="col-md-10">
 
-  </div>
-</div>
+                <!-- https://www.npmjs.com/package/angular-6-datatable -->
+                <table class="table table-responsive col-md-6" [mfData]="transform(messages)" #mf="mfDataTable"
+                       [mfRowsOnPage]="5" style="table-layout: fixed">
+                    <thead>
+                    <tr>
+                        <th style="width: 5%">
+                            <mfDefaultSorter by="id">Id</mfDefaultSorter>
+                        </th>
+                        <th style="width: 10%">
+                            <mfDefaultSorter by="date">Date</mfDefaultSorter>
+                        </th>
+                        <th style="width: 10%">
+                            <mfDefaultSorter by="type">Type</mfDefaultSorter>
+                        </th>
+                        <th style="width: 75%;">
+                            <mfDefaultSorter by="message">Message</mfDefaultSorter>
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr *ngFor="let item of mf.data" [class]="item.level" [ngStyle]="{color: getColor(item.level)}">
+                        <td>{{item.id}}</td>
+                        <td>{{item.date | date: 'HH:mm:ss:SSS'}}</td>
+                        <td>{{item.type}}</td>
+                        <td>{{item.message}}</td>
+                    </tr>
+                    </tbody>
+                    <tfoot>
+                    <tr>
+                        <td colspan="4">
+                            <mfBootstrapPaginator [(rowsOnPageSet)]="x" class="row"></mfBootstrapPaginator>
+                            <div class="input-group pull-right">
+                                <span class="input-group-addon"> Custom Nb of page : </span>
+                                <input type="text" class="form-control" id="pageNumber"
+                                       [(ngModel)]="x[3]" size="2" min="30" [ngModelOptions]="{standalone: true}"
+                                       type="number" step="10" style="width: 100px">
+                            </div>
+                            <div class="input-group pull-right pull-left">
+                                <button class="btn btn-primary" (click)="onClear()"> clear</button>
+                            </div>
+                        </td>
+                    </tr>
+                    </tfoot>
+                </table>
+            </div>
+
+        </div>
+    </div>
 </div>

@@ -3,22 +3,20 @@ import {FactsService} from '../../services/facts.service';
 import {Subscription} from "rxjs/internal/Subscription";
 
 
-
 /* This Component Displays the Facts. It uses the json-schema form library for Angular 6.
 You can check how to install it here : https://www.npmjs.com/package/angular2-json-schema-form
 And this app uses the Bootstrap3FrameworkModule included in JsonSchemaFormModule */
 
 @Component({
-  selector: 'app-facts',
-  templateUrl: './facts.component.html',
-  styleUrls: ['./facts.component.scss']
+    selector: 'app-facts',
+    templateUrl: './facts.component.html',
+    styleUrls: ['./facts.component.scss']
 })
 export class FactsComponent implements OnInit {
 
-    editor : any;
+    editor: any;
 
     event: any = {};
-
 
 
     jsonEditorOptions = {
@@ -27,40 +25,32 @@ export class FactsComponent implements OnInit {
     };
 
     jsonSchema = {};
-    jsonSchemaSubscription :Subscription;
+    jsonSchemaSubscription: Subscription;
 
-    jsonData  = {};
-    jsonDataSubscription : Subscription;
+    jsonData = {};
+    jsonDataSubscription: Subscription;
 
-  constructor(private factService: FactsService) {
-
-
-  }
-
-  test(){
-      this.factService.jsonData = this.jsonData;
-      console.log(this.factService.jsonData);
-      this.factService.emitJsonDataSubject()
-  }
+    constructor(private factService: FactsService) {
 
 
-  ngOnInit() {
-      this.jsonSchemaSubscription = this.factService.myFormDataSubject.subscribe(
-          (jsonSchema: any ) => {
-              this.jsonSchema = jsonSchema;
-              console.log(JSON.stringify(jsonSchema))
-          }
-      );
-      this.factService.emitMyFormDataSubject();
+    }
 
-      this.jsonDataSubscription = this.factService.jsonDataSubject.subscribe(
-          (jsonData: any ) => {
-              this.jsonData = jsonData;
-              console.log('Le JSON A CHANGE', JSON.stringify(jsonData));
-          }
-      );
-      this.factService.emitJsonDataSubject();
-  }
+
+    ngOnInit() {
+        this.jsonSchemaSubscription = this.factService.myFormDataSubject.subscribe(
+            (jsonSchema: any) => {
+                this.jsonSchema = jsonSchema;
+            }
+        );
+        this.factService.emitMyFormDataSubject();
+
+        this.jsonDataSubscription = this.factService.jsonDataSubject.subscribe(
+            (jsonData: any) => {
+                this.jsonData = jsonData;
+            }
+        );
+        this.factService.emitJsonDataSubject();
+    }
 
 
     ngOnDestroy() {

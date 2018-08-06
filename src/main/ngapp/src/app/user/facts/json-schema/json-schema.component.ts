@@ -1,10 +1,9 @@
-import { Component, OnInit, Input, SimpleChanges, OnChanges, AfterViewInit, ViewChild } from '@angular/core';
+import {Component, OnInit, Input, SimpleChanges, OnChanges, AfterViewInit, ViewChild} from '@angular/core';
 import {DRLService} from "../../../services/drl.service";
 import {FactsService} from "../../../services/facts.service";
 import * as _ from 'lodash';
 
 declare var JSONEditor;
-
 
 
 @Component({
@@ -36,8 +35,8 @@ export class JSONViewerComponent implements OnInit, OnChanges, AfterViewInit {
     }
 
     isEmpty(obj) {
-        for(var prop in obj) {
-            if(obj.hasOwnProperty(prop))
+        for (var prop in obj) {
+            if (obj.hasOwnProperty(prop))
                 return false;
         }
 
@@ -45,22 +44,19 @@ export class JSONViewerComponent implements OnInit, OnChanges, AfterViewInit {
     }
 
     ngOnChanges(changes: SimpleChanges) {
-        console.log(changes);
-        if (this.editorRef && changes['schema']){
+        if (this.editorRef && changes['schema']) {
 
             this.resetJsonEditor();
-            console.log('LE DATA EST LA',);
         }
     }
 
-    loadJson(){
-        if ( (!this.isEmpty(this.data)) ) {    //(!this.isEmpty(this.data)) && (!_.isEqual(this.editorRef.getValue(), this.data))
+    loadJson() {
+        if ((!this.isEmpty(this.data))) {    //(!this.isEmpty(this.data)) && (!_.isEqual(this.editorRef.getValue(), this.data))
             this.editorRef.setValue(
                 this.factsService.jsonData
             );
         }
     }
-
 
 
     ngOnInit() {
@@ -71,17 +67,19 @@ export class JSONViewerComponent implements OnInit, OnChanges, AfterViewInit {
         this.createDefaultObjectViewer();
     }
 
-    onSubmit(){
-        console.log('Hello', this.editorRef.getValue());
+    onSubmit() {
         this.drlService.submit(this.editorRef.getValue());
-        console.log("Schema : ", this.schema)
-        console.log('Data : ', this.data, this.editorRef.getValue())
         this.factsService.jsonData = this.editorRef.getValue();
         this.factsService.emitJsonDataSubject();
     }
 
     createDefaultObjectViewer() {
-        this.editorRef = new JSONEditor(this.templateDivRef, { theme: 'bootstrap3', iconlib: 'bootstrap3', mode: this.mode, schema: this.schema }, {});
+        this.editorRef = new JSONEditor(this.templateDivRef, {
+            theme: 'bootstrap3',
+            iconlib: 'bootstrap3',
+            mode: this.mode,
+            schema: this.schema
+        }, {});
         /*this.editorRef.on("change",  () => {
             if (!_.isEqual(this.editorRef.getValue(), this.factsService.jsonData)) {
                 this.factsService.jsonData = this.editorRef.getValue();
