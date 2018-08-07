@@ -10,7 +10,40 @@ declare var JSONEditor;
 })
 export class FactsService {
 
-    //myFormData = {"title":"Facts","type":"object","properties":{"defaultpkg.Fact":{"title":"Fact","type":"object","properties":{"value":{"title":"value","type":"integer","properties":{}}}}}};
+    /*myFormData = {
+        "title": "Facts", "type": "object", "properties": {
+            "defaultpkg.Fact": {
+                "title": "Fact",
+                "type": "object",
+                "properties": {"value": {"title": "value", "type": "integer", "properties": {}}}
+            },
+            "defaultpkg.Fact2": {
+                "title": "Fact",
+                "type": "object",
+                "properties": {"value": {"title": "value", "type": "integer", "properties": {}}}
+            },
+            "defaultpkg.Fact3": {
+                "title": "Fact",
+                "type": "object",
+                "properties": {"value": {"title": "value", "type": "integer", "properties": {}}}
+            },
+            "defaultpkg.Fact4": {
+                "title": "Fact",
+                "type": "object",
+                "properties": {"value": {"title": "value", "type": "integer", "properties": {}}}
+            },
+            "defaultpkg.Fact5": {
+                "title": "Fact",
+                "type": "object",
+                "properties": {"value": {"title": "value", "type": "integer", "properties": {}}}
+            },
+            "defaultpkg.Fact6": {
+                "title": "Fact",
+                "type": "object",
+                "properties": {"value": {"title": "value", "type": "integer", "properties": {}}}
+            }
+        }
+    }; */
     myFormData = {"title": "Facts", "type": "object", "properties": {}};
 
     myFormDataSubject = new Subject<object>(); // We use a Subject to set the variable DrlCode Private
