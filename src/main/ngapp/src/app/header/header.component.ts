@@ -59,6 +59,12 @@ export class HeaderComponent implements OnInit, OnDestroy {
         this.stepFunctionService.emitTotalStepSubject();
     }
 
+    actualiseStep() {
+        if (this.model['value']) {
+            this.nextEnd();
+        }
+    }
+
     compileDrl() {
         this.drlService.compile();
         this.stepFunctionService.totalReset();

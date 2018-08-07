@@ -24,6 +24,11 @@ th, td {
   word-wrap: break-word;
 }
 
+.input-group-addon {
+  min-width: 150px; // if you want width please write here //
+  text-align: left;
+}
+
 /* --------------------------------- Radio buttons --------------------------*/
 .funkyradio {
 
@@ -178,3 +183,4 @@ th, td {
     }
   }
 }
+

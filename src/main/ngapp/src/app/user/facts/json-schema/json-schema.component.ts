@@ -13,8 +13,8 @@ declare var JSONEditor;
         <button type="submit" class="btn btn-success" (click)="onSubmit()">
             <span class="glyphicon glyphicon-check"></span> Submit
         </button>
-        <button type="submit" class="btn btn-success" (click)="loadJson()">
-            <span class="glyphicon glyphicon-check"></span> Load Json
+        <button type="submit" class="btn btn-success pull-right" (click)="loadJson()">
+            <span class="glyphicon glyphicon-repeat"></span> Restore facts values
         </button>
     `
 })

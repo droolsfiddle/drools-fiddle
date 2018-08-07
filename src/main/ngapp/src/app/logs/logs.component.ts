@@ -19,7 +19,7 @@ export class LogsComponent implements OnInit, OnDestroy {
     messagesSubscription: Subscription;
 
     public searchString: string[] = ['test', 'try'];
-    public searchField: string = 'id';
+    public searchField: string = 'message';
     public searchFields: string[];
 
     public checkedMap = new Map<string, boolean>();

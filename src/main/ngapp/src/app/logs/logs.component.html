@@ -7,19 +7,31 @@
         <div class="panel-heading">
             <b>Logs</b>
         </div>
-        <div class="panel-body "><!-- [attr.class]="'tab-pane fad ' + activeArray[0]" -->
+        <div class="panel-body ">
 
             <form>
                 <div class="form-group">
+                    <!--<select [(ngModel)]="searchField" [ngModelOptions]="{standalone: true}">
+                        <option *ngFor="let field of searchFields" [ngValue]="field">
+                            {{field}}
+                        </option>
+                    </select>-->
                     <div class="input-group">
-                        <div class="input-group-addon"><i class="glyphicon glyphicon-search"></i></div>
-                        <select [(ngModel)]="searchField" [ngModelOptions]="{standalone: true}">
-                            <option *ngFor="let field of searchFields" [ngValue]="field">
-                                {{field}}
-                            </option>
-                        </select>
-                        <input type="text" class="form-control" name="searchString" placeholder="Type to search..."
+                        <div class="input-group-addon">
+                            <i class="glyphicon glyphicon-search">&nbsp;</i>
+                            Message
+                            <!--<i class="glyphicon glyphicon-envelope"></i>-->
+                        </div>
+                        <input type="text" class="form-control" name="searchString"
+                               placeholder="Message to search..."
                                [(ngModel)]="getMap(searchField)[0]">
+                    </div>
+                    <div class="input-group">
+                        <div class="input-group-addon">
+                            <i class="glyphicon glyphicon-search">&nbsp;</i>
+                            Type
+                            <!--<i class="glyphicon glyphicon-envelope"></i>-->
+                        </div>
                         <app-multiselect> <!-- [messages] = "messages" -->
 
                         </app-multiselect>
@@ -104,7 +116,7 @@
                                        [(ngModel)]="x[3]" size="2" min="30" [ngModelOptions]="{standalone: true}"
                                        type="number" step="10" style="width: 100px">
                             </div>
-                            <div class="input-group pull-right pull-left">
+                            <div class="input-group pull-left">
                                 <button class="btn btn-primary" (click)="onClear()"> clear</button>
                             </div>
                         </td>
