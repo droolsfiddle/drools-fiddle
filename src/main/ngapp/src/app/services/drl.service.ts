@@ -5,6 +5,7 @@ import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {ResolveStart, Router, RouterEvent} from '@angular/router';
 import {FactsService} from "./facts.service";
 import {filter} from 'rxjs/operators';
+import {StepFunctionsService} from "./step-functions.service";
 
 /* import  { Location } from '@angular/common'; */
 
@@ -48,7 +49,10 @@ export class DRLService {
         '        LOGGER.error("This is an error log");\n' +
         '    end\n' + '\n' + '\n' + '\n' + '\n' + '\n' + '\n' + '\n' + '\n' + '\n' + '\n' + '\n' + '\n' + '\n' + '\n' + '\n' + '\n';
 
-    constructor(private httpClient: HttpClient, private factsService: FactsService, private router: Router) { // We use HttpClient for the post method
+    constructor(private httpClient: HttpClient,
+                private factsService: FactsService,
+                private router: Router,
+                private stepFunctionService: StepFunctionsService) { // We use HttpClient for the post method
 
         this.router.events.pipe(filter(event => event instanceof RouterEvent)).pipe(filter(event => event instanceof ResolveStart)).subscribe((event) => {
             if (event['url']) {
@@ -187,6 +191,7 @@ export class DRLService {
                     this.jsonResp = res;
                     this.factsService.myFormData = res['jsonSchema'];
                     this.factsService.emitMyFormDataSubject();
+                    this.stepFunctionService.totalReset();
                     this.save();
                     console.log(res);
                 },

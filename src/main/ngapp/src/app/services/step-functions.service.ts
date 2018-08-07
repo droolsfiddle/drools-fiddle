@@ -1,6 +1,5 @@
 import {Injectable} from '@angular/core';
 import {Subscription} from "rxjs/internal/Subscription";
-import {DRLService} from "./drl.service";
 import {EventsService} from "./events.service";
 import {Subject} from "rxjs";
 import {ExampleNetworkData} from "../models/network-data.model";
@@ -13,14 +12,12 @@ export class StepFunctionsService {
     public queue = [];
     stepSubject = new Subject<number>(); // We use a Subject to subscribe to it in real time
     totalStepSubject = new Subject<number>(); // We use a Subject to subscribe to it in real time
-    hasCompiledSubscription: Subscription;
     public visNetworkDataSubscription: Subscription;
     public visNetworkData: ExampleNetworkData;
     private step = -1;
     private totalStep = 0;
     private edgeStep = 0;
     private factInstanceStep = 1;
-    private hasCompiled;
 
     /*
     actionHandle = {
@@ -50,13 +47,7 @@ export class StepFunctionsService {
         "fire": this.nextFR
     };*/
 
-    constructor(private drlService: DRLService, private eventsService: EventsService) {
-        this.hasCompiledSubscription = this.drlService.hasCompiledSubject.subscribe(
-            (hasCompile: boolean) => {
-                this.hasCompiled = hasCompile;
-            }
-        );
-        this.drlService.emitHasCompiledSubject();
+    constructor(private eventsService: EventsService) {
 
         this.visNetworkDataSubscription = this.eventsService.visNetworkDataSubject.subscribe(
             (visNetworkData: ExampleNetworkData) => {
