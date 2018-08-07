@@ -414,6 +414,7 @@ export class StepFunctionsService {
             this.removeEdge("0-" + dataA.id);
         }
         this.edgeStep--;
+        this.factInstanceStep--;
         this.removeNode(dataA.id);
     }
 
