@@ -27,6 +27,7 @@ public class Request {
   private String data;
   private String log;
   private String json; 
+  private int nestingLimit; 
   private boolean success;
   // private List<PackageDTO> packages;
   private JsonSchemaNode jsonSchema;
@@ -65,6 +66,14 @@ public class Request {
   public void setJson(String json) {
     this.json = json;
   }
+  
+  public int getNestingLimit() {
+	    return nestingLimit;
+	  }
+
+	  public void setNestingLimit(int nestingLimit) {
+	    this.nestingLimit = nestingLimit;
+	  }
 
   // public List<PackageDTO> getPackages() {
   //  return packages;

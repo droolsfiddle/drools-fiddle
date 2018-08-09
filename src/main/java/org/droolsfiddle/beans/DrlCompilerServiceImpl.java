@@ -47,7 +47,9 @@ import java.util.*;
 @Named
 public class DrlCompilerServiceImpl implements DrlCompilerService {
 
-    private Logger logger = Logger.getLogger(DrlCompilerServiceImpl.class);
+    
+
+	private Logger logger = Logger.getLogger(DrlCompilerServiceImpl.class);
 
     @Context
     private HttpServletRequest request;
@@ -56,6 +58,9 @@ public class DrlCompilerServiceImpl implements DrlCompilerService {
     DrlContext drlContext;
 
     private ObjectMapper mapper = new ObjectMapper();
+
+	private int nestingCount;
+	private int nestingLimit;
 
 
     public Request postDrlCompile(final Request iRequest) throws JsonProcessingException {
@@ -86,7 +91,11 @@ public class DrlCompilerServiceImpl implements DrlCompilerService {
             WebSocketUtil.sendToWebSocket(wsSession, "error while decoding input JSON: "+e.getMessage());
             resp.setLog("error while decoding input JSON: "+e.getMessage());
             return resp;
-        } 
+        }
+        
+        nestingLimit = iRequest.getNestingLimit(); 
+        resp.setNestingLimit(nestingLimit);
+        
 
 
         StringBuilder aLog = new StringBuilder();
@@ -128,6 +137,7 @@ public class DrlCompilerServiceImpl implements DrlCompilerService {
         root.setType("object");
         root.setTitle("Facts");
         for (FactType type : rootTypes) {
+        	nestingCount = 0;
             if (type.getFactClass().isEnum()) // skip enums
                 continue;
 
@@ -184,9 +194,13 @@ public class DrlCompilerServiceImpl implements DrlCompilerService {
         node.setTitle(name);
         node.setType("object");
 
-        for (FactField field : type.getFields()) {
-            node.getProperties().put(field.getName(),
-                    javaType2JsonSchemaNode(field.getName(), field.getType(), kbs));
+        nestingCount++;
+        if (nestingCount < nestingLimit) {
+        	for (FactField field : type.getFields()) {
+        		node.getProperties().put(field.getName(),
+        				javaType2JsonSchemaNode(field.getName(), field.getType(), kbs));
+        	}
+        	
         }
 
         return node;
@@ -194,18 +208,6 @@ public class DrlCompilerServiceImpl implements DrlCompilerService {
 
     private JsonSchemaBaseNode javaType2JsonSchemaNode(String name, Class<?> type, KieBase kbs) {
 
-        if (Collection.class.isAssignableFrom(type)) {
-            JsonSchemaArrayNode node = new JsonSchemaArrayNode();
-            node.setTitle(name);
-            node.setType("array");
-            JsonSchemaMultiTypeNode typeNode = new JsonSchemaMultiTypeNode();
-            typeNode.getType().add("string");
-            typeNode.getType().add("boolean");
-            typeNode.getType().add("integer");
-            typeNode.getType().add("number");
-            node.setItems(typeNode);
-            return node;
-        }
 
         if (type.isArray()) {
             JsonSchemaArrayNode node = new JsonSchemaArrayNode();
@@ -230,6 +232,18 @@ public class DrlCompilerServiceImpl implements DrlCompilerService {
 
     private JsonSchemaLeafNode javaType2JsonSchemaLeafNode(String name, Class<?> type) {
 
+    	if (Collection.class.isAssignableFrom(type)) {
+    		JsonSchemaArrayNode node = new JsonSchemaArrayNode();
+    		node.setTitle(name);
+    		node.setType("array");
+    		JsonSchemaMultiTypeNode typeNode = new JsonSchemaMultiTypeNode();
+    		typeNode.getType().add("string");
+    		typeNode.getType().add("boolean");
+    		typeNode.getType().add("integer");
+    		typeNode.getType().add("number");
+    		node.setItems(typeNode);
+    		return node;
+    	}
         JsonSchemaLeafNode node = new JsonSchemaNode();
 
         if (type.equals(Integer.class) || type.equals(Long.class) || type.equals(Short.class)

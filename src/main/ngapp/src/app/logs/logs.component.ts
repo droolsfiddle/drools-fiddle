@@ -30,12 +30,12 @@ export class LogsComponent implements OnInit, OnDestroy {
     mapSubscription: Subscription;
 
     constructor(private logger: NGXLogger, private logsService: LogsService) {
-        this.logsService.addMessage("Server-Log", {message: "Application Works"}, "success");
-        this.logsService.addMessage("Server-Log", {message: "Application Works"}, "debug");
-        this.logsService.addMessage("Log", {message: "Application Works"}, "danger");
-        this.logsService.addMessage("Server", {message: "Test"}, "info");
-        this.logsService.addMessage("Test", {message: "Application Works"}, "warning");
-        this.logsService.addMessage("Server-Log", {message: "Application Works"}, "success");
+        // this.logsService.addMessage("Server-Log", {message: "Application Works"}, "success");
+        // this.logsService.addMessage("Server-Log", {message: "Application Works"}, "debug");
+        // this.logsService.addMessage("Log", {message: "Application Works"}, "danger");
+        // this.logsService.addMessage("Server", {message: "Test"}, "info");
+        // this.logsService.addMessage("Test", {message: "Application Works"}, "warning");
+        // this.logsService.addMessage("Server-Log", {message: "Application Works"}, "success");
 
         this.checkedMap.set('success', true);
         this.checkedMap.set('debug', true);

@@ -21,8 +21,12 @@ export class DRLService {
     public hasCompiled = false;
     public UrlText: string;
     UrlSubject = new Subject<string>();
-    private dataObj = {data: '', json: ''};
+    private dataObj = {data: '', json: '', nestingLimit: 0};
     private jsonResp: any;
+
+    private nestingLimit: number = 10;
+    nestingLimitSubject = new Subject<number>();
+
 
     /* public target = 'drl'; */
     private DrlCode: string = '//\n' +
@@ -75,6 +79,14 @@ export class DRLService {
         this.hasCompiledSubject.next(this.hasCompiled);
     }
 
+    emitNestedLimitSubject() {
+        this.nestingLimitSubject.next(this.nestingLimit);
+    }
+
+    setNestingLimit(value: number ){
+        this.nestingLimit = value;
+    }
+
 
     changeDrlCode(code) {  // Update DrlCode When the user past his DRL code.
         this.DrlCode = code;
@@ -86,7 +98,8 @@ export class DRLService {
 
         this.dataObj = {
             data: btoa(String(this.DrlCode)),
-            json: btoa(String(JSON.stringify(this.factsService.jsonData)))
+            json: btoa(String(JSON.stringify(this.factsService.jsonData))),
+            nestingLimit : this.nestingLimit
         };
         this.httpClient
             .post('/rest/drools/drlCompile', this.dataObj)
@@ -97,6 +110,7 @@ export class DRLService {
                     this.eventService.tabsArray[1] = 'in active';
                     this.eventService.emitTabsSubject(); */
                     if (res['success']) {
+                        console.log(res);
                         this.hasCompiled = true;
                         this.emitHasCompiledSubject();
                         this.jsonResp = res;
@@ -140,7 +154,8 @@ export class DRLService {
     fire() {
         this.dataObj = {
             data: '',
-            json: ''
+            json: '',
+            nestingLimit : 0
         };
 
         this.httpClient
@@ -161,7 +176,8 @@ export class DRLService {
 
         this.dataObj = {
             data: '',
-            json: ''
+            json: '',
+            nestingLimit : 0
         };
         this.httpClient
             .post('/rest/context', this.dataObj)
@@ -180,7 +196,8 @@ export class DRLService {
     saveAndCompile() {
         this.dataObj = {
             data: btoa(String(this.DrlCode)),
-            json: btoa(String(JSON.stringify(this.factsService.jsonData)))
+            json: btoa(String(JSON.stringify(this.factsService.jsonData))),
+            nestingLimit : this.nestingLimit
         };
         this.httpClient
             .post('/rest/drools/drlCompile', this.dataObj)
