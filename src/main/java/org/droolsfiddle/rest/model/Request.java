@@ -29,6 +29,7 @@ public class Request {
   private String json; 
   private int nestingLimit; 
   private boolean success;
+  private boolean hasLoop;
   // private List<PackageDTO> packages;
   private JsonSchemaNode jsonSchema;
   private JsonSchemaNodeNew jsonSchemaNew;
@@ -115,6 +116,15 @@ public class Request {
   public void setSuccess(boolean success) {
     this.success = success;
   }
+  
+  public boolean isHasLoop() {
+	  return hasLoop;
+  }
+
+  public void setHasLoop(boolean hasLoop) {
+	  this.hasLoop = hasLoop;
+  }
+
 
   @Override
   public String toString() {

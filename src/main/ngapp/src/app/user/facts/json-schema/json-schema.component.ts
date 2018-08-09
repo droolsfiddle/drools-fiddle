@@ -16,22 +16,22 @@ declare var JSONEditor;
                 <span class="glyphicon glyphicon-check"></span> Submit
             </button>
 
-            <button type="submit" class="btn btn-success" style="margin-left: 30px " (click)="loadJson()" [disabled]="!hasCompiled">
+            <button type="submit" class="btn btn-success" style="margin-left: 30px " (click)="loadJson()">
                 <span class="glyphicon glyphicon-repeat"></span> Restore facts values
             </button>
-    
-    
-            <div class="form-group input-group pull-right">
-                <span class="input-group-addon"> Nesting Limit </span>
+
+            <div class="form-group input-group pull-right" [hidden]="!hasLoop">
+                <span class="input-group-addon" > Nesting Limit </span>
                 <input type="text" class="form-control" id="pageNumber"
                        [(ngModel)]="nestingLimit" size="2" min="30" [ngModelOptions]="{standalone: true}"
                        type="number" step="10" style="width: 100px">
-                 <div class="input-group-btn">
+                <div class="input-group-btn">
                     <button class="btn btn-group" (click)="setNestingLimit()">set</button>
-                 </div>
+                </div>
             </div>
         </form>
-    `
+    `,
+    styleUrls: ['./json-schema.component.scss']
 })
 
 export class JSONViewerComponent implements OnInit, OnChanges, AfterViewInit {
@@ -49,8 +49,8 @@ export class JSONViewerComponent implements OnInit, OnChanges, AfterViewInit {
     nestingLimit: number = 30;
     nestingLimitSubscription: Subscription;
 
-    hasCompiledSubscription: Subscription;
-    hasCompiled = true;
+    hasLoopSubscription: Subscription;
+    hasLoop = true;
 
     jsonDataSubscription: Subscription;
     jsonData = {};
@@ -60,7 +60,7 @@ export class JSONViewerComponent implements OnInit, OnChanges, AfterViewInit {
     }
 
     isEmpty(obj) {
-        for (var prop in obj) {
+        for (let prop in obj) {
             if (obj.hasOwnProperty(prop))
                 return false;
         }
@@ -103,13 +103,19 @@ export class JSONViewerComponent implements OnInit, OnChanges, AfterViewInit {
         );
         this.drlService.emitNestedLimitSubject();
 
+        this.hasLoopSubscription = this.drlService.hasLoopSubject.subscribe(
+            (hasLoop: any) => {
+                this.hasLoop = hasLoop;
+            }
+        );
+        this.drlService.emitHasLoopSubject();
+
         this.jsonDataSubscription = this.factsService.jsonDataSubject.subscribe(
             (jsonData: object) => {
                 this.jsonData = jsonData;
-                this.loadJson();
             }
         );
-        this.drlService.emitHasCompiledSubject();
+        this.factsService.emitJsonDataSubject();
     }
 
 

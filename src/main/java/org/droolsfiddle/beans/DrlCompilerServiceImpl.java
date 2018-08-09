@@ -62,6 +62,10 @@ public class DrlCompilerServiceImpl implements DrlCompilerService {
 	private int nestingCount;
 	private int nestingLimit;
 
+	private boolean hasLoop;
+
+	private Set<FactType> usedFactType;
+
 
     public Request postDrlCompile(final Request iRequest) throws JsonProcessingException {
 
@@ -71,6 +75,7 @@ public class DrlCompilerServiceImpl implements DrlCompilerService {
 
         Request resp = new Request();
         resp.setSuccess(false);
+        hasLoop = false;
         
         String drl;
         try {
@@ -116,7 +121,8 @@ public class DrlCompilerServiceImpl implements DrlCompilerService {
                 WebSocketUtil.sendToWebSocket(wsSession, mapper.writeValueAsString(info.toString()));
             }
 
-            
+
+            resp.setHasLoop(hasLoop);
             resp.setLog(aLog.toString());
             return resp;
         }
@@ -141,6 +147,7 @@ public class DrlCompilerServiceImpl implements DrlCompilerService {
             if (type.getFactClass().isEnum()) // skip enums
                 continue;
 
+            usedFactType = new HashSet<>();
             root.getProperties().put(type.getName(),
                     factType2JsonSchemaNode(type.getSimpleName(),type,kbs));
 
@@ -179,6 +186,7 @@ public class DrlCompilerServiceImpl implements DrlCompilerService {
             }
         }
 
+        resp.setHasLoop(hasLoop);
         resp.setLog(aLog.toString());
         resp.setSuccess(true);
 
@@ -188,6 +196,11 @@ public class DrlCompilerServiceImpl implements DrlCompilerService {
     }
 
     private JsonSchemaNode factType2JsonSchemaNode(String name, FactType type, KieBase kbs) {
+    	if (usedFactType.contains(type)) {
+    		hasLoop = true;
+    	} else {
+    		usedFactType.add(type);
+    	}
         logger.debug("factType2JsonSchemaNode("+name+", "+type+")");
         JsonSchemaNode node = new JsonSchemaNode();
 
@@ -195,7 +208,7 @@ public class DrlCompilerServiceImpl implements DrlCompilerService {
         node.setType("object");
 
         nestingCount++;
-        if (nestingCount < nestingLimit) {
+        if (!hasLoop || (nestingCount < nestingLimit)) {
         	for (FactField field : type.getFields()) {
         		node.getProperties().put(field.getName(),
         				javaType2JsonSchemaNode(field.getName(), field.getType(), kbs));
@@ -203,6 +216,10 @@ public class DrlCompilerServiceImpl implements DrlCompilerService {
         	
         }
 
+        nestingCount--;
+        if (usedFactType.contains(type)) {
+        	usedFactType.remove(type);
+    	} 
         return node;
     }
 

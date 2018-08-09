@@ -17,8 +17,13 @@ import {StepFunctionsService} from "./step-functions.service";
 export class DRLService {
     // private _options = { headers: new HttpHeaders({ 'Content-Type': 'application/json' }) };
     DrlCodeSubject = new Subject<string>(); // We use a Subject to set the variable DrlCode Private
+
     hasCompiledSubject = new Subject<boolean>();
     public hasCompiled = false;
+
+    hasLoopSubject = new Subject<boolean>();
+    public hasLoop = false;
+
     public UrlText: string;
     UrlSubject = new Subject<string>();
     private dataObj = {data: '', json: '', nestingLimit: 0};
@@ -75,6 +80,10 @@ export class DRLService {
         this.UrlSubject.next(this.UrlText.slice());
     }
 
+    emitHasLoopSubject() {
+        this.hasLoopSubject.next(this.hasLoop);
+    }
+
     emitHasCompiledSubject() {
         this.hasCompiledSubject.next(this.hasCompiled);
     }
@@ -114,8 +123,10 @@ export class DRLService {
                         this.jsonResp = res;
                         this.factsService.myFormData = res['jsonSchema'];
                         this.factsService.emitMyFormDataSubject();
-                        this.hasCompiled = true
+                        this.hasCompiled = true;
                         this.emitHasCompiledSubject();
+                        this.hasLoop = res['hasLoop'];
+                        this.emitHasLoopSubject();
                         $('.nav-tabs > .active').next('li').find('a').trigger('click');
                     }
 
@@ -209,6 +220,8 @@ export class DRLService {
                     this.factsService.myFormData = res['jsonSchema'];
                     this.factsService.emitMyFormDataSubject();
                     this.stepFunctionService.totalReset();
+                    this.hasLoop = res['hasLoop'];
+                    this.emitHasLoopSubject();
                     this.save();
                     console.log(res);
                 },
