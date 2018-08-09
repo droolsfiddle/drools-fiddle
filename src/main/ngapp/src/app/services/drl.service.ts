@@ -83,7 +83,7 @@ export class DRLService {
         this.nestingLimitSubject.next(this.nestingLimit);
     }
 
-    setNestingLimit(value: number ){
+    setNestingLimit(value: number) {
         this.nestingLimit = value;
     }
 
@@ -99,7 +99,7 @@ export class DRLService {
         this.dataObj = {
             data: btoa(String(this.DrlCode)),
             json: btoa(String(JSON.stringify(this.factsService.jsonData))),
-            nestingLimit : this.nestingLimit
+            nestingLimit: this.nestingLimit
         };
         this.httpClient
             .post('/rest/drools/drlCompile', this.dataObj)
@@ -111,11 +111,11 @@ export class DRLService {
                     this.eventService.emitTabsSubject(); */
                     if (res['success']) {
                         console.log(res);
-                        this.hasCompiled = true;
-                        this.emitHasCompiledSubject();
                         this.jsonResp = res;
                         this.factsService.myFormData = res['jsonSchema'];
                         this.factsService.emitMyFormDataSubject();
+                        this.hasCompiled = true
+                        this.emitHasCompiledSubject();
                         $('.nav-tabs > .active').next('li').find('a').trigger('click');
                     }
 
@@ -155,7 +155,7 @@ export class DRLService {
         this.dataObj = {
             data: '',
             json: '',
-            nestingLimit : 0
+            nestingLimit: 0
         };
 
         this.httpClient
@@ -177,7 +177,7 @@ export class DRLService {
         this.dataObj = {
             data: '',
             json: '',
-            nestingLimit : 0
+            nestingLimit: 0
         };
         this.httpClient
             .post('/rest/context', this.dataObj)
@@ -197,7 +197,7 @@ export class DRLService {
         this.dataObj = {
             data: btoa(String(this.DrlCode)),
             json: btoa(String(JSON.stringify(this.factsService.jsonData))),
-            nestingLimit : this.nestingLimit
+            nestingLimit: this.nestingLimit
         };
         this.httpClient
             .post('/rest/drools/drlCompile', this.dataObj)

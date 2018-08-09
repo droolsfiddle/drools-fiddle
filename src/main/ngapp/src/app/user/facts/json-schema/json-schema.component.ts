@@ -16,7 +16,7 @@ declare var JSONEditor;
                 <span class="glyphicon glyphicon-check"></span> Submit
             </button>
 
-            <button type="submit" class="btn btn-success" style="margin-left: 30px " (click)="loadJson()">
+            <button type="submit" class="btn btn-success" style="margin-left: 30px " (click)="loadJson()" [disabled]="!hasCompiled">
                 <span class="glyphicon glyphicon-repeat"></span> Restore facts values
             </button>
     
@@ -46,8 +46,15 @@ export class JSONViewerComponent implements OnInit, OnChanges, AfterViewInit {
     templateDivRef: any;
     editorRef: any;
 
-    nestingLimit: number=30;
-    nestingLimitSubscription : Subscription;
+    nestingLimit: number = 30;
+    nestingLimitSubscription: Subscription;
+
+    hasCompiledSubscription: Subscription;
+    hasCompiled = true;
+
+    jsonDataSubscription: Subscription;
+    jsonData = {};
+
 
     constructor(private drlService: DRLService, private factsService: FactsService) {
     }
@@ -61,7 +68,7 @@ export class JSONViewerComponent implements OnInit, OnChanges, AfterViewInit {
         return JSON.stringify(obj) === JSON.stringify({});
     }
 
-    setNestingLimit(){
+    setNestingLimit() {
         this.drlService.setNestingLimit(this.nestingLimit);
         this.drlService.emitNestedLimitSubject();
     }
@@ -76,8 +83,9 @@ export class JSONViewerComponent implements OnInit, OnChanges, AfterViewInit {
     loadJson() {
         if ((!this.isEmpty(this.data))) {    //(!this.isEmpty(this.data)) && (!_.isEqual(this.editorRef.getValue(), this.data))
             this.editorRef.setValue(
-                this.factsService.jsonData
+                this.jsonData
             );
+            console.log(this.jsonData, 'changed');
         }
     }
 
@@ -94,6 +102,14 @@ export class JSONViewerComponent implements OnInit, OnChanges, AfterViewInit {
             }
         );
         this.drlService.emitNestedLimitSubject();
+
+        this.jsonDataSubscription = this.factsService.jsonDataSubject.subscribe(
+            (jsonData: object) => {
+                this.jsonData = jsonData;
+                this.loadJson();
+            }
+        );
+        this.drlService.emitHasCompiledSubject();
     }
 
 
@@ -127,10 +143,12 @@ export class JSONViewerComponent implements OnInit, OnChanges, AfterViewInit {
     resetJsonEditor() {
         this.editorRef.destroy();
         this.createDefaultObjectViewer();
+        this.loadJson();
     }
 
     ngOnDestroy() {
         this.nestingLimitSubscription.unsubscribe();
+        this.jsonDataSubscription.unsubscribe();
     }
 
 }
