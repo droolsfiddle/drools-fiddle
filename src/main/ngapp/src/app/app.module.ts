@@ -15,7 +15,6 @@ import {HomeComponent} from './home/home.component';
 import {UserComponent} from './user/user/user.component';
 import {HttpClientModule} from '@angular/common/http';
 import {Location, LocationStrategy, PathLocationStrategy} from '@angular/common';
-import {VisModule} from 'ng2-vis';
 import * as $ from 'jquery';
 import {NgxToggleModule} from 'ngx-toggle';
 import {PopoverModule} from 'ngx-popover';
@@ -32,6 +31,7 @@ import {DataTableModule} from "angular-6-datatable";
 import {JSONViewerComponent} from "./user/facts/json-schema/json-schema.component";
 import {NgMultiSelectDropDownModule} from "ng-multiselect-dropdown";
 import {MultiselectComponent} from './logs/multiselect/multiselect.component';
+import {VisModule} from "ngx-vis";
 
 
 const appRoutes: Routes = [

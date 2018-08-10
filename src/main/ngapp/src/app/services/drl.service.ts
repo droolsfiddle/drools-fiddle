@@ -29,7 +29,7 @@ export class DRLService {
     private dataObj = {data: '', json: '', nestingLimit: 0};
     private jsonResp: any;
 
-    private nestingLimit: number = 10;
+    private nestingLimit: number = 5;
     nestingLimitSubject = new Subject<number>();
 
 

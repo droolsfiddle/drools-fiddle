@@ -1,9 +1,7 @@
 import {Injectable} from '@angular/core';
 import {Subject} from 'rxjs';
-import {VisEdges, VisNetworkOptions, VisNetworkService, VisNodes} from "ng2-vis";
+import {VisEdges, VisNetworkOptions, VisNetworkService, VisNodes} from "ngx-vis";
 import {ExampleNetworkData} from "../models/network-data.model";
-import {Subscription} from "rxjs/internal/Subscription";
-import {Message} from "../models/message.model";
 
 /* This Service will manage the events */
 

@@ -36,7 +36,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "../webapp/ng/home",
+            "outputPath": "../webapp/drools-fiddle",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -48,7 +48,6 @@
             "styles": [
               "node_modules/bootstrap/dist/css/bootstrap.css",
               "node_modules/font-awesome/css/font-awesome.css",
-              "node_modules/vis/dist/vis-network.min.css",
               "src/styles.scss"
             ],
             "scripts": [
@@ -58,8 +57,6 @@
               "node_modules/ace-builds/src-min/theme-tomorrow_night_bright.js",
               "node_modules/ace-builds/src-min/mode-drools.js",
               "node_modules/json-editor/dist/jsoneditor.js"
-
-
             ]
           },
           "configurations": {
