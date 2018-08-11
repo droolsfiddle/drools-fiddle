@@ -89,8 +89,9 @@ public class DrlContextPersistenceServiceImpl implements DrlContextPersistenceSe
                 dto.setError("No context corresponding to id " + cid);
                 dto.setResult(false);
             } else {
-                context.setKieBase(repository.get(cid));
+                context.setKieBase((repository.get(cid)));
                 dto.setDrl(context.getKieBase().getDrl());
+                dto.setJson(context.getKieBase().getJson());
                 dto.setResult(true);
             }
         } catch (Exception e) {

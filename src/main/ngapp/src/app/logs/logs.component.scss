@@ -6,21 +6,181 @@ pre.textarea {
   overflow: auto; /* in most browsers, this will results in a scrollbar when there's more content than can fit in the dimensions defined above */
 }
 
-h3.panel-title
-{
+h3.panel-title {
   margin: 3%;
 }
 
 //wraping pre
 
 pre {
-  white-space: pre-wrap;       /* Since CSS 2.1 */
-  white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
-  white-space: -pre-wrap;      /* Opera 4-6 */
-  white-space: -o-pre-wrap;    /* Opera 7 */
-  word-wrap: break-word;       /* Internet Explorer 5.5+ */
+  white-space: pre-wrap; /* Since CSS 2.1 */
+  white-space: -moz-pre-wrap; /* Mozilla, since 1999 */
+  white-space: -pre-wrap; /* Opera 4-6 */
+  white-space: -o-pre-wrap; /* Opera 7 */
+  word-wrap: break-word; /* Internet Explorer 5.5+ */
 }
 
-th,td {
+th, td {
   word-wrap: break-word;
 }
+
+.input-group-addon {
+  min-width: 150px; // if you want width please write here //
+  text-align: left;
+}
+
+/* --------------------------------- Radio buttons --------------------------*/
+.funkyradio {
+
+  div {
+    clear: both;
+    overflow: hidden;
+  }
+
+  label {
+    width: 100%;
+    border-radius: 3px;
+    border: 1px solid #D1D3D4;
+    font-weight: normal;
+  }
+
+  input[type="radio"],
+  input[type="checkbox"] {
+
+    &:empty {
+      display: none;
+
+      ~ label {
+        position: relative;
+        line-height: 2.5em;
+        text-indent: 3.25em;
+        margin-top: 1em;
+        cursor: pointer;
+        user-select: none;
+
+        &:before {
+          position: absolute;
+          display: block;
+          top: 0;
+          bottom: 0;
+          left: 0;
+          content: '';
+          width: 2.5em;
+          background: #D1D3D4;
+          border-radius: 3px 0 0 3px;
+        }
+      }
+    }
+
+    &:hover:not(:checked) ~ label {
+      color: #888;
+      opacity: 0.8;
+
+      &:before {
+        content: '\2714';
+        text-indent: .9em;
+        color: #C2C2C2;
+      }
+    }
+
+    &:checked ~ label {
+      color: #777;
+
+      &:before {
+        content: '\2714';
+        text-indent: .9em;
+        color: #333;
+        background-color: #ccc;
+      }
+    }
+
+    &:focus ~ label:before {
+      box-shadow: 0 0 0 3px #999;
+    }
+  }
+
+  &-default {
+    input[type="radio"],
+    input[type="checkbox"] {
+      &:checked ~ label:before {
+        color: #fff;
+        background-color: #ccc;
+      }
+      &:empty ~ label:before {
+        color: #fff;
+        background-color: #ccc;
+      }
+    }
+  }
+
+  &-primary {
+    input[type="radio"],
+    input[type="checkbox"] {
+      &:checked ~ label:before {
+        color: #fff;
+        background-color: #337ab7;
+      }
+      &:empty ~ label:before {
+        color: #fff;
+        background-color: #337ab7;
+      }
+    }
+  }
+
+  &-success {
+    input[type="radio"],
+    input[type="checkbox"] {
+      &:checked ~ label:before {
+        color: #fff;
+        background-color: #5cb85c;
+      }
+      &:empty ~ label:before {
+        color: #fff;
+        background-color: #5cb85c;
+      }
+    }
+  }
+
+  &-danger {
+    input[type="radio"],
+    input[type="checkbox"] {
+      &:checked ~ label:before {
+        color: #fff;
+        background-color: #d9534f;
+      }
+      &:empty ~ label:before {
+        color: #fff;
+        background-color: #d9534f;
+      }
+    }
+  }
+
+  &-warning {
+    input[type="radio"],
+    input[type="checkbox"] {
+      &:checked ~ label:before {
+        color: #fff;
+        background-color: #f0ad4e;
+      }
+      &:empty ~ label:before {
+        color: #fff;
+        background-color: #f0ad4e;
+      }
+    }
+  }
+
+  &-info {
+    input[type="radio"],
+    input[type="checkbox"] {
+      &:checked ~ label:before {
+        color: #fff;
+        background-color: #5bc0de;
+      }
+      &:empty ~ label:before {
+        color: #fff;
+        background-color: #5bc0de;
+      }
+    }
+  }
+}
+

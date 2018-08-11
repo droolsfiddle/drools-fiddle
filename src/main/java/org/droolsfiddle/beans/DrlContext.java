@@ -16,6 +16,7 @@
 package org.droolsfiddle.beans;
 
 import org.droolsfiddle.persistence.beans.KieBaseWrapper;
+import org.droolsfiddle.persistence.redis.DroolsFiddleSession;
 import org.kie.api.KieBase;
 import org.kie.api.runtime.KieContainer;
 import org.springframework.context.annotation.Scope;
@@ -34,8 +35,12 @@ import java.io.IOException;
 public class DrlContext {
 
     private KieBaseWrapper kieBase;
+    
+    private DroolsFiddleSession droolsFiddleSession;
 
     private Session webSocketSession;
+    
+    private String json;
 
 
     public boolean hasKieBase() {
@@ -48,6 +53,14 @@ public class DrlContext {
 
     public void setKieBase(KieBaseWrapper kieContainer) {
         this.kieBase = kieContainer;
+    }
+    
+    public String getJson() {
+        return json;
+    }
+
+    public void setJson(String json) {
+        this.json = json;
     }
 
     public Session getWebSocketSession() { return webSocketSession; }

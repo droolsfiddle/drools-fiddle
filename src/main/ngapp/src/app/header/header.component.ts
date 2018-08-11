@@ -11,91 +11,95 @@ import {SocketService} from "../services/socket.service";
 let stepFunctionService: StepFunctionsService;
 
 @Component({
-  selector: 'app-header',
-  templateUrl: './header.component.html',
-  styleUrls: ['./header.component.scss']
+    selector: 'app-header',
+    templateUrl: './header.component.html',
+    styleUrls: ['./header.component.scss']
 })
 
 export class HeaderComponent implements OnInit, OnDestroy {
     public model = this.eventService.modelLiveButton;
     fireDisableSubscription: Subscription;
-  fireDisable = true;
+    fireDisable = true;
 
-  stepSubscription: Subscription;
-  step = 0;
+    stepSubscription: Subscription;
+    step = 0;
 
-  totalStepSubscription: Subscription;
-  totalStep = 0;
-
-
-
-  /* dataTarget: string; */
+    totalStepSubscription: Subscription;
+    totalStep = 0;
 
 
-  constructor(private drlService: DRLService, private eventService: EventsService, private stepFunctionService: StepFunctionsService,
-  private socketService: SocketService) { }
+    /* dataTarget: string; */
 
 
-  ngOnInit() {
-      this.fireDisableSubscription = this.drlService.hasCompiledSubject.subscribe(
-          (hasCompile: boolean) => {
-              this.fireDisable = hasCompile;
-          }
-      );
-      this.drlService.emitHasCompiledSubject();
+    constructor(private drlService: DRLService, private eventService: EventsService, private stepFunctionService: StepFunctionsService,
+                private socketService: SocketService) {
+    }
 
-      this.stepSubscription = this.stepFunctionService.stepSubject.subscribe(
-          (step: number) => {
-              this.step = step;
-          }
-      );
-      this.stepFunctionService.emitStepSubject();
 
-      this.totalStepSubscription = this.stepFunctionService.totalStepSubject.subscribe(
-          (totalStep: number) => {
-              this.totalStep = totalStep;
-          }
-      );
-      this.stepFunctionService.emitTotalStepSubject();
-  }
+    ngOnInit() {
+        this.fireDisableSubscription = this.drlService.hasCompiledSubject.subscribe(
+            (hasCompile: boolean) => {
+                this.fireDisable = hasCompile;
+            }
+        );
+        this.drlService.emitHasCompiledSubject();
 
-  compileDrl() {
-      this.drlService.compile();
-      this.stepFunctionService.totalReset();
-      /* this.dataTarget = this.drlService.target;
-      this.eventService.emitTabsSubject();
-       console.log(this.dataTarget); */
-  }
+        this.stepSubscription = this.stepFunctionService.stepSubject.subscribe(
+            (step: number) => {
+                this.step = step;
+            }
+        );
+        this.stepFunctionService.emitStepSubject();
 
-  fireDrl() {
+        this.totalStepSubscription = this.stepFunctionService.totalStepSubject.subscribe(
+            (totalStep: number) => {
+                this.totalStep = totalStep;
+            }
+        );
+        this.stepFunctionService.emitTotalStepSubject();
+    }
 
-    this.drlService.fire();
-  }
+    actualiseStep() {
+        if (this.model['value']) {
+            this.nextEnd();
+        }
+    }
 
-  saveDrl() {
-    this.drlService.saveAndCompile();
-      this.stepFunctionService.totalReset();
-  }
-  ngOnDestroy() {
+    compileDrl() {
+        this.drlService.compile();
+        this.stepFunctionService.totalReset();
+    }
+
+    fireDrl() {
+
+        this.drlService.fire();
+    }
+
+    saveDrl() {
+        this.drlService.saveAndCompile();
+        this.stepFunctionService.totalReset();
+    }
+
+    ngOnDestroy() {
         this.fireDisableSubscription.unsubscribe();
         this.totalStepSubscription.unsubscribe();
         this.stepSubscription.unsubscribe();
     }
 
     next() {
-      this.stepFunctionService.next();
+        this.stepFunctionService.next();
     }
 
     nextEnd() {
-      this.stepFunctionService.nextEnd();
+        this.stepFunctionService.nextEnd();
     }
 
     previousBegin() {
-      this.stepFunctionService.previousBegin();
+        this.stepFunctionService.previousBegin();
     }
 
-    previous(){
-      this.stepFunctionService.previous();
+    previous() {
+        this.stepFunctionService.previous();
 
     }
 

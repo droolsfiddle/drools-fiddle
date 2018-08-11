@@ -4,9 +4,8 @@
 .project
 .settings
 target/
-src/main/webapp/ng/
+src/main/webapp/drools-fiddle/
 
 src/main/ngapp/node_modules/*
-!src/main/ngapp/node_modules/ng2-vis
 
 

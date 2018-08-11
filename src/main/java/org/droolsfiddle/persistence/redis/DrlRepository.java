@@ -31,7 +31,7 @@ import javax.inject.Named;
 @Named
 public class DrlRepository {
 
-    private final RedisTemplate<String, KieBaseWrapper> template;
+    private final RedisTemplate<String, DroolsFiddleSession> template;
 
     private final RedisAtomicLong contextIdCounter;
 
@@ -73,7 +73,7 @@ public class DrlRepository {
     }
 */
     @Inject
-    DrlRepository(RedisTemplate<String, KieBaseWrapper> template) {
+    DrlRepository(RedisTemplate<String, DroolsFiddleSession> template) {
         this.template = template;
         contextIdCounter = new RedisAtomicLong("global:cid", template.getConnectionFactory());
     }

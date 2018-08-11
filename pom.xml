@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.test</groupId>
     <artifactId>drools-fiddle</artifactId>
@@ -29,6 +30,12 @@
     </dependencyManagement>
 
     <dependencies>
+        <dependency>
+            <groupId>javax</groupId>
+            <artifactId>javaee-api</artifactId>
+            <version>7.0</version>
+            <scope>provided</scope>
+        </dependency>
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
@@ -183,7 +190,7 @@
             <version>${jackson.version}</version>
         </dependency>
         <!-- websocket -->
-         <dependency>
+        <dependency>
             <groupId>org.jboss.spec.javax.websocket</groupId>
             <artifactId>jboss-websocket-api_1.0_spec</artifactId>
             <version>${version.org.jboss.spec.javax.websocket}</version>
@@ -205,9 +212,9 @@
                 <configuration>
                     <source>1.7</source>
                     <target>1.7</target>
-			  <excludes>
-                		src/main/ngapp/**
-            		</excludes>  
+                    <excludes>
+                        src/main/ngapp/**
+                    </excludes>
                 </configuration>
             </plugin>
             <plugin>
@@ -215,48 +222,51 @@
                 <version>2.3</version>
                 <configuration>
                     <failOnMissingWebXml>false</failOnMissingWebXml>
-			   <excludes>
-				src/main/ngapp/**
-			</excludes> 
+                    <excludes>
+                        src/main/ngapp/**
+                    </excludes>
                 </configuration>
             </plugin>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>exec-maven-plugin</artifactId>
-				<version>1.5.0</version>
-				<executions>
-					<execution>
-					<id>exec-npm-install</id>
-					<phase>generate-sources</phase>
-					<configuration>
-						<workingDirectory>${project.basedir}/src/main/ngapp</workingDirectory>
-						<executable>npm${extension}</executable>
-						<arguments>
-							<argument>install</argument>
-						</arguments>
-					</configuration>
-					<goals>
-						<goal>exec</goal>
-					</goals>
-					</execution>
-					<execution>
-					<id>exec-npm-ng-build</id>
-					<phase>generate-sources</phase>
-					<configuration>
-						<workingDirectory>${project.basedir}/src/main/ngapp</workingDirectory>
-						<executable>ng${extension}</executable>
-						<arguments>
-							<argument>build</argument>
-							<argument>--base-href=/ng/home/#/</argument>
-						</arguments>
-					</configuration>
-					<goals>
-						<goal>exec</goal>
-					</goals>
-					</execution>
-				</executions>
-			</plugin>
-			
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>1.5.0</version>
+                <executions>
+                    <execution>
+                        <id>exec-npm-install</id>
+                        <phase>generate-sources</phase>
+                        <configuration>
+                            <workingDirectory>${project.basedir}/src/main/ngapp</workingDirectory>
+                            <executable>npm${extension}</executable>
+                            <arguments>
+                                <argument>install</argument>
+                            </arguments>
+                        </configuration>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>exec-npm-ng-build</id>
+                        <phase>generate-sources</phase>
+                        <configuration>
+                            <workingDirectory>${project.basedir}/src/main/ngapp</workingDirectory>
+                            <executable>ng${extension}</executable>
+                            <arguments>
+                                <argument>build</argument>
+                                <argument>--base-href=/drools-fiddle/#/</argument>
+                                <!-- add those arguments if you want fast performances and a short loading time -->
+                                <argument>--aot</argument>
+                                <argument>--prod</argument>
+                            </arguments>
+                        </configuration>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
             <plugin>
                 <groupId>org.wildfly.plugins</groupId>
                 <artifactId>wildfly-maven-plugin</artifactId>
@@ -352,7 +362,8 @@
                                     <groups>org.droolsfiddle.it.IntegrationTest</groups>
                                     <systemPropertyVariables>
                                         <arquillian.launch>wildfly10</arquillian.launch>
-                                        <java.util.logging.manager>org.jboss.logmanager.LogManager</java.util.logging.manager>
+                                        <java.util.logging.manager>org.jboss.logmanager.LogManager
+                                        </java.util.logging.manager>
                                         <jboss.home>${project.basedir}/target/wildfly-10.0.0.Final</jboss.home>
                                     </systemPropertyVariables>
                                     <redirectTestOutputToFile>false</redirectTestOutputToFile>
@@ -476,7 +487,7 @@
                 </os>
             </activation>
             <properties>
-                <extension> </extension>
+                <extension></extension>
             </properties>
         </profile>
     </profiles>

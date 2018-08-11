@@ -1,6 +1,6 @@
-import {VisEdges, VisNetworkData, VisNodes} from 'ng2-vis';
+import {VisEdges, VisNetworkData, VisNodes} from 'ngx-vis';
 
 export class ExampleNetworkData implements VisNetworkData {
-  constructor(public nodes: VisNodes, public edges: VisEdges) {
-  }
+    constructor(public nodes: VisNodes, public edges: VisEdges) {
+    }
 }

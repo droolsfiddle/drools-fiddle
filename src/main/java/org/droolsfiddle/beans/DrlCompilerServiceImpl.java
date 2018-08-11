@@ -47,7 +47,9 @@ import java.util.*;
 @Named
 public class DrlCompilerServiceImpl implements DrlCompilerService {
 
-    private Logger logger = Logger.getLogger(DrlCompilerServiceImpl.class);
+    
+
+	private Logger logger = Logger.getLogger(DrlCompilerServiceImpl.class);
 
     @Context
     private HttpServletRequest request;
@@ -57,16 +59,24 @@ public class DrlCompilerServiceImpl implements DrlCompilerService {
 
     private ObjectMapper mapper = new ObjectMapper();
 
+	private int nestingCount;
+	private int nestingLimit;
+
+	private boolean hasLoop;
+
+	private Set<FactType> usedFactType;
+
 
     public Request postDrlCompile(final Request iRequest) throws JsonProcessingException {
 
         
     	logger.debug("Init validation drl: DrlParser");
-        Session wsSession = (Session) request.getSession().getAttribute(Session.class.getName());
+        Session wsSession = (Session) request.getSession().getAttribute(Session.class.getName()); 
 
         Request resp = new Request();
         resp.setSuccess(false);
-
+        hasLoop = false;
+        
         String drl;
         try {
             drl = new String(Base64.decode(iRequest.getData()),
@@ -76,6 +86,22 @@ public class DrlCompilerServiceImpl implements DrlCompilerService {
             resp.setLog("error while decoding input drl: "+e.getMessage());
             return resp;
         }
+        
+        
+        String json; 
+        try {
+            json = new String(Base64.decode(iRequest.getJson()),
+                    Charset.forName("UTF-8"));
+        } catch (IOException e) {
+            WebSocketUtil.sendToWebSocket(wsSession, "error while decoding input JSON: "+e.getMessage());
+            resp.setLog("error while decoding input JSON: "+e.getMessage());
+            return resp;
+        }
+        
+        nestingLimit = iRequest.getNestingLimit(); 
+        resp.setNestingLimit(nestingLimit);
+        
+
 
         StringBuilder aLog = new StringBuilder();
 
@@ -95,7 +121,8 @@ public class DrlCompilerServiceImpl implements DrlCompilerService {
                 WebSocketUtil.sendToWebSocket(wsSession, mapper.writeValueAsString(info.toString()));
             }
 
-            
+
+            resp.setHasLoop(hasLoop);
             resp.setLog(aLog.toString());
             return resp;
         }
@@ -104,7 +131,7 @@ public class DrlCompilerServiceImpl implements DrlCompilerService {
         aLog.append(kContainer.getClassLoader());
 
         KieBase kbs = kContainer.getKieBase();
-        drlContext.setKieBase(new KieBaseWrapper(drl,kbs));
+        drlContext.setKieBase(new KieBaseWrapper(drl , kbs , json));
 
         // packages parsing
         Set<FactType> rootTypes = new HashSet<FactType>();
@@ -116,9 +143,11 @@ public class DrlCompilerServiceImpl implements DrlCompilerService {
         root.setType("object");
         root.setTitle("Facts");
         for (FactType type : rootTypes) {
+        	nestingCount = 0;
             if (type.getFactClass().isEnum()) // skip enums
                 continue;
 
+            usedFactType = new HashSet<>();
             root.getProperties().put(type.getName(),
                     factType2JsonSchemaNode(type.getSimpleName(),type,kbs));
 
@@ -157,43 +186,45 @@ public class DrlCompilerServiceImpl implements DrlCompilerService {
             }
         }
 
+        resp.setHasLoop(hasLoop);
         resp.setLog(aLog.toString());
         resp.setSuccess(true);
 
         logger.debug("End DRL compile service: "+resp.toString());
-
-        return resp;
+			
+        return resp; 
     }
 
     private JsonSchemaNode factType2JsonSchemaNode(String name, FactType type, KieBase kbs) {
+    	if (usedFactType.contains(type)) {
+    		hasLoop = true;
+    	} else {
+    		usedFactType.add(type);
+    	}
         logger.debug("factType2JsonSchemaNode("+name+", "+type+")");
         JsonSchemaNode node = new JsonSchemaNode();
 
         node.setTitle(name);
         node.setType("object");
 
-        for (FactField field : type.getFields()) {
-            node.getProperties().put(field.getName(),
-                    javaType2JsonSchemaNode(field.getName(), field.getType(), kbs));
+        nestingCount++;
+        if (!hasLoop || (nestingCount < nestingLimit)) {
+        	for (FactField field : type.getFields()) {
+        		node.getProperties().put(field.getName(),
+        				javaType2JsonSchemaNode(field.getName(), field.getType(), kbs));
+        	}
+        	
         }
 
+        nestingCount--;
+        if (usedFactType.contains(type)) {
+        	usedFactType.remove(type);
+    	} 
         return node;
     }
 
     private JsonSchemaBaseNode javaType2JsonSchemaNode(String name, Class<?> type, KieBase kbs) {
 
-        if (Collection.class.isAssignableFrom(type)) {
-            JsonSchemaArrayNode node = new JsonSchemaArrayNode();
-            node.setTitle(name);
-            node.setType("array");
-            JsonSchemaMultiTypeNode typeNode = new JsonSchemaMultiTypeNode();
-            typeNode.getType().add("string");
-            typeNode.getType().add("boolean");
-            typeNode.getType().add("integer");
-            typeNode.getType().add("number");
-            node.setItems(typeNode);
-            return node;
-        }
 
         if (type.isArray()) {
             JsonSchemaArrayNode node = new JsonSchemaArrayNode();
@@ -218,6 +249,18 @@ public class DrlCompilerServiceImpl implements DrlCompilerService {
 
     private JsonSchemaLeafNode javaType2JsonSchemaLeafNode(String name, Class<?> type) {
 
+    	if (Collection.class.isAssignableFrom(type)) {
+    		JsonSchemaArrayNode node = new JsonSchemaArrayNode();
+    		node.setTitle(name);
+    		node.setType("array");
+    		JsonSchemaMultiTypeNode typeNode = new JsonSchemaMultiTypeNode();
+    		typeNode.getType().add("string");
+    		typeNode.getType().add("boolean");
+    		typeNode.getType().add("integer");
+    		typeNode.getType().add("number");
+    		node.setItems(typeNode);
+    		return node;
+    	}
         JsonSchemaLeafNode node = new JsonSchemaNode();
 
         if (type.equals(Integer.class) || type.equals(Long.class) || type.equals(Short.class)

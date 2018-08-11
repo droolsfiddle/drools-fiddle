@@ -12,10 +12,9 @@ And this app uses the Bootstrap3FrameworkModule included in JsonSchemaFormModule
 </json-schema-form> -->
 
 
-<app-json-viewer [options]="jsonEditorOptions" [mode]="'tree'" [schema]="jsonSchema" [data]="">
+<app-json-viewer [options]="jsonEditorOptions" [mode]="'tree'" [schema]="jsonSchema" [(data)]="jsonData">
 
 </app-json-viewer>
-
 
 
 <!-- <json-editor [schema]="myFormData"  buttons-controller="SyncButtonsController">

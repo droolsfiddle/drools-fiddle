@@ -26,7 +26,10 @@ public class Request {
   private int id;
   private String data;
   private String log;
+  private String json; 
+  private int nestingLimit; 
   private boolean success;
+  private boolean hasLoop;
   // private List<PackageDTO> packages;
   private JsonSchemaNode jsonSchema;
   private JsonSchemaNodeNew jsonSchemaNew;
@@ -56,6 +59,22 @@ public class Request {
   public void setLog(String log) {
     this.log = log;
   }
+  
+  public String getJson() {
+    return json;
+  }
+
+  public void setJson(String json) {
+    this.json = json;
+  }
+  
+  public int getNestingLimit() {
+	    return nestingLimit;
+	  }
+
+	  public void setNestingLimit(int nestingLimit) {
+	    this.nestingLimit = nestingLimit;
+	  }
 
   // public List<PackageDTO> getPackages() {
   //  return packages;
@@ -97,6 +116,15 @@ public class Request {
   public void setSuccess(boolean success) {
     this.success = success;
   }
+  
+  public boolean isHasLoop() {
+	  return hasLoop;
+  }
+
+  public void setHasLoop(boolean hasLoop) {
+	  this.hasLoop = hasLoop;
+  }
+
 
   @Override
   public String toString() {
@@ -104,6 +132,7 @@ public class Request {
             "id=" + id +
             ", data='" + data + '\'' +
             ", log='" + log + '\'' +
+            ", JSON='" + json + '\'' +
             ", success=" + success +
             ", jsonSchema=" + jsonSchema +
             '}';

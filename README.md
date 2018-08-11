@@ -30,6 +30,7 @@ In order to build and deploy this project you will need to fullfill those prereq
     * Java 8
 *  [Docker](https://www.docker.com) daemon
 *  [NodeJS](https://nodejs.org/en/)
+*  [Angular CLI](https://www.npmjs.com/package/@angular/cli#prerequisites)
 
 ### Build
 
@@ -87,6 +88,7 @@ end
 
 ### Contributors
 
+* Alexis OLIVARI : olivari.alexis0 [at] gmail [dot] com
 * Thomas Palandri
 * Jaona Ramahaleo
 

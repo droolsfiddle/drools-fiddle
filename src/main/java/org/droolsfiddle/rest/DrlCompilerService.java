@@ -31,6 +31,6 @@ public interface DrlCompilerService {
 
     @POST
     @Path("/drlCompile")
-    Request postDrlCompile(Request iRequest) throws JsonProcessingException;
+    Request postDrlCompile(Request iRequest) throws JsonProcessingException; 
 
 }

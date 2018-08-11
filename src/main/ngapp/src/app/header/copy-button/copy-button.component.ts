@@ -4,9 +4,9 @@ import {EventsService} from "../../services/events.service";
 import {DRLService} from "../../services/drl.service";
 
 @Component({
-  selector: 'app-copy-button',
-  templateUrl: './copy-button.component.html',
-  styleUrls: ['./copy-button.component.scss']
+    selector: 'app-copy-button',
+    templateUrl: './copy-button.component.html',
+    styleUrls: ['./copy-button.component.scss']
 })
 export class CopyButtonComponent implements OnInit, OnDestroy {
 
@@ -14,15 +14,17 @@ export class CopyButtonComponent implements OnInit, OnDestroy {
     text: string = window.location.href;
     isCopied1: boolean;
 
-  constructor(private drlService: DRLService) { }
+    constructor(private drlService: DRLService) {
+    }
 
-  ngOnInit() {
-      this.textSubscription = this.drlService.UrlSubject.subscribe(
-          (UrlText: string) => {
-              this.text = UrlText;
-          }
-      );
-  }
+    ngOnInit() {
+        this.textSubscription = this.drlService.UrlSubject.subscribe(
+            (UrlText: string) => {
+                this.text = UrlText;
+            }
+        );
+    }
+
     ngOnDestroy() {
         this.textSubscription.unsubscribe();
     }
