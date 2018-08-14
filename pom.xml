@@ -240,6 +240,7 @@
                             <executable>npm${extension}</executable>
                             <arguments>
                                 <argument>install</argument>
+                                <argument>-f</argument>
                             </arguments>
                         </configuration>
                         <goals>
