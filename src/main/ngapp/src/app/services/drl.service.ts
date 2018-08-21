@@ -36,7 +36,7 @@ export class DRLService {
     /* public target = 'drl'; */
     private DrlCode: string = '//\n' +
         '// copy paste your drl\n' +
-        '// Drools version : 6.3.0.Final\n' +
+        '// Drools version : 7.10.0.Final\n' +
         '\n' +
         'import org.droolsfiddle.utilities.WSLogger;\n' +
         '\n' +

@@ -6,7 +6,7 @@ import {
     VisNetworkService,
     VisNetworkData,
     VisNetworkOptions
-} from 'ngx-vis';
+} from 'ng2-vis';
 import {EventsService} from "../services/events.service";
 import {Subscription} from "rxjs/index";
 import {ExampleNetworkData} from "../models/network-data.model";
