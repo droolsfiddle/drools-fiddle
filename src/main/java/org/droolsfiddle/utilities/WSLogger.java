@@ -14,22 +14,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class WSLogger {
 
-	  private Logger logger = Logger.getLogger(WebSocketHandler.class);
-	
-	public class Payload {
-		public String payload;
-		public Payload(String payload){
-			this.payload = payload;
-		}
-		@Override
-		public String toString() {
-			return payload;
-		}
-	};
 
 	private Session wsSession;
-
-    private ObjectMapper mapper = new ObjectMapper();
 
 	public WSLogger(Session wsSession) {
 		this.wsSession = wsSession;
@@ -58,6 +44,3 @@ public class WSLogger {
 		log(message, "warning", "User-log-warn");
 	}
 }
-
-/*String payload = String.format("{ \\'action\\' : \\'User-Log\\' , \\'message\\' : \\'%s\\' }", message);
-WebSocketUtil.sendToWebSocket(wsSession, payload); */
