@@ -59,4 +59,10 @@ public class WebSocketHandler {
   public void close(CloseReason reason) {
     logger.info("WebSocket connection closed with CloseCode: " + reason.getCloseCode());
   }
+  
+  @OnError
+  public void error(Session session, Throwable t) {
+      logger.error("Exception in websocket", t);
+  }
+  
 }
