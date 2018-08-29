@@ -30,8 +30,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
     /* dataTarget: string; */
 
 
-    constructor(private drlService: DRLService, private eventService: EventsService, private stepFunctionService: StepFunctionsService, private socketService: SocketService ) {
-    }
+
+    constructor(private drlService: DRLService, private eventService: EventsService, private stepFunctionService: StepFunctionsService, private socketService: SocketService ) {}
 
 
     ngOnInit() {
