@@ -17,7 +17,7 @@ package org.droolsfiddle.websocket;
 
 import org.droolsfiddle.rest.model.FactDTO;
 import org.droolsfiddle.rest.model.RuleDTO;
-import org.droolsfiddle.utilities.WSLogger.Payload;
+//import org.droolsfiddle.utilities.WSLogger.Payload;
 import org.kie.api.event.rule.BeforeMatchFiredEvent;
 import org.kie.api.event.rule.ObjectDeletedEvent;
 import org.kie.api.event.rule.ObjectInsertedEvent;
@@ -131,8 +131,10 @@ public class CustomDroolsEvent {
     return this;
   }
 
+  
+  /*
   public CustomDroolsEvent map(Payload payload) {
     setObject(payload);
     return this;
-  }
+  }*/
 }
