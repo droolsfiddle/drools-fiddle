@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {Subject} from 'rxjs';
-import {VisEdges, VisNetworkOptions, VisNetworkService, VisNodes} from "ngx-vis";
+import {VisEdges, VisNetworkOptions, VisNetworkService, VisNodes} from "ng2-vis";
 import {ExampleNetworkData} from "../models/network-data.model";
 
 /* This Service will manage the events */
@@ -158,17 +158,17 @@ export class EventsService {
             /*{id: 1, label : 'User', group : 'users', title : '42'},
             {id: 2, label: 'Rule', group: 'rule',title : '42'},
             {id: 3,  label: 'Fact Type', group: 'factType', title : '42'},
-            {id: 4,  label: 'Fact Instance', group: 'factInstance'}, ]); */
+            {id: 4,  label: 'Fact Instance', group: 'factInstance'}, ]);*/
             {"id": 0, "label": "User", "group": "users", "title": "42"},]);
         /* {"id":"1151983785","title":"{\n  \"value\": 42\n}","group":"factInstance"},
         {"id":"Rule","label":"Rule","title":"{\n  \"name\": \"Rule\"\n}","group":"rule"},
         {"id":"Fact","label":"Fact","title":"[\n  {\n    \"id\": 0,\n    \"name\": \"value\",\n    \"type\": \"int\",\n    \"enumValues\": null\n  }\n]","group":"factType"},]); */
 
         const edges = new VisEdges([
-            /*{ from: '1', to: '3', dashes: 'true' },
-            { from: '1', to: '2', arrows: 'to' },
-            { from: '2', to: '4', group: 'test' },
-            { from: '2', to: '5' }]); */
+            /*{ from: '1', to: '3' },
+            { from: '1', to: '2' }, */
+            /*{ from: '2', to: '4', group: 'test' },
+            { from: '2', to: '5', label: 'testing' }*/
             /* {"id":"Fact-1151983785","from":"Fact","to":"1151983785","dashes":true},
             {"id":"0-1151983785","from":0,"to":"1151983785","arrows":"to","label":1},
             {"id":"1151983785-Rule","from":"1151983785","to":"Rule","arrows":"to","color":"purple","label":2},]); */
@@ -208,6 +208,7 @@ export class EventsService {
                 },
                 test: {
                     arrows: 'to',
+                    label: 'test'
                 }
             },
             edges: {

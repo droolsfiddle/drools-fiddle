@@ -31,7 +31,7 @@ import {DataTableModule} from "angular-6-datatable";
 import {JSONViewerComponent} from "./user/facts/json-schema/json-schema.component";
 import {NgMultiSelectDropDownModule} from "ng-multiselect-dropdown";
 import {MultiselectComponent} from './logs/multiselect/multiselect.component';
-import {VisModule} from "ngx-vis";
+import {VisModule} from "ng2-vis";
 
 
 const appRoutes: Routes = [

@@ -29,6 +29,8 @@ public class WebSocketUtil {
 
   static public void sendToWebSocket(Session iSession, String iData) {
     try {
+    	logger.debug("session  "+ iSession);
+    	logger.debug("session getBasicRemote "+ iSession.getBasicRemote());
       iSession.getBasicRemote().sendText(iData);
     } catch (IOException e2) {
       logger.error("Websocket error",e2);

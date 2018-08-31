@@ -1,5 +1,4 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {NGXLogger} from "ngx-logger";
 import {Message} from "../models/message.model";
 import {Subscription} from "rxjs/index";
 import {LogsService} from "../services/logs.service";
@@ -11,8 +10,8 @@ import {LogsService} from "../services/logs.service";
     selector: 'app-logs',
     templateUrl: './logs.component.html',
     styleUrls: ['./logs.component.scss'],
-    providers: [NGXLogger]
 })
+
 export class LogsComponent implements OnInit, OnDestroy {
 
     public messages: Message[];
@@ -29,7 +28,7 @@ export class LogsComponent implements OnInit, OnDestroy {
     public map = new Map<string, string[]>();
     mapSubscription: Subscription;
 
-    constructor(private logger: NGXLogger, private logsService: LogsService) {
+    constructor( private logsService: LogsService) {
         // this.logsService.addMessage("Server-Log", {message: "Application Works"}, "success");
         // this.logsService.addMessage("Server-Log", {message: "Application Works"}, "debug");
         // this.logsService.addMessage("Log", {message: "Application Works"}, "danger");

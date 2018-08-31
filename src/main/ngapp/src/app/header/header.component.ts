@@ -8,7 +8,6 @@ import {SocketService} from "../services/socket.service";
 
 /*  This component is the Header, it displays the navbar on the top.
  The app uses here the Bootstrap 3.3.7 framework */
-let stepFunctionService: StepFunctionsService;
 
 @Component({
     selector: 'app-header',
@@ -31,9 +30,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
     /* dataTarget: string; */
 
 
-    constructor(private drlService: DRLService, private eventService: EventsService, private stepFunctionService: StepFunctionsService,
-                private socketService: SocketService) {
-    }
+
+    constructor(private drlService: DRLService, private eventService: EventsService, private stepFunctionService: StepFunctionsService, private socketService: SocketService ) {}
 
 
     ngOnInit() {
