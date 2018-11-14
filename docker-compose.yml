@@ -1,0 +1,29 @@
+# Install Docker Community edition (https://docker.com/) on Windows, macOS, or Linux.
+#
+# Start the stack with:
+#
+#   docker-compose up
+#
+# Use the drools-fiddle:
+#
+#   browse http://localhost/drools-fiddle
+#
+# Stop the stack with:
+#
+#   docker-compose down
+
+redis:
+
+  image: redis:latest
+
+  command: redis-server --appendonly yes
+
+fiddle:
+
+  image: drools-fiddle/drools-fiddle:1.0-SNAPSHOT
+
+  ports:
+    - 80:8080
+
+  links: 
+    - redis:redis

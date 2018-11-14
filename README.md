@@ -46,13 +46,28 @@ In order to build and deploy this project you will need to fullfill those prereq
 
     mvn clean install -Pdocker
 
+Access drools-fiddle at [http://localhost/drools-fiddle]()
+
 #### Stop containers
 
     mvn docker:stop -Pdocker
+    
+#### Start/stop containers without _maven_
+
+When you have already built images then it is possible to start the drools-fiddle without _maven_. You can call either 
+_docker_ directly or use _docker-compose_.
+
+Start the stack:
+
+    docker-compose up [--detach]
+    
+Stop the stack
+
+    docker-compose down
 
 ## Getting Started
 
-1. Connect to http://droolsfiddle.tk/. The DRL editor is already filled with an HelloWorld package:
+1. Connect to [http://droolsfiddle.tk/](). The DRL editor is already filled with an HelloWorld package:
 
 ```
 declare Fact
