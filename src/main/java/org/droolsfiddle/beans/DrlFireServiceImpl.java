@@ -69,8 +69,12 @@ public class DrlFireServiceImpl implements DrlFireService {
             logger.debug("Firing new kieSession");
             kieSession = kBase.newKieSession();
         }
-               
-        kieSession.setGlobal("LOGGER", new WSLogger(wsSession));
+
+        try{
+            kieSession.setGlobal("LOGGER", new WSLogger(wsSession));
+        }catch (Throwable t)
+        {}
+
         ExecutorService service = Executors.newFixedThreadPool(1);
 
         Future<Integer> futureResult = service.submit(new Callable<Integer>() {
