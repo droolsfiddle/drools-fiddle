@@ -46,7 +46,7 @@ In order to build and deploy this project you will need to fullfill those prereq
 
     mvn clean install -Pdocker
 
-Access drools-fiddle at [http://localhost/drools-fiddle]()
+Access drools-fiddle at [http://localhost/drools-fiddle](http://localhost/drools-fiddle)
 
 #### Stop containers
 
@@ -67,7 +67,7 @@ Stop the stack
 
 ## Getting Started
 
-1. Connect to [http://droolsfiddle.tk/](). The DRL editor is already filled with an HelloWorld package:
+1. Connect to [http://droolsfiddle.tk/](http://droolsfiddle.tk/). The DRL editor is already filled with an HelloWorld package:
 
 ```
 declare Fact
