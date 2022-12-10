@@ -8,7 +8,7 @@
     <name>drools fiddle Maven Webapp</name>
     <url>http://maven.apache.org</url>
     <properties>
-        <spring.version>4.3.0.RELEASE</spring.version>
+        <spring.version>6.0.0</spring.version>
         <drools.version>7.10.0.Final</drools.version>
         <jackson.version>2.7.0</jackson.version>
         <version.org.jboss.arquillian>1.1.11.Final</version.org.jboss.arquillian>
